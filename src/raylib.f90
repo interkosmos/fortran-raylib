@@ -13,6 +13,8 @@ module raylib
     integer, parameter, public :: c_unsigned_int  = c_int
     integer, parameter, public :: c_unsigned_char = c_signed_char
 
+    real, parameter, public :: PI = acos(-1.0)
+
     ! Vector2
     type, bind(c), public :: vector2_type
         real(kind=c_float) :: x = 0.0
@@ -550,6 +552,9 @@ module raylib
     integer(kind=c_int), parameter, public :: MATERIAL_MAP_PREFILTER  = 9
     integer(kind=c_int), parameter, public :: MATERIAL_MAP_BRDF       = 10
 
+    integer(kind=c_int), parameter, public :: MATERIAL_MAP_DIFFUSE    = 0
+    integer(kind=c_int), parameter, public :: MATERIAL_MAP_SPECULAR   = 1
+
     ! ShaderLocationIndex
     integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_POSITION    = 0
     integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TEXCOORD01  = 1
@@ -1044,11 +1049,14 @@ module raylib
     public :: load_model_from_mesh
     public :: load_music_stream
     public :: load_music_stream_from_memory
+    public :: load_render_texture
     public :: load_shader
     public :: load_shader_from_memory
     public :: load_sound
     public :: load_sound_from_wave
+    public :: load_texture
     public :: load_texture_cubemap
+    public :: load_texture_from_image
     public :: load_utf8
     public :: load_vr_stereo_config
     public :: load_wave
@@ -4405,6 +4413,15 @@ module raylib
             type(music_type)                                 :: load_music_stream_from_memory
         end function load_music_stream_from_memory
 
+        ! RenderTexture2D LoadRenderTexture(int width, int height)
+        function load_render_texture(width, height) bind(c, name='LoadRenderTexture')
+            import :: c_int, render_texture2d_type
+            implicit none
+            integer(kind=c_int), intent(in), value :: width
+            integer(kind=c_int), intent(in), value :: height
+            type(render_texture2d_type)            :: load_render_texture
+        end function load_render_texture
+
         ! Shader LoadShader(const char *vsFileName, const char *fsFileName)
         function load_shader(vs_file_name, fs_file_name) bind(c, name='LoadShader')
             import :: c_char, shader_type
@@ -4439,6 +4456,14 @@ module raylib
             type(sound_type)                   :: load_sound_from_wave
         end function load_sound_from_wave
 
+        ! Texture2D LoadTexture(const char *fileName)                                                       // Load texture from file into GPU memory (VRAM)
+        function load_texture(file_name) bind(c, name='LoadTexture')
+            import :: c_char, texture2d_type
+            implicit none
+            character(kind=c_char), intent(in) :: file_name
+            type(texture2d_type)               :: load_texture
+        end function load_texture
+
         ! TextureCubemap LoadTextureCubemap(Image image, int layout)
         function load_texture_cubemap(image, layout) bind(c, name='LoadTextureCubemap')
             import :: c_int, image_type, texture_cubemap_type
@@ -4447,6 +4472,14 @@ module raylib
             integer(kind=c_int), intent(in), value :: layout
             type(texture_cubemap_type)             :: load_texture_cubemap
         end function load_texture_cubemap
+
+        ! Texture2D LoadTextureFromImage(Image image)
+        function load_texture_from_image(image) bind(c, name='LoadTextureFromImage')
+            import :: image_type, texture2d_type
+            implicit none
+            type(image_type), intent(in), value :: image
+            type(texture2d_type)                :: load_texture_from_image
+        end function load_texture_from_image
 
         ! char *LoadUTF8(const int *codepoints, int length)
         function load_utf8(codepoints, length) bind(c, name='LoadUTF8')
