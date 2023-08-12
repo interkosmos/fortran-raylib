@@ -145,7 +145,7 @@ module raylib
         type(c_ptr)          :: glyphs        = c_null_ptr !! GlyphInfo *
     end type font_type
 
-    ! Camera3D
+    ! Camera, Camera3D
     type, bind(c), public :: camera3d_type
         type(vector3_type)  :: position
         type(vector3_type)  :: target
@@ -153,15 +153,6 @@ module raylib
         real(kind=c_float)  :: fov_y      = 0.0
         integer(kind=c_int) :: projection = 0
     end type camera3d_type
-
-    ! Camera
-    type, bind(c), public :: camera_type
-        type(vector3_type)  :: position
-        type(vector3_type)  :: target
-        type(vector3_type)  :: up
-        real(kind=c_float)  :: fov_y      = 0.0
-        integer(kind=c_int) :: projection = 0
-    end type camera_type
 
     ! Camera2D
     type, bind(c), public :: camera2d_type
@@ -1567,9 +1558,9 @@ module raylib
 
         ! void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint)
         subroutine draw_billboard(camera, texture, position, size, tint) bind(c, name='DrawBillboard')
-            import :: c_float, camera_type, color_type, texture2d_type, vector3_type
+            import :: c_float, camera3d_type, color_type, texture2d_type, vector3_type
             implicit none
-            type(camera_type),    intent(in), value :: camera
+            type(camera3d_type),  intent(in), value :: camera
             type(texture2d_type), intent(in), value :: texture
             type(vector3_type),   intent(in), value :: position
             real(kind=c_float),   intent(in), value :: size
@@ -1579,9 +1570,9 @@ module raylib
         ! void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint)
         subroutine draw_billboard_pro(camera, texture, source, position, up, size, origin, rotation, tint) &
                 bind(c, name='DrawBillboardPro')
-            import :: c_float, camera_type, color_type, rectangle_type, texture2d_type, vector2_type, vector3_type
+            import :: c_float, camera3d_type, color_type, rectangle_type, texture2d_type, vector2_type, vector3_type
             implicit none
-            type(camera_type),    intent(in), value :: camera
+            type(camera3d_type),  intent(in), value :: camera
             type(texture2d_type), intent(in), value :: texture
             type(rectangle_type), intent(in), value :: source
             type(vector3_type),   intent(in), value :: position
@@ -1594,9 +1585,9 @@ module raylib
 
         ! void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint)
         subroutine draw_billboard_rec(camera, texture, source, position, size, tint) bind(c, name='DrawBillboardRec')
-            import :: camera_type, color_type, rectangle_type, texture2d_type, vector2_type, vector3_type
+            import :: camera3d_type, color_type, rectangle_type, texture2d_type, vector2_type, vector3_type
             implicit none
-            type(camera_type),    intent(in), value :: camera
+            type(camera3d_type),  intent(in), value :: camera
             type(texture2d_type), intent(in), value :: texture
             type(rectangle_type), intent(in), value :: source
             type(vector3_type),   intent(in), value :: position
@@ -2804,10 +2795,10 @@ module raylib
 
         ! Matrix GetCameraMatrix(Camera camera)
         function get_camera_matrix(camera) bind(c, name='GetCameraMatrix')
-            import :: camera_type, matrix_type
+            import :: camera3d_type, matrix_type
             implicit none
-            type(camera_type), intent(in), value :: camera
-            type(matrix_type)                    :: get_camera_matrix
+            type(camera3d_type), intent(in), value :: camera
+            type(matrix_type)                      :: get_camera_matrix
         end function get_camera_matrix
 
         ! Matrix GetCameraMatrix2D(Camera2D camera)
@@ -3168,10 +3159,10 @@ module raylib
 
         ! Ray GetMouseRay(Vector2 mousePosition, Camera camera)
         function get_mouse_ray(mouse_position, camera) bind(c, name='GetMouseRay')
-            import :: camera_type, ray_type, vector2_type
+            import :: camera3d_type, ray_type, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: mouse_position
-            type(camera_type),  intent(in), value :: camera
+            type(camera3d_type),intent(in), value :: camera
             type(ray_type)                        :: get_mouse_ray
         end function get_mouse_ray
 
@@ -4686,9 +4677,9 @@ module raylib
 
         ! void SetCameraMode(Camera camera, int mode)
         subroutine set_camera_mode(camera, mode) bind(c, name='SetCameraMode')
-            import :: c_int, camera_type
+            import :: c_int, camera3d_type
             implicit none
-            type(camera_type),   intent(in), value :: camera
+            type(camera3d_type), intent(in), value :: camera
             integer(kind=c_int), intent(in), value :: mode
         end subroutine set_camera_mode
 
@@ -5414,11 +5405,12 @@ module raylib
             integer(kind=c_int),     intent(in), value :: frame_count
         end subroutine update_audio_stream
 
-        ! void UpdateCamera(Camera *camera)
-        subroutine update_camera(camera) bind(c, name='UpdateCamera')
-            import :: camera_type
+        ! void UpdateCamera(Camera *camera, int mode)
+        subroutine update_camera(camera, mode) bind(c, name='UpdateCamera')
+            import :: camera3d_type, c_int
             implicit none
-            type(camera_type), intent(inout) :: camera
+            type(camera3d_type), intent(inout)     :: camera
+            integer(kind=c_int), intent(in), value :: mode
         end subroutine update_camera
 
         ! void UpdateMeshBuffer(Mesh mesh, int index, const void *data, int dataSize, int offset)
