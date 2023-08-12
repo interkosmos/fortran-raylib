@@ -1,19 +1,32 @@
 # fortran-raylib
 
 A work-in-progress collection of interface bindings to
-[raylib](https://www.raylib.com/) 4.2, for 2-D and 3-D game programming in
+[raylib](https://www.raylib.com/) 4.5, for 2-D and 3-D game programming in
 Fortran 2018.
+
 
 ## Build Instructions
 
-Simply run the provided Makefile:
+Install the raylib package suitable for your operating system, or build from
+[source](https://github.com/raysan5/raylib/releases/tag/4.5.0):
+
+```
+$ cd raylib-4.5.0/
+$ mkdir build && cd build/
+$ cmake ..
+$ make
+```
+
+Build the *fortran-raylib* library by executing the provided Makefile:
 
 ```
 $ make
 ```
 
 You may have to overwrite the libraries to link (argument `LDLIBS`), depending
-on you operating system. Or, instead with *fpm*:
+on you operating system.
+
+Or, instead with *fpm*:
 
 ```
 $ fpm build --profile release --flag "-fno-range-check"
@@ -77,6 +90,12 @@ Build all examples with:
 
 ```
 $ make examples
+```
+
+To link against the static raylib library, run:
+
+```
+$ make examples RAYLIB=libraylib.a
 ```
 
 ## Compatibility

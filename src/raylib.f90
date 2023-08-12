@@ -1,7 +1,7 @@
 ! raylib.f90
 !
 ! A collection of auto-generated Fortran 2018 interface bindings to
-! raylib 4.2.
+! raylib 4.5.
 !
 ! Author:  Philipp Engel
 ! Licence: ISC
@@ -662,6 +662,7 @@ module raylib
     integer(kind=c_int), parameter, public :: BLEND_SUBTRACT_COLORS   = 4
     integer(kind=c_int), parameter, public :: BLEND_ALPHA_PREMULTIPLY = 5
     integer(kind=c_int), parameter, public :: BLEND_CUSTOM            = 6
+    integer(kind=c_int), parameter, public :: BLEND_CUSTOM_SEPARATE   = 7
 
     ! Gesture
     integer(kind=c_int), parameter, public :: GESTURE_NONE        = 0
@@ -692,6 +693,7 @@ module raylib
     integer(kind=c_int), parameter, public :: NPATCH_THREE_PATCH_VERTICAL   = 1
     integer(kind=c_int), parameter, public :: NPATCH_THREE_PATCH_HORIZONTAL = 2
 
+    public :: attach_audio_mixed_processor
     public :: begin_blend_mode
     public :: begin_drawing
     public :: begin_mode2d
@@ -706,6 +708,7 @@ module raylib
     public :: check_collision_lines
     public :: check_collision_point_circle
     public :: check_collision_point_line
+    public :: check_collision_point_poly
     public :: check_collision_point_rec
     public :: check_collision_point_triangle
     public :: check_collision_recs
@@ -716,12 +719,16 @@ module raylib
     public :: codepoint_to_utf8
     public :: color_alpha
     public :: color_alpha_blend
+    public :: color_brightness
+    public :: color_contrast
     public :: color_from_hsv
     public :: color_from_normalized
+    public :: color_tint
     public :: color_to_int
     public :: compress_data
     public :: decode_data_base64
     public :: decompress_data
+    public :: detach_audio_mixed_processor
     public :: directory_exists
     public :: disable_cursor
     public :: disable_event_waiting
@@ -729,6 +736,8 @@ module raylib
     public :: draw_billboard_pro
     public :: draw_billboard_rec
     public :: draw_bounding_box
+    public :: draw_capsule
+    public :: draw_capsule_wires
     public :: draw_circle
     public :: draw_circle3d
     public :: draw_circle_gradient
@@ -737,8 +746,6 @@ module raylib
     public :: draw_circle_sector_lines
     public :: draw_circle_v
     public :: draw_cube
-    public :: draw_cube_texture
-    public :: draw_cube_texture_rec
     public :: draw_cube_v
     public :: draw_cube_wires
     public :: draw_cube_wires_v
@@ -796,11 +803,8 @@ module raylib
     public :: draw_texture
     public :: draw_texture_ex
     public :: draw_texture_npatch
-    public :: draw_texture_poly
     public :: draw_texture_pro
-    public :: draw_texture_quad
     public :: draw_texture_rec
-    public :: draw_texture_tiled
     public :: draw_texture_v
     public :: draw_triangle
     public :: draw_triangle3d
@@ -835,6 +839,8 @@ module raylib
     public :: gen_image_gradient_h
     public :: gen_image_gradient_radial
     public :: gen_image_gradient_v
+    public :: gen_image_perlin_noise
+    public :: gen_image_text
     public :: gen_image_white_noise
     public :: gen_mesh_tangents
     public :: gen_texture_mipmaps
@@ -845,6 +851,8 @@ module raylib
     public :: get_clipboard_text
     public :: get_codepoint
     public :: get_codepoint_count
+    public :: get_codepoint_next
+    public :: get_codepoint_previous
     public :: get_collision_rec
     public :: get_color
     public :: get_current_monitor
@@ -899,7 +907,6 @@ module raylib
     public :: get_screen_width
     public :: get_shader_location
     public :: get_shader_location_attrib
-    public :: get_sounds_playing
     public :: get_time
     public :: get_touch_point_count
     public :: get_touch_point_id
@@ -913,6 +920,7 @@ module raylib
     public :: image_alpha_crop
     public :: image_alpha_mask
     public :: image_alpha_premultiply
+    public :: image_blur_gaussian
     public :: image_clear_background
     public :: image_color_brightness
     public :: image_color_contrast
@@ -925,6 +933,8 @@ module raylib
     public :: image_dither
     public :: image_draw
     public :: image_draw_circle
+    public :: image_draw_circle_lines
+    public :: image_draw_circle_lines_v
     public :: image_draw_circle_v
     public :: image_draw_line
     public :: image_draw_line_v
@@ -954,27 +964,38 @@ module raylib
     public :: is_audio_device_ready
     public :: is_audio_stream_playing
     public :: is_audio_stream_processed
+    public :: is_audio_stream_ready
     public :: is_cursor_hidden
     public :: is_cursor_on_screen
     public :: is_file_dropped
     public :: is_file_extension
+    public :: is_font_ready
     public :: is_gamepad_available
     public :: is_gamepad_button_down
     public :: is_gamepad_button_pressed
     public :: is_gamepad_button_released
     public :: is_gamepad_button_up
     public :: is_gesture_detected
+    public :: is_image_ready
     public :: is_key_down
     public :: is_key_pressed
     public :: is_key_released
     public :: is_key_up
+    public :: is_material_ready
+    public :: is_model_ready
     public :: is_mouse_button_down
     public :: is_mouse_button_pressed
     public :: is_mouse_button_released
     public :: is_mouse_button_up
+    public :: is_music_ready
     public :: is_music_stream_playing
     public :: is_path_file
+    public :: is_render_texture_ready
+    public :: is_shader_ready
     public :: is_sound_playing
+    public :: is_sound_ready
+    public :: is_texture_ready
+    public :: is_wave_ready
     public :: is_window_focused
     public :: is_window_fullscreen
     public :: is_window_hidden
@@ -1012,6 +1033,7 @@ module raylib
     public :: load_sound
     public :: load_sound_from_wave
     public :: load_texture_cubemap
+    public :: load_utf8
     public :: load_vr_stereo_config
     public :: load_wave
     public :: load_wave_from_memory
@@ -1029,7 +1051,6 @@ module raylib
     public :: play_audio_stream
     public :: play_music_stream
     public :: play_sound
-    public :: play_sound_multi
     public :: poll_input_events
     public :: restore_window
     public :: resume_audio_stream
@@ -1075,6 +1096,7 @@ module raylib
     public :: set_texture_wrap
     public :: set_trace_log_level
     public :: set_window_icon
+    public :: set_window_icons
     public :: set_window_min_size
     public :: set_window_monitor
     public :: set_window_opacity
@@ -1086,7 +1108,6 @@ module raylib
     public :: stop_audio_stream
     public :: stop_music_stream
     public :: stop_sound
-    public :: stop_sound_multi
     public :: swap_screen_buffer
     public :: take_screenshot
     public :: text_append
@@ -1118,12 +1139,12 @@ module raylib
     public :: unload_image_palette
     public :: unload_mesh
     public :: unload_model
-    public :: unload_model_keep_meshes
     public :: unload_music_stream
     public :: unload_render_texture
     public :: unload_shader
     public :: unload_sound
     public :: unload_texture
+    public :: unload_utf8
     public :: unload_vr_stereo_config
     public :: unload_wave
     public :: unload_wave_samples
@@ -1142,6 +1163,13 @@ module raylib
     public :: window_should_close
 
     interface
+        ! void AttachAudioMixedProcessor(AudioCallback processor)
+        subroutine attach_audio_mixed_processor(processor) bind(c, name='AttachAudioMixedProcessor')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: processor
+        end subroutine attach_audio_mixed_processor
+
         ! void BeginBlendMode(int mode)
         subroutine begin_blend_mode(mode) bind(c, name='BeginBlendMode')
             import :: c_int
@@ -1261,6 +1289,16 @@ module raylib
             logical(kind=c_bool)                   :: check_collision_point_line
         end function check_collision_point_line
 
+        ! bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
+        function check_collision_point_poly(point, points, point_count) bind(c, name='CheckCollisionPointPoly')
+            import :: c_bool, c_int, vector2_type
+            implicit none
+            type(vector2_type),  intent(in), value :: point
+            type(vector2_type),  intent(inout)     :: points(*)
+            integer(kind=c_int), intent(in), value :: point_count
+            logical(kind=c_bool)                   :: check_collision_point_poly
+        end function check_collision_point_poly
+
         ! bool CheckCollisionPointRec(Vector2 point, Rectangle rec)
         function check_collision_point_rec(point, rec) bind(c, name='CheckCollisionPointRec')
             import :: c_bool, rectangle_type, vector2_type
@@ -1312,12 +1350,12 @@ module raylib
         subroutine close_window() bind(c, name='CloseWindow')
         end subroutine close_window
 
-        ! const char *CodepointToUTF8(int codepoint, int *byteSize)
-        function codepoint_to_utf8(codepoint, byte_size) bind(c, name='CodepointToUTF8')
+        ! const char *CodepointToUTF8(int codepoint, int *utf8Size)
+        function codepoint_to_utf8(codepoint, utf8_size) bind(c, name='CodepointToUTF8')
             import :: c_int, c_ptr
             implicit none
             integer(kind=c_int), intent(in), value :: codepoint
-            integer(kind=c_int), intent(out)       :: byte_size
+            integer(kind=c_int), intent(out)       :: utf8_size
             type(c_ptr)                            :: codepoint_to_utf8
         end function codepoint_to_utf8
 
@@ -1340,6 +1378,24 @@ module raylib
             type(color_type)                    :: color_alpha_blend
         end function color_alpha_blend
 
+        ! Color ColorBrightness(Color color, float factor)
+        function color_brightness(color, factor) bind(c, name='ColorBrightness')
+            import :: c_float, color_type
+            implicit none
+            type(color_type),   intent(in), value :: color
+            real(kind=c_float), intent(in), value :: factor
+            type(color_type)                      :: color_brightness
+        end function color_brightness
+
+        ! Color ColorContrast(Color color, float contrast)
+        function color_contrast(color, contrast) bind(c, name='ColorContrast')
+            import :: c_float, color_type
+            implicit none
+            type(color_type),   intent(in), value :: color
+            real(kind=c_float), intent(in), value :: contrast
+            type(color_type)                      :: color_contrast
+        end function color_contrast
+
         ! Color ColorFromHSV(float hue, float saturation, float value)
         function color_from_hsv(hue, saturation, value) bind(c, name='ColorFromHSV')
             import :: c_float, color_type
@@ -1357,6 +1413,15 @@ module raylib
             type(vector4_type), intent(in), value :: normalized
             type(color_type)                      :: color_from_normalized
         end function color_from_normalized
+
+        ! Color ColorTint(Color color, Color tint)
+        function color_tint(color, tint) bind(c, name='ColorTint')
+            import :: color_type
+            implicit none
+            type(color_type), intent(in), value :: color
+            type(color_type), intent(in), value :: tint
+            type(color_type)                    :: color_tint
+        end function color_tint
 
         ! int ColorToInt(Color color)
         function color_to_int(color) bind(c, name='ColorToInt')
@@ -1394,6 +1459,13 @@ module raylib
             integer(kind=c_int),           intent(out)       :: data_size
             type(c_ptr)                                      :: decompress_data
         end function decompress_data
+
+        ! void DetachAudioMixedProcessor(AudioCallback processor)
+        subroutine detach_audio_mixed_processor(processor) bind(c, name='DetachAudioMixedProcessor')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: processor
+        end subroutine detach_audio_mixed_processor
 
         ! bool DirectoryExists(const char *dirPath)
         function directory_exists(dir_path) bind(c, name='DirectoryExists')
@@ -1457,6 +1529,30 @@ module raylib
             type(bounding_box_type), intent(in), value :: box
             type(color_type),        intent(in), value :: color
         end subroutine draw_bounding_box
+
+        ! void DrawCapsule(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color)
+        subroutine draw_capsule(start_pos, end_pos, radius, slices, rings, color) bind(c, name='DrawCapsule')
+            import :: c_float, c_int, color_type, vector3_type
+            implicit none
+            type(vector3_type),  intent(in), value :: start_pos
+            type(vector3_type),  intent(in), value :: end_pos
+            real(kind=c_float),  intent(in), value :: radius
+            integer(kind=c_int), intent(in), value :: slices
+            integer(kind=c_int), intent(in), value :: rings
+            type(color_type),    intent(in), value :: color
+        end subroutine draw_capsule
+
+        ! void DrawCapsuleWires(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color)
+        subroutine draw_capsule_wires(start_pos, end_pos, radius, slices, rings, color) bind(c, name='DrawCapsuleWires')
+            import :: c_float, c_int, color_type, vector3_type
+            implicit none
+            type(vector3_type),  intent(in), value :: start_pos
+            type(vector3_type),  intent(in), value :: end_pos
+            real(kind=c_float),  intent(in), value :: radius
+            integer(kind=c_int), intent(in), value :: slices
+            integer(kind=c_int), intent(in), value :: rings
+            type(color_type),    intent(in), value :: color
+        end subroutine draw_capsule_wires
 
         ! void DrawCircle(int centerX, int centerY, float radius, Color color)
         subroutine draw_circle(center_x, center_y, radius, color) bind(c, name='DrawCircle')
@@ -1545,32 +1641,6 @@ module raylib
             real(kind=c_float), intent(in), value :: length
             type(color_type),   intent(in), value :: color
         end subroutine draw_cube
-
-        ! void DrawCubeTexture(Texture2D texture, Vector3 position, float width, float height, float length, Color color)
-        subroutine draw_cube_texture(texture, position, width, height, length, color) bind(c, name='DrawCubeTexture')
-            import :: c_float, color_type, texture2d_type, vector3_type
-            implicit none
-            type(texture2d_type), intent(in), value :: texture
-            type(vector3_type),   intent(in), value :: position
-            real(kind=c_float),   intent(in), value :: width
-            real(kind=c_float),   intent(in), value :: height
-            real(kind=c_float),   intent(in), value :: length
-            type(color_type),     intent(in), value :: color
-        end subroutine draw_cube_texture
-
-        ! void DrawCubeTextureRec(Texture2D texture, Rectangle source, Vector3 position, float width, float height, float length, Color color)
-        subroutine draw_cube_texture_rec(texture, source, position, width, height, length, color) &
-                bind(c, name='DrawCubeTextureRec')
-            import :: c_float, color_type, rectangle_type, texture2d_type, vector3_type
-            implicit none
-            type(texture2d_type), intent(in), value :: texture
-            type(rectangle_type), intent(in), value :: source
-            type(vector3_type),   intent(in), value :: position
-            real(kind=c_float),   intent(in), value :: width
-            real(kind=c_float),   intent(in), value :: height
-            real(kind=c_float),   intent(in), value :: length
-            type(color_type),     intent(in), value :: color
-        end subroutine draw_cube_texture_rec
 
         ! void DrawCubeV(Vector3 position, Vector3 size, Color color)
         subroutine draw_cube_v(position, size, color) bind(c, name='DrawCubeV')
@@ -1758,7 +1828,7 @@ module raylib
         subroutine draw_line_strip(points, point_count, color) bind(c, name='DrawLineStrip')
             import :: c_int, color_type, vector2_type
             implicit none
-            type(vector2_type),  intent(inout)     :: points
+            type(vector2_type),  intent(inout)     :: points(*)
             integer(kind=c_int), intent(in), value :: point_count
             type(color_type),    intent(in), value :: color
         end subroutine draw_line_strip
@@ -2127,7 +2197,7 @@ module raylib
             import :: c_float, c_int, color_type, font_type, vector2_type
             implicit none
             type(font_type),     intent(in), value :: font
-            integer(kind=c_int), intent(inout)     :: codepoints
+            integer(kind=c_int), intent(inout)     :: codepoints(*)
             integer(kind=c_int), intent(in), value :: count
             type(vector2_type),  intent(in), value :: position
             real(kind=c_float),  intent(in), value :: font_size
@@ -2196,19 +2266,6 @@ module raylib
             type(color_type),       intent(in), value :: tint
         end subroutine draw_texture_npatch
 
-        ! void DrawTexturePoly(Texture2D texture, Vector2 center, Vector2 *points, Vector2 *texcoords, int pointCount, Color tint)
-        subroutine draw_texture_poly(texture, center, points, texcoords, point_count, tint) &
-                bind(c, name='DrawTexturePoly')
-            import :: c_int, color_type, texture2d_type, vector2_type
-            implicit none
-            type(texture2d_type), intent(in), value :: texture
-            type(vector2_type),   intent(in), value :: center
-            type(vector2_type),   intent(inout)     :: points
-            type(vector2_type),   intent(inout)     :: texcoords
-            integer(kind=c_int),  intent(in), value :: point_count
-            type(color_type),     intent(in), value :: tint
-        end subroutine draw_texture_poly
-
         ! void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint)
         subroutine draw_texture_pro(texture, source, dest, origin, rotation, tint) bind(c, name='DrawTexturePro')
             import :: c_float, color_type, rectangle_type, texture2d_type, vector2_type
@@ -2221,17 +2278,6 @@ module raylib
             type(color_type),     intent(in), value :: tint
         end subroutine draw_texture_pro
 
-        ! void DrawTextureQuad(Texture2D texture, Vector2 tiling, Vector2 offset, Rectangle quad, Color tint)
-        subroutine draw_texture_quad(texture, tiling, offset, quad, tint) bind(c, name='DrawTextureQuad')
-            import :: color_type, rectangle_type, texture2d_type, vector2_type
-            implicit none
-            type(texture2d_type), intent(in), value :: texture
-            type(vector2_type),   intent(in), value :: tiling
-            type(vector2_type),   intent(in), value :: offset
-            type(rectangle_type), intent(in), value :: quad
-            type(color_type),     intent(in), value :: tint
-        end subroutine draw_texture_quad
-
         ! void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint)
         subroutine draw_texture_rec(texture, source, position, tint) bind(c, name='DrawTextureRec')
             import :: color_type, rectangle_type, texture2d_type, vector2_type
@@ -2241,19 +2287,6 @@ module raylib
             type(vector2_type),   intent(in), value :: position
             type(color_type),     intent(in), value :: tint
         end subroutine draw_texture_rec
-
-        ! void DrawTextureTiled(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, float scale, Color tint)
-        subroutine draw_texture_tiled(texture, source, dest, origin, rotation, scale, tint) bind(c, name='DrawTextureTiled')
-            import :: c_float, color_type, rectangle_type, texture2d_type, vector2_type
-            implicit none
-            type(texture2d_type), intent(in), value :: texture
-            type(rectangle_type), intent(in), value :: source
-            type(rectangle_type), intent(in), value :: dest
-            type(vector2_type),   intent(in), value :: origin
-            real(kind=c_float),   intent(in), value :: rotation
-            real(kind=c_float),   intent(in), value :: scale
-            type(color_type),     intent(in), value :: tint
-        end subroutine draw_texture_tiled
 
         ! void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
         subroutine draw_texture_v(texture, position, tint) bind(c, name='DrawTextureV')
@@ -2288,7 +2321,7 @@ module raylib
         subroutine draw_triangle_fan(points, point_count, color) bind(c, name='DrawTriangleFan')
             import :: c_int, color_type, vector2_type
             implicit none
-            type(vector2_type),  intent(inout)     :: points
+            type(vector2_type),  intent(inout)     :: points(*)
             integer(kind=c_int), intent(in), value :: point_count
             type(color_type),    intent(in), value :: color
         end subroutine draw_triangle_fan
@@ -2307,7 +2340,7 @@ module raylib
         subroutine draw_triangle_strip(points, point_count, color) bind(c, name='DrawTriangleStrip')
             import :: c_int, color_type, vector2_type
             implicit none
-            type(vector2_type),  intent(inout)     :: points
+            type(vector2_type),  intent(inout)     :: points(*)
             integer(kind=c_int), intent(in), value :: point_count
             type(color_type),    intent(in), value :: color
         end subroutine draw_triangle_strip
@@ -2362,14 +2395,14 @@ module raylib
         subroutine end_vr_stereo_mode() bind(c, name='EndVrStereoMode')
         end subroutine end_vr_stereo_mode
 
-        ! bool ExportDataAsCode(const char *data, unsigned int size, const char *fileName)
+        ! bool ExportDataAsCode(const unsigned char *data, unsigned int size, const char *fileName)
         function export_data_as_code(data, size, file_name) bind(c, name='ExportDataAsCode')
-            import :: c_bool, c_char, c_unsigned_int
+            import :: c_bool, c_char, c_unsigned_char, c_unsigned_int
             implicit none
-            character(kind=c_char),       intent(inout)     :: data
-            integer(kind=c_unsigned_int), intent(in), value :: size
-            character(kind=c_char),       intent(in)        :: file_name
-            logical(kind=c_bool)                            :: export_data_as_code
+            integer(kind=c_unsigned_char), intent(in)        :: data
+            integer(kind=c_unsigned_int),  intent(in), value :: size
+            character(kind=c_char),        intent(in)        :: file_name
+            logical(kind=c_bool)                             :: export_data_as_code
         end function export_data_as_code
 
         ! bool ExportFontAsCode(Font font, const char *fileName)
@@ -2534,6 +2567,28 @@ module raylib
             type(image_type)                       :: gen_image_white_noise
         end function gen_image_white_noise
 
+        ! Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float scale)
+        function gen_image_perlin_noise(width, height, offset_x, offset_y, scale) bind(c, name='GenImagePerlinNoise')
+            import :: c_float, c_int, image_type
+            implicit none
+            integer(kind=c_int), intent(in), value :: width
+            integer(kind=c_int), intent(in), value :: height
+            integer(kind=c_int), intent(in), value :: offset_x
+            integer(kind=c_int), intent(in), value :: offset_y
+            real(kind=c_float),  intent(in), value :: scale
+            type(image_type)                       :: gen_image_perlin_noise
+        end function gen_image_perlin_noise
+
+        ! Image GenImageText(int width, int height, const char *text)
+        function gen_image_text(width, height, text) bind(c, name='GenImageText')
+            import :: c_char, c_int, image_type
+            implicit none
+            integer(kind=c_int),    intent(in), value :: width
+            integer(kind=c_int),    intent(in), value :: height
+            character(kind=c_char), intent(in)        :: text
+            type(image_type)                          :: gen_image_text
+        end function gen_image_text
+
         ! void GenMeshTangents(Mesh *mesh)
         subroutine gen_mesh_tangents(mesh) bind(c, name='GenMeshTangents')
             import :: mesh_type
@@ -2585,12 +2640,12 @@ module raylib
             type(c_ptr) :: get_clipboard_text
         end function get_clipboard_text
 
-        ! int GetCodepoint(const char *text, int *bytesProcessed)
-        function get_codepoint(text, bytes_processed) bind(c, name='GetCodepoint')
+        ! int GetCodepoint(const char *text, int *codepointSize)
+        function get_codepoint(text, codepoint_size) bind(c, name='GetCodepoint')
             import :: c_char, c_int
             implicit none
             character(kind=c_char), intent(in)  :: text
-            integer(kind=c_int),    intent(out) :: bytes_processed
+            integer(kind=c_int),    intent(out) :: codepoint_size
             integer(kind=c_int)                 :: get_codepoint
         end function get_codepoint
 
@@ -2601,6 +2656,24 @@ module raylib
             character(kind=c_char), intent(in) :: text
             integer(kind=c_int)                :: get_codepoint_count
         end function get_codepoint_count
+
+        ! int GetCodepointNext(const char *text, int *codepointSize)
+        function get_codepoint_next(text, codepoint_size) bind(c, name='GetCodepointNext')
+            import :: c_char, c_int
+            implicit none
+            character(kind=c_char), intent(in)  :: text
+            integer(kind=c_int),    intent(out) :: codepoint_size
+            integer(kind=c_int)                 :: get_codepoint_next
+        end function get_codepoint_next
+
+        ! int GetCodepointPrevious(const char *text, int *codepointSize)
+        function get_codepoint_previous(text, codepoint_size) bind(c, name='GetCodepointPrevious')
+            import :: c_char, c_int
+            implicit none
+            character(kind=c_char), intent(in)  :: text
+            integer(kind=c_int),    intent(out) :: codepoint_size
+            integer(kind=c_int)                 :: get_codepoint_previous
+        end function get_codepoint_previous
 
         ! Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2)
         function get_collision_rec(rec1, rec2) bind(c, name='GetCollisionRec')
@@ -2790,6 +2863,14 @@ module raylib
             real(kind=c_float), intent(in), value :: threshold
             type(rectangle_type)                  :: get_image_alpha_border
         end function get_image_alpha_border
+
+        ! void ImageBlurGaussian(Image *image, int blurSize)
+        subroutine image_blur_gaussian(image, blur_size) bind(c, name='ImageBlurGaussian')
+            import :: c_int, image_type
+            implicit none
+            type(image_type),    intent(inout)     :: image
+            integer(kind=c_int), intent(in), value :: blur_size
+        end subroutine image_blur_gaussian
 
         ! Color GetImageColor(Image image, int x, int y)
         function get_image_color(image, x, y) bind(c, name='GetImageColor')
@@ -3030,13 +3111,6 @@ module raylib
             integer(kind=c_int)                       :: get_shader_location_attrib
         end function get_shader_location_attrib
 
-        ! int GetSoundsPlaying(void)
-        function get_sounds_playing() bind(c, name='GetSoundsPlaying')
-            import :: c_int
-            implicit none
-            integer(kind=c_int) :: get_sounds_playing
-        end function get_sounds_playing
-
         ! double GetTime(void)
         function get_time() bind(c, name='GetTime')
             import :: c_double
@@ -3235,6 +3309,27 @@ module raylib
             integer(kind=c_int), intent(in), value :: radius
             type(color_type),    intent(in), value :: color
         end subroutine image_draw_circle
+
+        ! void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color)
+        subroutine image_draw_circle_lines(dst, center_x, center_y, radius, color) bind(c, name='ImageDrawCircleLines')
+            import :: c_int, color_type, image_type
+            implicit none
+            type(image_type),    intent(inout)     :: dst
+            integer(kind=c_int), intent(in), value :: center_x
+            integer(kind=c_int), intent(in), value :: center_y
+            integer(kind=c_int), intent(in), value :: radius
+            type(color_type),    intent(in), value :: color
+        end subroutine image_draw_circle_lines
+
+        ! void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
+        subroutine image_draw_circle_lines_v(dst, center, radius, color) bind(c, name='ImageDrawCircleLinesV')
+            import :: c_int, color_type, image_type, vector2_type
+            implicit none
+            type(image_type),    intent(inout)     :: dst
+            type(vector2_type),  intent(in), value :: center
+            integer(kind=c_int), intent(in), value :: radius
+            type(color_type),    intent(in), value :: color
+        end subroutine image_draw_circle_lines_v
 
         ! void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color)
         subroutine image_draw_circle_v(dst, center, radius, color) bind(c, name='ImageDrawCircleV')
@@ -3502,6 +3597,14 @@ module raylib
             logical(kind=c_bool)                       :: is_audio_stream_processed
         end function is_audio_stream_processed
 
+        ! bool IsAudioStreamReady(AudioStream stream)
+        function is_audio_stream_ready(stream) bind(c, name='IsAudioStreamReady')
+            import :: audio_stream_type, c_bool
+            implicit none
+            type(audio_stream_type), intent(in), value :: stream
+            logical(kind=c_bool)                       :: is_audio_stream_ready
+        end function is_audio_stream_ready
+
         ! bool IsCursorHidden(void)
         function is_cursor_hidden() bind(c, name='IsCursorHidden')
             import :: c_bool
@@ -3531,6 +3634,14 @@ module raylib
             character(kind=c_char), intent(in) :: ext
             logical(kind=c_bool)               :: is_file_extension
         end function is_file_extension
+
+        ! bool IsFontReady(Font font)
+        function is_font_ready(font) bind(c, name='IsFontReady')
+            import :: c_bool, font_type
+            implicit none
+            type(font_type), intent(in), value :: font
+            logical(kind=c_bool)               :: is_font_ready
+        end function is_font_ready
 
         ! bool IsGamepadAvailable(int gamepad)
         function is_gamepad_available(gamepad) bind(c, name='IsGamepadAvailable')
@@ -3584,6 +3695,14 @@ module raylib
             logical(kind=c_bool)                   :: is_gesture_detected
         end function is_gesture_detected
 
+        ! bool IsImageReady(Image image)
+        function is_image_ready(image) bind(c, name='IsImageReady')
+            import :: c_bool, image_type
+            implicit none
+            type(image_type), intent(in), value :: image
+            logical(kind=c_bool)                :: is_image_ready
+        end function is_image_ready
+
         ! bool IsKeyDown(int key)
         function is_key_down(key) bind(c, name='IsKeyDown')
             import :: c_bool, c_int
@@ -3615,6 +3734,22 @@ module raylib
             integer(kind=c_int), intent(in), value :: key
             logical(kind=c_bool)                   :: is_key_up
         end function is_key_up
+
+        ! bool IsMaterialReady(Material material)
+        function is_material_ready(material) bind(c, name='IsMaterialReady')
+            import :: c_bool, material_type
+            implicit none
+            type(material_type), intent(in), value :: material
+            logical(kind=c_bool)                   :: is_material_ready
+        end function is_material_ready
+
+        ! bool IsModelReady(Model model)
+        function is_model_ready(model) bind(c, name='IsModelReady')
+            import :: c_bool, model_type
+            implicit none
+            type(model_type), intent(in), value :: model
+            logical(kind=c_bool)                :: is_model_ready
+        end function is_model_ready
 
         ! bool IsMouseButtonDown(int button)
         function is_mouse_button_down(button) bind(c, name='IsMouseButtonDown')
@@ -3648,6 +3783,14 @@ module raylib
             logical(kind=c_bool)                   :: is_mouse_button_up
         end function is_mouse_button_up
 
+        ! bool IsMusicReady(Music music)
+        function is_music_ready(music) bind(c, name='IsMusicReady')
+            import :: c_bool, music_type
+            implicit none
+            type(music_type), intent(in), value :: music
+            logical(kind=c_bool)                :: is_music_ready
+        end function is_music_ready
+
         ! bool IsMusicStreamPlaying(Music music)
         function is_music_stream_playing(music) bind(c, name='IsMusicStreamPlaying')
             import :: c_bool, music_type
@@ -3664,6 +3807,22 @@ module raylib
             logical(kind=c_bool)               :: is_path_file
         end function is_path_file
 
+        ! bool IsRenderTextureReady(RenderTexture2D target)
+        function is_render_texture_ready(target) bind(c, name='IsRenderTextureReady')
+            import :: c_bool, render_texture2d_type
+            implicit none
+            type(render_texture2d_type), intent(in), value :: target
+            logical(kind=c_bool)                           :: is_render_texture_ready
+        end function is_render_texture_ready
+
+        ! bool IsShaderReady(Shader shader)
+        function is_shader_ready(shader) bind(c, name='IsShaderReady')
+            import :: c_bool, shader_type
+            implicit none
+            type(shader_type), intent(in), value :: shader
+            logical(kind=c_bool)                 :: is_shader_ready
+        end function is_shader_ready
+
         ! bool IsSoundPlaying(Sound sound)
         function is_sound_playing(sound) bind(c, name='IsSoundPlaying')
             import :: c_bool, sound_type
@@ -3671,6 +3830,30 @@ module raylib
             type(sound_type), intent(in), value :: sound
             logical(kind=c_bool)                :: is_sound_playing
         end function is_sound_playing
+
+        ! bool IsSoundReady(Sound sound)
+        function is_sound_ready(sound) bind(c, name='IsSoundReady')
+            import :: c_bool, sound_type
+            implicit none
+            type(sound_type), intent(in), value :: sound
+            logical(kind=c_bool)                :: is_sound_ready
+        end function is_sound_ready
+
+        ! bool IsTextureReady(Texture2D texture)
+        function is_texture_ready(texture) bind(c, name='IsTextureReady')
+            import :: c_bool, texture2d_type
+            implicit none
+            type(texture2d_type), intent(in), value :: texture
+            logical(kind=c_bool)                    :: is_texture_ready
+        end function is_texture_ready
+
+        ! bool IsWaveReady(Wave wave)
+        function is_wave_ready(wave) bind(c, name='IsWaveReady')
+            import :: c_bool, wave_type
+            implicit none
+            type(wave_type), intent(in), value :: wave
+            logical(kind=c_bool)               :: is_wave_ready
+        end function is_wave_ready
 
         ! bool IsWindowFocused(void)
         function is_window_focused() bind(c, name='IsWindowFocused')
@@ -3996,6 +4179,15 @@ module raylib
             type(texture_cubemap_type)             :: load_texture_cubemap
         end function load_texture_cubemap
 
+        ! char *LoadUTF8(const int *codepoints, int length)
+        function load_utf8(codepoints, length) bind(c, name='LoadUTF8')
+            import :: c_int, c_ptr
+            implicit none
+            integer(kind=c_int), intent(out)       :: codepoints(*)
+            integer(kind=c_int), intent(in), value :: length
+            type(c_ptr)                            :: load_utf8
+        end function load_utf8
+
         ! VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device)
         function load_vr_stereo_config(device) bind(c, name='LoadVrStereoConfig')
             import :: vr_device_info_type, vr_stereo_config_type
@@ -4043,12 +4235,12 @@ module raylib
             integer(kind=c_int)                       :: measure_text
         end function measure_text
 
-        ! void *MemAlloc(int size)
+        ! void *MemAlloc(unsigned int size)
         function mem_alloc(size) bind(c, name='MemAlloc')
-            import :: c_int, c_ptr
+            import :: c_ptr, c_unsigned_int
             implicit none
-            integer(kind=c_int), intent(in), value :: size
-            type(c_ptr)                            :: mem_alloc
+            integer(kind=c_unsigned_int), intent(in), value :: size
+            type(c_ptr)                                     :: mem_alloc
         end function mem_alloc
 
         ! void MemFree(void *ptr)
@@ -4058,13 +4250,13 @@ module raylib
             type(c_ptr), intent(in), value :: ptr
         end subroutine mem_free
 
-        ! void *MemRealloc(void *ptr, int size)
+        ! void *MemRealloc(void *ptr, unsigned int size)
         function mem_realloc(ptr, size) bind(c, name='MemRealloc')
-            import :: c_int, c_ptr
+            import :: c_ptr, c_unsigned_int
             implicit none
-            type(c_ptr),         intent(in), value :: ptr
-            integer(kind=c_int), intent(in), value :: size
-            type(c_ptr)                            :: mem_realloc
+            type(c_ptr),                  intent(in), value :: ptr
+            integer(kind=c_unsigned_int), intent(in), value :: size
+            type(c_ptr)                                     :: mem_realloc
         end function mem_realloc
 
         ! void MinimizeWindow(void)
@@ -4119,13 +4311,6 @@ module raylib
             implicit none
             type(sound_type), intent(in), value :: sound
         end subroutine play_sound
-
-        ! void PlaySoundMulti(Sound sound)
-        subroutine play_sound_multi(sound) bind(c, name='PlaySoundMulti')
-            import :: sound_type
-            implicit none
-            type(sound_type), intent(in), value :: sound
-        end subroutine play_sound_multi
 
         ! void PollInputEvents(void)
         subroutine poll_input_events() bind(c, name='PollInputEvents')
@@ -4478,6 +4663,14 @@ module raylib
             type(image_type), intent(in), value :: image
         end subroutine set_window_icon
 
+        ! void SetWindowIcons(Image *images, int count)
+        subroutine set_window_icons(images, count) bind(c, name='SetWindowIcons')
+            import :: c_int, image_type
+            implicit none
+            type(image_type),    intent(inout)     :: images
+            integer(kind=c_int), intent(in), value :: count
+        end subroutine set_window_icons
+
         ! void SetWindowMinSize(int width, int height)
         subroutine set_window_min_size(width, height) bind(c, name='SetWindowMinSize')
             import :: c_int
@@ -4554,10 +4747,6 @@ module raylib
             implicit none
             type(sound_type), intent(in), value :: sound
         end subroutine stop_sound
-
-        ! void StopSoundMulti(void)
-        subroutine stop_sound_multi() bind(c, name='StopSoundMulti')
-        end subroutine stop_sound_multi
 
         ! void SwapScreenBuffer(void)
         subroutine swap_screen_buffer() bind(c, name='SwapScreenBuffer')
@@ -4800,13 +4989,6 @@ module raylib
             type(model_type), intent(in), value :: model
         end subroutine unload_model
 
-        ! void UnloadModelKeepMeshes(Model model)
-        subroutine unload_model_keep_meshes(model) bind(c, name='UnloadModelKeepMeshes')
-            import :: model_type
-            implicit none
-            type(model_type), intent(in), value :: model
-        end subroutine unload_model_keep_meshes
-
         ! void UnloadMusicStream(Music music)
         subroutine unload_music_stream(music) bind(c, name='UnloadMusicStream')
             import :: music_type
@@ -4841,6 +5023,13 @@ module raylib
             implicit none
             type(texture2d_type), intent(in), value :: texture
         end subroutine unload_texture
+
+        ! void UnloadUTF8(char *text)
+        subroutine unload_utf8(text) bind(c, name='UnloadUTF8')
+            import :: c_char
+            implicit none
+            character(kind=c_char), intent(in) :: text
+        end subroutine unload_utf8
 
         ! void UnloadVrStereoConfig(VrStereoConfig config)
         subroutine unload_vr_stereo_config(config) bind(c, name='UnloadVrStereoConfig')

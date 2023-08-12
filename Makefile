@@ -5,8 +5,9 @@ FC      = gfortran
 AR      = ar
 FFLAGS  = -std=f2018 -Wall -Wno-conversion -fmax-errors=1 -fno-range-check
 ARFLAGS = rcs
-LDFLAGS = -L/usr/local/lib -I/usr/local/include
-LDLIBS  = -lraylib -lGL -lpthread -lm
+LDFLAGS = -L/usr/local/lib/ -I./include/
+RAYLIB  = -lraylib
+LDLIBS  = $(RAYLIB) -lGL -lpthread -lm
 TARGET  = libfortran-raylib.a
 
 .PHONY: all clean examples
