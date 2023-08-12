@@ -13,7 +13,19 @@ $ make
 ```
 
 You may have to overwrite the libraries to link (argument `LDLIBS`), depending
-on you operating system.
+on you operating system. Or, instead with *fpm*:
+
+```
+$ fpm build --profile release --flag "-fno-range-check"
+```
+
+Alternatively, you can add *fortran-raylib* as a dependency to the `fpm.toml` of
+your project:
+
+```toml
+[dependencies]
+fortran-raylib = { git = "https://github.com/interkosmos/fortran-raylib.git" }
+```
 
 ## Example
 

@@ -1,0 +1,37 @@
+name = "fortran-raylib"
+version = "0.1.0"
+license = "ISC"
+author = "Philipp Engel"
+maintainer = "@interkosmos"
+copyright = "Copyright (c) 2023, Philipp Engel"
+description = "Fortran 2018 ISO C binding interfaces to raylib"
+keywords = [ "graphics", "raylib" ]
+
+[build]
+link = [ "raylib", "GL", "pthread", "m" ]
+
+[library]
+source-dir = "src"
+
+[install]
+library = true
+
+[[executable]]
+name = "camera"
+source-dir = "examples"
+main = "camera.f90"
+
+[[executable]]
+name = "flags"
+source-dir = "examples"
+main = "flags.f90"
+
+[[executable]]
+name = "keys"
+source-dir = "examples"
+main = "keys.f90"
+
+[[executable]]
+name = "window"
+source-dir = "examples"
+main = "window.f90"
