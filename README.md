@@ -4,7 +4,6 @@ A work-in-progress collection of interface bindings to
 [raylib](https://www.raylib.com/) 4.5, for 2-D and 3-D game programming in
 Fortran 2018.
 
-
 ## Build Instructions
 
 Install the raylib package suitable for your operating system, or build from
@@ -13,7 +12,7 @@ Install the raylib package suitable for your operating system, or build from
 ```
 $ cd raylib-4.5.0/
 $ mkdir build && cd build/
-$ cmake ..
+$ cmake -DUSE_EXTERNAL_GLFW=ON ..
 $ make
 ```
 
@@ -39,6 +38,18 @@ your project:
 [dependencies]
 fortran-raylib = { git = "https://github.com/interkosmos/fortran-raylib.git" }
 ```
+
+Link your Fortran application against `libfortran-raylib.a`, `-lraylib`, and
+additional platform-dependent libraries:
+
+| System          | Linker Libraries                                                                                         |
+|-----------------|----------------------------------------------------------------------------------------------------------|
+| FreeBSD         | `-lraylib -lglfw -lGL -lpthread -lm`                                                                     |
+| Linux           | `-lraylib -lGL -lm -lpthread -ldl -lrt -lX11`                                                            |
+| Linux (Wayland) | `-lraylib -lGL -lm -lpthread -ldl -lrt -lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon`      |
+| macOS           | `-lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo` |
+| Raspberry Pi    | `-lraylib -lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl -latomic`                            |
+| Windows         | `-lraylib -lopengl32 -lgdi32 -lwinmm`                                                                    |
 
 ## Example
 
@@ -68,12 +79,11 @@ program main
 end program main
 ```
 
-Link the example against `libfortran-raylib.a`, `-lraylib`, and additional
-platform-dependent libraries:
+Compile and link the example program:
 
 ```
 $ gfortran -L/usr/local/lib -I/usr/local/include -o example example.f90 \
-  libfortran-raylib.a -lraylib -lGL -lpthread -lm
+  libfortran-raylib.a -lraylib -lGL -lglfw -lpthread -lm
 $ ./example
 ```
 
@@ -83,6 +93,7 @@ More examples can be found in `examples/`:
 
 * **camera** renders a cube in 3-D.
 * **flags** shows window flags.
+* **fly** renders a 3-D scene, with keyboard and mouse controls.
 * **keys** demonstrates keyboard input.
 * **window** opens a window with raylib.
 

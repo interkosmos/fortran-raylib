@@ -27,6 +27,11 @@ source-dir = "examples"
 main = "flags.f90"
 
 [[executable]]
+name = "fly"
+source-dir = "examples"
+main = "fly.f90"
+
+[[executable]]
 name = "keys"
 source-dir = "examples"
 main = "keys.f90"

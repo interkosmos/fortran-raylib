@@ -25,6 +25,7 @@ program main
 
     call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
     call set_target_fps(60)
+    call hide_cursor()
 
     ball_pos    = vector2_type(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0)
     ball_speed  = vector2_type(5.0, 4.0)
