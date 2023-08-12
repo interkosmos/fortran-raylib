@@ -1,6 +1,7 @@
 ! raylib.f90
 !
-! A collection of auto-generated Fortran 2018 interface bindings to raylib.
+! A collection of auto-generated Fortran 2018 interface bindings to
+! raylib 4.2.
 !
 ! Author:  Philipp Engel
 ! Licence: ISC
@@ -140,8 +141,8 @@ module raylib
         integer(kind=c_int)  :: glyph_count   = 0
         integer(kind=c_int)  :: glyph_padding = 0
         type(texture2d_type) :: texture
-        type(c_ptr)          :: recs   !! Rectangle
-        type(c_ptr)          :: glyphs !! GlyphInfo
+        type(c_ptr)          :: recs   !! Rectangle *
+        type(c_ptr)          :: glyphs !! GlyphInfo *
     end type font_type
 
     ! Camera3D
@@ -693,8 +694,8 @@ module raylib
 
     public :: begin_blend_mode
     public :: begin_drawing
-    public :: begin_mode_2d
-    public :: begin_mode_3d
+    public :: begin_mode2d
+    public :: begin_mode3d
     public :: begin_scissor_mode
     public :: begin_shader_mode
     public :: begin_texture_mode
@@ -712,12 +713,14 @@ module raylib
     public :: clear_window_state
     public :: close_audio_device
     public :: close_window
+    public :: codepoint_to_utf8
     public :: color_alpha
     public :: color_alpha_blend
-    public :: color_from_h_s_v
+    public :: color_from_hsv
     public :: color_from_normalized
     public :: color_to_int
     public :: compress_data
+    public :: decode_data_base64
     public :: decompress_data
     public :: directory_exists
     public :: disable_cursor
@@ -727,6 +730,7 @@ module raylib
     public :: draw_billboard_rec
     public :: draw_bounding_box
     public :: draw_circle
+    public :: draw_circle3d
     public :: draw_circle_gradient
     public :: draw_circle_lines
     public :: draw_circle_sector
@@ -747,6 +751,7 @@ module raylib
     public :: draw_fps
     public :: draw_grid
     public :: draw_line
+    public :: draw_line3d
     public :: draw_line_bezier
     public :: draw_line_bezier_cubic
     public :: draw_line_bezier_quad
@@ -762,6 +767,7 @@ module raylib
     public :: draw_pixel
     public :: draw_pixel_v
     public :: draw_plane
+    public :: draw_point3d
     public :: draw_poly
     public :: draw_poly_lines
     public :: draw_poly_lines_ex
@@ -789,7 +795,7 @@ module raylib
     public :: draw_text_pro
     public :: draw_texture
     public :: draw_texture_ex
-    public :: draw_texture_n_patch
+    public :: draw_texture_npatch
     public :: draw_texture_poly
     public :: draw_texture_pro
     public :: draw_texture_quad
@@ -797,15 +803,18 @@ module raylib
     public :: draw_texture_tiled
     public :: draw_texture_v
     public :: draw_triangle
+    public :: draw_triangle3d
     public :: draw_triangle_fan
     public :: draw_triangle_lines
     public :: draw_triangle_strip
+    public :: draw_triangle_strip3d
     public :: enable_cursor
     public :: enable_event_waiting
+    public :: encode_data_base64
     public :: end_blend_mode
     public :: end_drawing
-    public :: end_mode_2d
-    public :: end_mode_3d
+    public :: end_mode2d
+    public :: end_mode3d
     public :: end_scissor_mode
     public :: end_shader_mode
     public :: end_texture_mode
@@ -831,6 +840,7 @@ module raylib
     public :: gen_texture_mipmaps
     public :: get_application_directory
     public :: get_camera_matrix
+    public :: get_camera_matrix2d
     public :: get_char_pressed
     public :: get_clipboard_text
     public :: get_codepoint
@@ -885,6 +895,7 @@ module raylib
     public :: get_render_height
     public :: get_render_width
     public :: get_screen_height
+    public :: get_screen_to_world2d
     public :: get_screen_width
     public :: get_shader_location
     public :: get_shader_location_attrib
@@ -896,6 +907,7 @@ module raylib
     public :: get_touch_y
     public :: get_window_handle
     public :: get_working_directory
+    public :: get_world_to_screen2d
     public :: hide_cursor
     public :: image_alpha_clear
     public :: image_alpha_crop
@@ -931,12 +943,12 @@ module raylib
     public :: image_mipmaps
     public :: image_resize
     public :: image_resize_canvas
-    public :: image_resize_n_n
-    public :: image_rotate_c_c_w
-    public :: image_rotate_c_w
+    public :: image_resize_nn
+    public :: image_rotate_ccw
+    public :: image_rotate_cw
     public :: image_text
     public :: image_text_ex
-    public :: image_to_p_o_t
+    public :: image_to_pot
     public :: init_audio_device
     public :: init_window
     public :: is_audio_device_ready
@@ -1010,7 +1022,7 @@ module raylib
     public :: mem_free
     public :: mem_realloc
     public :: minimize_window
-    public :: open_u_r_l
+    public :: open_url
     public :: pause_audio_stream
     public :: pause_music_stream
     public :: pause_sound
@@ -1129,10 +1141,6 @@ module raylib
     public :: wave_format
     public :: window_should_close
 
-    public :: c_f_str_ptr
-
-    private :: copy
-
     interface
         ! void BeginBlendMode(int mode)
         subroutine begin_blend_mode(mode) bind(c, name='BeginBlendMode')
@@ -1146,18 +1154,18 @@ module raylib
         end subroutine begin_drawing
 
         ! void BeginMode2D(Camera2D camera)
-        subroutine begin_mode_2d(camera) bind(c, name='BeginMode2D')
+        subroutine begin_mode2d(camera) bind(c, name='BeginMode2D')
             import :: camera2d_type
             implicit none
             type(camera2d_type), intent(in), value :: camera
-        end subroutine begin_mode_2d
+        end subroutine begin_mode2d
 
         ! void BeginMode3D(Camera3D camera)
-        subroutine begin_mode_3d(camera) bind(c, name='BeginMode3D')
+        subroutine begin_mode3d(camera) bind(c, name='BeginMode3D')
             import :: camera3d_type
             implicit none
             type(camera3d_type), intent(in), value :: camera
-        end subroutine begin_mode_3d
+        end subroutine begin_mode3d
 
         ! void BeginScissorMode(int x, int y, int width, int height)
         subroutine begin_scissor_mode(x, y, width, height) bind(c, name='BeginScissorMode')
@@ -1304,6 +1312,15 @@ module raylib
         subroutine close_window() bind(c, name='CloseWindow')
         end subroutine close_window
 
+        ! const char *CodepointToUTF8(int codepoint, int *byteSize)
+        function codepoint_to_utf8(codepoint, byte_size) bind(c, name='CodepointToUTF8')
+            import :: c_int, c_ptr
+            implicit none
+            integer(kind=c_int), intent(in), value :: codepoint
+            integer(kind=c_int), intent(out)       :: byte_size
+            type(c_ptr)                            :: codepoint_to_utf8
+        end function codepoint_to_utf8
+
         ! Color ColorAlpha(Color color, float alpha)
         function color_alpha(color, alpha) bind(c, name='ColorAlpha')
             import :: c_float, color_type
@@ -1324,14 +1341,14 @@ module raylib
         end function color_alpha_blend
 
         ! Color ColorFromHSV(float hue, float saturation, float value)
-        function color_from_h_s_v(hue, saturation, value) bind(c, name='ColorFromHSV')
+        function color_from_hsv(hue, saturation, value) bind(c, name='ColorFromHSV')
             import :: c_float, color_type
             implicit none
             real(kind=c_float), intent(in), value :: hue
             real(kind=c_float), intent(in), value :: saturation
             real(kind=c_float), intent(in), value :: value
-            type(color_type)                      :: color_from_h_s_v
-        end function color_from_h_s_v
+            type(color_type)                      :: color_from_hsv
+        end function color_from_hsv
 
         ! Color ColorFromNormalized(Vector4 normalized)
         function color_from_normalized(normalized) bind(c, name='ColorFromNormalized')
@@ -1358,6 +1375,15 @@ module raylib
             integer(kind=c_int),           intent(out)       :: comp_data_size
             type(c_ptr)                                      :: compress_data
         end function compress_data
+
+        ! unsigned char *DecodeDataBase64(const unsigned char *data, int *outputSize)
+        function decode_data_base64(data, output_size) bind(c, name='DecodeDataBase64')
+            import :: c_int, c_unsigned_char, c_ptr
+            implicit none
+            integer(kind=c_unsigned_char), intent(in)  :: data
+            integer(kind=c_int),           intent(out) :: output_size
+            type(c_ptr)                                :: decode_data_base64
+        end function decode_data_base64
 
         ! unsigned char *DecompressData(const unsigned char *compData, int compDataSize, int *dataSize)
         function decompress_data(comp_data, comp_data_size, data_size) bind(c, name='DecompressData')
@@ -1441,6 +1467,17 @@ module raylib
             real(kind=c_float),  intent(in), value :: radius
             type(color_type),    intent(in), value :: color
         end subroutine draw_circle
+
+        ! void DrawCircle3D(Vector3 center, float radius, Vector3 rotationAxis, float rotationAngle, Color color)
+        subroutine draw_circle3d(center, radius, rotation_axis, rotation_angle, color) bind(c, name='DrawCircle3D')
+            import :: c_float, color_type, vector3_type
+            implicit none
+            type(vector3_type), intent(in), value :: center
+            real(kind=c_float), intent(in), value :: radius
+            type(vector3_type), intent(in), value :: rotation_axis
+            real(kind=c_float), intent(in), value :: rotation_angle
+            type(color_type),   intent(in), value :: color
+        end subroutine draw_circle3d
 
         ! void DrawCircleGradient(int centerX, int centerY, float radius, Color color1, Color color2)
         subroutine draw_circle_gradient(center_x, center_y, radius, color1, color2) bind(c, name='DrawCircleGradient')
@@ -1663,6 +1700,15 @@ module raylib
             type(color_type),    intent(in), value :: color
         end subroutine draw_line
 
+        ! void DrawLine3D(Vector3 startPos, Vector3 endPos, Color color)
+        subroutine draw_line3d(start_pos, end_pos, color) bind(c, name='DrawLine3D')
+            import :: color_type, vector3_type
+            implicit none
+            type(vector3_type), intent(in), value :: start_pos
+            type(vector3_type), intent(in), value :: end_pos
+            type(color_type),   intent(in), value :: color
+        end subroutine draw_line3d
+
         ! void DrawLineBezier(Vector2 startPos, Vector2 endPos, float thick, Color color)
         subroutine draw_line_bezier(start_pos, end_pos, thick, color) bind(c, name='DrawLineBezier')
             import :: c_float, color_type, vector2_type
@@ -1816,6 +1862,14 @@ module raylib
             type(vector2_type), intent(in), value :: size
             type(color_type),   intent(in), value :: color
         end subroutine draw_plane
+
+        ! void DrawPoint3D(Vector3 position, Color color)
+        subroutine draw_point3d(position, color) bind(c, name='DrawPoint3D')
+            import :: color_type, vector3_type
+            implicit none
+            type(vector3_type), intent(in), value :: position
+            type(color_type),   intent(in), value :: color
+        end subroutine draw_point3d
 
         ! void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color color)
         subroutine draw_poly(center, sides, radius, rotation, color) bind(c, name='DrawPoly')
@@ -2036,6 +2090,15 @@ module raylib
             type(color_type),    intent(in), value :: color
         end subroutine draw_sphere_wires
 
+        ! void DrawTriangleStrip3D(Vector3 *points, int pointCount, Color color)
+        subroutine draw_triangle_strip3d(points, point_count, color) bind(c, name='DrawTriangleStrip3D')
+            import :: c_int, color_type, vector3_type
+            implicit none
+            type(vector3_type),  intent(in)        :: points(*)
+            integer(kind=c_int), intent(in), value :: point_count
+            type(color_type),    intent(in), value :: color
+        end subroutine draw_triangle_strip3d
+
         ! void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
         subroutine draw_text(text, pos_x, pos_y, font_size, color) bind(c, name='DrawText')
             import :: c_char, c_int, color_type
@@ -2121,17 +2184,17 @@ module raylib
         end subroutine draw_texture_ex
 
         ! void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint)
-        subroutine draw_texture_n_patch(texture, n_patch_info, dest, origin, rotation, tint) &
+        subroutine draw_texture_npatch(texture, npatch_info, dest, origin, rotation, tint) &
                 bind(c, name='DrawTextureNPatch')
             import :: c_float, color_type, npatch_info_type, rectangle_type, texture2d_type, vector2_type
             implicit none
             type(texture2d_type),   intent(in), value :: texture
-            type(npatch_info_type), intent(in), value :: n_patch_info
+            type(npatch_info_type), intent(in), value :: npatch_info
             type(rectangle_type),   intent(in), value :: dest
             type(vector2_type),     intent(in), value :: origin
             real(kind=c_float),     intent(in), value :: rotation
             type(color_type),       intent(in), value :: tint
-        end subroutine draw_texture_n_patch
+        end subroutine draw_texture_npatch
 
         ! void DrawTexturePoly(Texture2D texture, Vector2 center, Vector2 *points, Vector2 *texcoords, int pointCount, Color tint)
         subroutine draw_texture_poly(texture, center, points, texcoords, point_count, tint) &
@@ -2211,6 +2274,16 @@ module raylib
             type(color_type),   intent(in), value :: color
         end subroutine draw_triangle
 
+        ! void DrawTriangle3D(Vector3 v1, Vector3 v2, Vector3 v3, Color color)
+        subroutine draw_triangle3d(v1, v2, v3, color) bind(c, name='DrawTriangle3D')
+            import :: color_type, vector3_type
+            implicit none
+            type(vector3_type), intent(in), value :: v1
+            type(vector3_type), intent(in), value :: v2
+            type(vector3_type), intent(in), value :: v3
+            type(color_type),   intent(in), value :: color
+        end subroutine draw_triangle3d
+
         ! void DrawTriangleFan(Vector2 *points, int pointCount, Color color)
         subroutine draw_triangle_fan(points, point_count, color) bind(c, name='DrawTriangleFan')
             import :: c_int, color_type, vector2_type
@@ -2247,6 +2320,16 @@ module raylib
         subroutine enable_event_waiting() bind(c, name='EnableEventWaiting')
         end subroutine enable_event_waiting
 
+        ! char *EncodeDataBase64(const unsigned char *data, int dataSize, int *outputSize)
+        function encode_data_base64(data, data_size, output_size) bind(c, name='EncodeDataBase64')
+            import :: c_int, c_unsigned_char, c_ptr
+            implicit none
+            integer(kind=c_unsigned_char), intent(in)        :: data
+            integer(kind=c_int),           intent(in), value :: data_size
+            integer(kind=c_int),           intent(out)       :: output_size
+            type(c_ptr)                                      :: encode_data_base64
+        end function encode_data_base64
+
         ! void EndBlendMode(void)
         subroutine end_blend_mode() bind(c, name='EndBlendMode')
         end subroutine end_blend_mode
@@ -2256,12 +2339,12 @@ module raylib
         end subroutine end_drawing
 
         ! void EndMode2D(void)
-        subroutine end_mode_2d() bind(c, name='EndMode2D')
-        end subroutine end_mode_2d
+        subroutine end_mode2d() bind(c, name='EndMode2D')
+        end subroutine end_mode2d
 
         ! void EndMode3D(void)
-        subroutine end_mode_3d() bind(c, name='EndMode3D')
-        end subroutine end_mode_3d
+        subroutine end_mode3d() bind(c, name='EndMode3D')
+        end subroutine end_mode3d
 
         ! void EndScissorMode(void)
         subroutine end_scissor_mode() bind(c, name='EndScissorMode')
@@ -2479,6 +2562,14 @@ module raylib
             type(camera_type), intent(in), value :: camera
             type(matrix_type)                    :: get_camera_matrix
         end function get_camera_matrix
+
+        ! Matrix GetCameraMatrix2D(Camera2D camera)
+        function get_camera_matrix2d(camera) bind(c, name='GetCameraMatrix2D')
+            import :: camera2d_type, matrix_type
+            implicit none
+            type(camera2d_type), intent(in), value :: camera
+            type(matrix_type)                      :: get_camera_matrix2d
+        end function get_camera_matrix2d
 
         ! int GetCharPressed(void)
         function get_char_pressed() bind(c, name='GetCharPressed')
@@ -2905,6 +2996,15 @@ module raylib
             integer(kind=c_int) :: get_screen_height
         end function get_screen_height
 
+        ! Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera)
+        function get_screen_to_world2d(position, camera) bind(c, name='GetScreenToWorld2D')
+            import :: camera2d_type, vector2_type
+            implicit none
+            type(vector2_type),  intent(in), value :: position
+            type(camera2d_type), intent(in), value :: camera
+            type(vector2_type)                     :: get_screen_to_world2d
+        end function get_screen_to_world2d
+
         ! int GetScreenWidth(void)
         function get_screen_width() bind(c, name='GetScreenWidth')
             import :: c_int
@@ -2986,6 +3086,15 @@ module raylib
             implicit none
             type(c_ptr) :: get_working_directory
         end function get_working_directory
+
+        ! Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera)
+        function get_world_to_screen2d(position, camera) bind(c, name='GetWorldToScreen2D')
+            import :: camera2d_type, vector2_type
+            implicit none
+            type(vector2_type),  intent(in), value :: position
+            type(camera2d_type), intent(in), value :: camera
+            type(vector2_type)                     :: get_world_to_screen2d
+        end function get_world_to_screen2d
 
         ! void HideCursor(void)
         subroutine hide_cursor() bind(c, name='HideCursor')
@@ -3305,27 +3414,27 @@ module raylib
         end subroutine image_resize_canvas
 
         ! void ImageResizeNN(Image *image, int newWidth,int newHeight)
-        subroutine image_resize_n_n(image, new_width, new_height) bind(c, name='ImageResizeNN')
+        subroutine image_resize_nn(image, new_width, new_height) bind(c, name='ImageResizeNN')
             import :: c_int, image_type
             implicit none
             type(image_type),    intent(inout)     :: image
             integer(kind=c_int), intent(in), value :: new_width
             integer(kind=c_int), intent(in), value :: new_height
-        end subroutine image_resize_n_n
+        end subroutine image_resize_nn
 
         ! void ImageRotateCCW(Image *image)
-        subroutine image_rotate_c_c_w(image) bind(c, name='ImageRotateCCW')
+        subroutine image_rotate_ccw(image) bind(c, name='ImageRotateCCW')
             import :: image_type
             implicit none
             type(image_type), intent(inout) :: image
-        end subroutine image_rotate_c_c_w
+        end subroutine image_rotate_ccw
 
         ! void ImageRotateCW(Image *image)
-        subroutine image_rotate_c_w(image) bind(c, name='ImageRotateCW')
+        subroutine image_rotate_cw(image) bind(c, name='ImageRotateCW')
             import :: image_type
             implicit none
             type(image_type), intent(inout) :: image
-        end subroutine image_rotate_c_w
+        end subroutine image_rotate_cw
 
         ! Image ImageText(const char *text, int fontSize, Color color)
         function image_text(text, font_size, color) bind(c, name='ImageText')
@@ -3350,12 +3459,12 @@ module raylib
         end function image_text_ex
 
         ! void ImageToPOT(Image *image, Color fill)
-        subroutine image_to_p_o_t(image, fill) bind(c, name='ImageToPOT')
+        subroutine image_to_pot(image, fill) bind(c, name='ImageToPOT')
             import :: color_type, image_type
             implicit none
             type(image_type), intent(inout) :: image
             type(color_type), intent(in), value :: fill
-        end subroutine image_to_p_o_t
+        end subroutine image_to_pot
 
         ! void InitAudioDevice(void)
         subroutine init_audio_device() bind(c, name='InitAudioDevice')
@@ -3963,11 +4072,11 @@ module raylib
         end subroutine minimize_window
 
         ! void OpenURL(const char *url)
-        subroutine open_u_r_l(url) bind(c, name='OpenURL')
+        subroutine open_url(url) bind(c, name='OpenURL')
             import :: c_char
             implicit none
             character(kind=c_char), intent(in) :: url
-        end subroutine open_u_r_l
+        end subroutine open_url
 
         ! void PauseAudioStream(AudioStream stream)
         subroutine pause_audio_stream(stream) bind(c, name='PauseAudioStream')
@@ -4863,37 +4972,4 @@ module raylib
             logical(kind=c_bool) :: window_should_close
         end function window_should_close
     end interface
-
-    interface
-        function c_strlen(str) bind(c, name='strlen')
-            import :: c_ptr, c_size_t
-            type(c_ptr), intent(in), value :: str
-            integer(c_size_t)              :: c_strlen
-        end function c_strlen
-    end interface
-contains
-    pure function copy(a)
-        character, intent(in)  :: a(:)
-        character(len=size(a)) :: copy
-        integer(kind=8)        :: i
-
-        do i = 1, size(a)
-            copy(i:i) = a(i)
-        end do
-    end function copy
-
-    subroutine c_f_str_ptr(c_str, f_str)
-        !! Copies a C string, passed as a C pointer, to a Fortran string.
-        type(c_ptr),                   intent(in)  :: c_str
-        character(len=:), allocatable, intent(out) :: f_str
-        character(kind=c_char), pointer            :: ptrs(:)
-        integer(kind=8)                            :: sz
-
-        if (.not. c_associated(c_str)) return
-        sz = c_strlen(c_str)
-        if (sz <= 0) return
-        call c_f_pointer(c_str, ptrs, [ sz ])
-        allocate (character(len=sz) :: f_str)
-        f_str = copy(ptrs)
-    end subroutine c_f_str_ptr
 end module raylib

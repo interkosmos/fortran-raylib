@@ -1,8 +1,8 @@
 # fortran-raylib
 
 A work-in-progress collection of interface bindings to
-[raylib](https://www.raylib.com/), for 2-D and 3-D game programming in Fortran
-2018.
+[raylib](https://www.raylib.com/) 4.2, for 2-D and 3-D game programming in
+Fortran 2018.
 
 ## Build Instructions
 
@@ -71,6 +71,7 @@ $ make examples
 
 Some issues have to be regarded when calling raylib from Fortran:
 
+* All procedure names and dummy arguments have been converted to snake case.
 * As Fortran does not feature unsigned data types, use the compiler flag
   `-fno-range-check` to allow signed values to be written into unsigned
   variables where necessary.
@@ -80,7 +81,9 @@ Some issues have to be regarded when calling raylib from Fortran:
   like `TextFormat()`. In this particular case, just use the Fortran `write`
   statement instead.
 * If a function returns `c_ptr`, the result has to be converted to a Fortran
-  pointer with the intrinsic subroutine `c_f_pointer()` first.
+  pointer with the intrinsic subroutine `c_f_pointer()` first. C char pointers
+  may be converted with utility subroutine `c_f_str_ptr()` from module
+  `raylib_util`.
 
 ## Licence
 

@@ -32,11 +32,11 @@ program main
         call begin_drawing()
             call clear_background(RAYWHITE)
 
-            call begin_mode_3d(camera)
+            call begin_mode3d(camera)
                 call draw_cube(cube_pos, 2.0, 2.0, 2.0, RED)
                 call draw_cube_wires(cube_pos, 2.0, 2.0, 2.0, MAROON)
                 call draw_grid(10, 1.0)
-            call end_mode_3d()
+            call end_mode3d()
 
             call draw_text('Welcome to the third dimension!' // c_null_char, 10, 40, 20, DARKGRAY)
             call draw_fps(10, 10)

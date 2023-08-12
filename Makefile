@@ -15,7 +15,8 @@ all: $(TARGET)
 
 $(TARGET): src/raylib.f90
 	$(FC) $(FFLAGS) -c src/raylib.f90
-	$(AR) $(ARFLAGS) $(TARGET) raylib.o
+	$(FC) $(FFLAGS) -c src/raylib_util.f90
+	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_util.o
 
 examples: $(TARGET)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
