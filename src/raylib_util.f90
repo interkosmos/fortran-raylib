@@ -10,21 +10,21 @@ module raylib_util
     private
 
     private :: copy
-
-    public :: c_f_str_ptr
+    public  :: c_f_str_ptr
 
     interface
         function c_strlen(str) bind(c, name='strlen')
             import :: c_ptr, c_size_t
+            implicit none
             type(c_ptr), intent(in), value :: str
-            integer(c_size_t)              :: c_strlen
+            integer(kind=c_size_t)         :: c_strlen
         end function c_strlen
     end interface
 contains
     pure function copy(a)
         character, intent(in)  :: a(:)
         character(len=size(a)) :: copy
-        integer(kind=8)        :: i
+        integer                :: i
 
         do i = 1, size(a)
             copy(i:i) = a(i)

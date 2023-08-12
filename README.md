@@ -92,9 +92,9 @@ Some issues have to be regarded when calling raylib from Fortran:
 * Some variadic C functions of raylib are not bound by the interface library,
   like `TextFormat()`. In this particular case, just use the Fortran `write`
   statement instead.
-* If a function returns `c_ptr`, the result has to be converted to a Fortran
-  pointer with the intrinsic subroutine `c_f_pointer()` first. C char pointers
-  may be converted with utility subroutine `c_f_str_ptr()` from module
+* If a function returns `type(c_ptr)`, the result has to be converted to a
+  Fortran pointer with the intrinsic subroutine `c_f_pointer()` first. C char
+  pointers may be converted with utility subroutine `c_f_str_ptr()` from module
   `raylib_util`.
 
 ## Licence

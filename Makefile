@@ -13,7 +13,7 @@ TARGET  = libfortran-raylib.a
 
 all: $(TARGET)
 
-$(TARGET): src/raylib.f90
+$(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_util.o
@@ -26,7 +26,7 @@ examples: $(TARGET)
 
 clean:
 	if [ `ls -1 *.mod 2>/dev/null | wc -l` -gt 0 ]; then rm *.mod; fi
-	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ];   then rm *.o;   fi
+	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ];   then rm *.o; fi
 	if [ -e $(TARGET) ]; then rm $(TARGET); fi
 	if [ -e camera ]; then rm camera; fi
 	if [ -e flags ];  then rm flags; fi

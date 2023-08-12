@@ -15,8 +15,8 @@ module raylib
 
     ! Vector2
     type, bind(c), public :: vector2_type
-        real(kind=c_float) :: x
-        real(kind=c_float) :: y
+        real(kind=c_float) :: x = 0.0
+        real(kind=c_float) :: y = 0.0
     end type vector2_type
 
     ! Vector3
@@ -141,8 +141,8 @@ module raylib
         integer(kind=c_int)  :: glyph_count   = 0
         integer(kind=c_int)  :: glyph_padding = 0
         type(texture2d_type) :: texture
-        type(c_ptr)          :: recs   !! Rectangle *
-        type(c_ptr)          :: glyphs !! GlyphInfo *
+        type(c_ptr)          :: recs          = c_null_ptr !! Rectangle *
+        type(c_ptr)          :: glyphs        = c_null_ptr !! GlyphInfo *
     end type font_type
 
     ! Camera3D
@@ -1543,7 +1543,7 @@ module raylib
             real(kind=c_float), intent(in), value :: width
             real(kind=c_float), intent(in), value :: height
             real(kind=c_float), intent(in), value :: length
-            type(color_type), intent(in), value :: color
+            type(color_type),   intent(in), value :: color
         end subroutine draw_cube
 
         ! void DrawCubeTexture(Texture2D texture, Vector3 position, float width, float height, float length, Color color)
@@ -2114,11 +2114,11 @@ module raylib
         subroutine draw_text_codepoint(font, codepoint, position, font_size, tint) bind(c, name='DrawTextCodepoint')
             import :: c_float, c_int, color_type, font_type, vector2_type
             implicit none
-            type(font_type), intent(in), value :: font
+            type(font_type),     intent(in), value :: font
             integer(kind=c_int), intent(in), value :: codepoint
-            type(vector2_type), intent(in), value :: position
-            real(kind=c_float), intent(in), value :: font_size
-            type(color_type), intent(in), value :: tint
+            type(vector2_type),  intent(in), value :: position
+            real(kind=c_float),  intent(in), value :: font_size
+            type(color_type),    intent(in), value :: tint
         end subroutine draw_text_codepoint
 
         ! void DrawTextCodepoints(Font font, const int *codepoints, int count, Vector2 position, float fontSize, float spacing, Color tint)
@@ -3462,7 +3462,7 @@ module raylib
         subroutine image_to_pot(image, fill) bind(c, name='ImageToPOT')
             import :: color_type, image_type
             implicit none
-            type(image_type), intent(inout) :: image
+            type(image_type), intent(inout)     :: image
             type(color_type), intent(in), value :: fill
         end subroutine image_to_pot
 
