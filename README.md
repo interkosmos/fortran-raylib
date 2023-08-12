@@ -95,6 +95,7 @@ More examples can be found in `examples/`:
 * **flags** shows window flags.
 * **fly** renders a 3-D scene, with keyboard and mouse controls.
 * **keys** demonstrates keyboard input.
+* **keys** renders a height map.
 * **window** opens a window with raylib.
 
 Build all examples with:

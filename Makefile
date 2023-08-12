@@ -25,6 +25,7 @@ examples: $(TARGET)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o flags  examples/flags.f90  $(TARGET) $(LDLIBS)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o fly    examples/fly.f90    $(TARGET) $(LDLIBS)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o keys   examples/keys.f90   $(TARGET) $(LDLIBS)
+	$(FC) $(FFLAGS) $(LDFLAGS) -o map    examples/map.f90    $(TARGET) $(LDLIBS)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o window examples/window.f90 $(TARGET) $(LDLIBS)
 
 clean:
@@ -35,4 +36,5 @@ clean:
 	if [ -e flags ];  then rm flags; fi
 	if [ -e fly ];    then rm fly; fi
 	if [ -e keys ];   then rm keys; fi
+	if [ -e map ];    then rm map; fi
 	if [ -e window ]; then rm window; fi

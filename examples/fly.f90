@@ -14,7 +14,6 @@ program main
     integer, parameter :: MAX_COLUMNS   = 20
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
-    real,    parameter :: PI            = acos(-1.0)
 
     character(len=32)   :: text
     integer             :: camera_mode, i
