@@ -1,0 +1,10 @@
+build/
+dist/
+doc/
+
+*.a
+*.mod
+*.o
+*.so
+*.swp
+*.*~
