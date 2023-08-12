@@ -9,8 +9,7 @@ module raylib_util
     implicit none (type, external)
     private
 
-    private :: copy
-    public  :: c_f_str_ptr
+    public :: c_f_str_ptr
 
     interface
         function c_strlen(str) bind(c, name='strlen')
@@ -21,23 +20,13 @@ module raylib_util
         end function c_strlen
     end interface
 contains
-    pure function copy(a)
-        character, intent(in)  :: a(:)
-        character(len=size(a)) :: copy
-        integer                :: i
-
-        do i = 1, size(a)
-            copy(i:i) = a(i)
-        end do
-    end function copy
-
     subroutine c_f_str_ptr(c_str, f_str)
         !! Copies a C string, passed as a C pointer, to a Fortran string.
         type(c_ptr),                   intent(in)  :: c_str
         character(len=:), allocatable, intent(out) :: f_str
 
         character(kind=c_char), pointer :: ptrs(:)
-        integer(kind=c_size_t)          :: sz
+        integer(kind=c_size_t)          :: i, sz
 
         copy_block: block
             if (.not. c_associated(c_str)) exit copy_block
@@ -45,7 +34,11 @@ contains
             if (sz < 0) exit copy_block
             call c_f_pointer(c_str, ptrs, [ sz ])
             allocate (character(len=sz) :: f_str)
-            f_str = copy(ptrs)
+
+            do i = 1, sz
+                f_str(i:i) = ptrs(i)
+            end do
+
             return
         end block copy_block
 

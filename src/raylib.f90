@@ -694,6 +694,7 @@ module raylib
     integer(kind=c_int), parameter, public :: NPATCH_THREE_PATCH_HORIZONTAL = 2
 
     public :: attach_audio_mixed_processor
+    public :: attach_audio_stream_processor
     public :: begin_blend_mode
     public :: begin_drawing
     public :: begin_mode2d
@@ -703,6 +704,8 @@ module raylib
     public :: begin_texture_mode
     public :: begin_vr_stereo_mode
     public :: change_directory
+    public :: check_collision_box_sphere
+    public :: check_collision_boxes
     public :: check_collision_circle_rec
     public :: check_collision_circles
     public :: check_collision_lines
@@ -712,6 +715,7 @@ module raylib
     public :: check_collision_point_rec
     public :: check_collision_point_triangle
     public :: check_collision_recs
+    public :: check_collision_spheres
     public :: clear_background
     public :: clear_window_state
     public :: close_audio_device
@@ -729,6 +733,7 @@ module raylib
     public :: decode_data_base64
     public :: decompress_data
     public :: detach_audio_mixed_processor
+    public :: detach_audio_stream_processor
     public :: directory_exists
     public :: disable_cursor
     public :: disable_event_waiting
@@ -842,7 +847,18 @@ module raylib
     public :: gen_image_perlin_noise
     public :: gen_image_text
     public :: gen_image_white_noise
+    public :: gen_mesh_cone
+    public :: gen_mesh_cube
+    public :: gen_mesh_cubicmap
+    public :: gen_mesh_cylinder
+    public :: gen_mesh_heightmap
+    public :: gen_mesh_hemi_sphere
+    public :: gen_mesh_knot
+    public :: gen_mesh_plane
+    public :: gen_mesh_poly
+    public :: gen_mesh_sphere
     public :: gen_mesh_tangents
+    public :: gen_mesh_torus
     public :: gen_texture_mipmaps
     public :: get_application_directory
     public :: get_camera_matrix
@@ -900,6 +916,11 @@ module raylib
     public :: get_pixel_data_size
     public :: get_prev_directory_path
     public :: get_random_value
+    public :: get_ray_collision_box
+    public :: get_ray_collision_mesh
+    public :: get_ray_collision_quad
+    public :: get_ray_collision_sphere
+    public :: get_ray_collision_triangle
     public :: get_render_height
     public :: get_render_width
     public :: get_screen_height
@@ -982,6 +1003,7 @@ module raylib
     public :: is_key_released
     public :: is_key_up
     public :: is_material_ready
+    public :: is_model_animation_valid
     public :: is_model_ready
     public :: is_mouse_button_down
     public :: is_mouse_button_pressed
@@ -1024,7 +1046,10 @@ module raylib
     public :: load_image_from_texture
     public :: load_image_palette
     public :: load_image_raw
+    public :: load_material_default
+    public :: load_materials
     public :: load_model
+    public :: load_model_animations
     public :: load_model_from_mesh
     public :: load_music_stream
     public :: load_music_stream_from_memory
@@ -1073,7 +1098,11 @@ module raylib
     public :: set_exit_key
     public :: set_gamepad_mappings
     public :: set_gestures_enabled
+    public :: set_load_file_data_callback
+    public :: set_load_file_text_callback
     public :: set_master_volume
+    public :: set_material_texture
+    public :: set_model_mesh_material
     public :: set_mouse_cursor
     public :: set_mouse_offset
     public :: set_mouse_position
@@ -1083,6 +1112,8 @@ module raylib
     public :: set_music_volume
     public :: set_pixel_color
     public :: set_random_seed
+    public :: set_save_file_data_callback
+    public :: set_save_file_text_callback
     public :: set_shader_value
     public :: set_shader_value_matrix
     public :: set_shader_value_texture
@@ -1094,6 +1125,7 @@ module raylib
     public :: set_target_fps
     public :: set_texture_filter
     public :: set_texture_wrap
+    public :: set_trace_log_callback
     public :: set_trace_log_level
     public :: set_window_icon
     public :: set_window_icons
@@ -1137,8 +1169,11 @@ module raylib
     public :: unload_image
     public :: unload_image_colors
     public :: unload_image_palette
+    public :: unload_material
     public :: unload_mesh
     public :: unload_model
+    public :: unload_model_animation
+    public :: unload_model_animations
     public :: unload_music_stream
     public :: unload_render_texture
     public :: unload_shader
@@ -1151,6 +1186,7 @@ module raylib
     public :: update_audio_stream
     public :: update_camera
     public :: update_mesh_buffer
+    public :: update_model_animation
     public :: update_music_stream
     public :: update_sound
     public :: update_texture
@@ -1169,6 +1205,14 @@ module raylib
             implicit none
             type(c_funptr), intent(in), value :: processor
         end subroutine attach_audio_mixed_processor
+
+        ! void AttachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
+        subroutine attach_audio_stream_processor(stream, processor) bind(c, name='AttachAudioStreamProcessor')
+            import :: audio_stream_type, c_funptr
+            implicit none
+            type(audio_stream_type), intent(in), value :: stream
+            type(c_funptr),          intent(in), value :: processor
+        end subroutine attach_audio_stream_processor
 
         ! void BeginBlendMode(int mode)
         subroutine begin_blend_mode(mode) bind(c, name='BeginBlendMode')
@@ -1233,6 +1277,25 @@ module raylib
             character(kind=c_char), intent(in) :: dir
             logical(kind=c_bool)               :: change_directory
         end function change_directory
+
+        ! bool CheckCollisionBoxSphere(BoundingBox box, Vector3 center, float radius)
+        function check_collision_box_sphere(box, center, radius) bind(c, name='CheckCollisionBoxSphere')
+            import :: bounding_box_type, c_bool, c_float, vector3_type
+            implicit none
+            type(bounding_box_type), intent(in), value :: box
+            type(vector3_type),      intent(in), value :: center
+            real(kind=c_float),      intent(in), value :: radius
+            logical(kind=c_bool)                       :: check_collision_box_sphere
+        end function check_collision_box_sphere
+
+        ! bool CheckCollisionBoxes(BoundingBox box1, BoundingBox box2)
+        function check_collision_boxes(box1, box2) bind(c, name='CheckCollisionBoxes')
+            import :: bounding_box_type, c_bool
+            implicit none
+            type(bounding_box_type), intent(in), value :: box1
+            type(bounding_box_type), intent(in), value :: box2
+            logical(kind=c_bool)                       :: check_collision_boxes
+        end function check_collision_boxes
 
         ! bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec)
         function check_collision_circle_rec(center, radius, rec) bind(c, name='CheckCollisionCircleRec')
@@ -1327,6 +1390,17 @@ module raylib
             type(rectangle_type), intent(in), value :: rec2
             logical(kind=c_bool)                    :: check_collision_recs
         end function check_collision_recs
+
+        ! bool CheckCollisionSpheres(Vector3 center1, float radius1, Vector3 center2, float radius2)
+        function check_collision_spheres(center1, radius1, center2, radius2) bind(c, name='CheckCollisionSpheres')
+            import :: c_bool, c_float, vector3_type
+            implicit none
+            type(vector3_type), intent(in), value :: center1
+            real(kind=c_float), intent(in), value :: radius1
+            type(vector3_type), intent(in), value :: center2
+            real(kind=c_float), intent(in), value :: radius2
+            logical(kind=c_bool)                  :: check_collision_spheres
+        end function check_collision_spheres
 
         ! void ClearBackground(Color color)
         subroutine clear_background(color) bind(c, name='ClearBackground')
@@ -1466,6 +1540,14 @@ module raylib
             implicit none
             type(c_funptr), intent(in), value :: processor
         end subroutine detach_audio_mixed_processor
+
+        ! void DetachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
+        subroutine detach_audio_stream_processor(stream, processor) bind(c, name='DetachAudioStreamProcessor')
+            import :: audio_stream_type, c_funptr
+            implicit none
+            type(audio_stream_type), intent(in), value :: stream
+            type(c_funptr),          intent(in), value :: processor
+        end subroutine detach_audio_stream_processor
 
         ! bool DirectoryExists(const char *dirPath)
         function directory_exists(dir_path) bind(c, name='DirectoryExists')
@@ -2589,12 +2671,122 @@ module raylib
             type(image_type)                          :: gen_image_text
         end function gen_image_text
 
+        ! Mesh GenMeshCone(float radius, float height, int slices)
+        function gen_mesh_cone(radius, height, slices) bind(c, name='GenMeshCone')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            real(kind=c_float),  intent(in), value :: height
+            integer(kind=c_int), intent(in), value :: slices
+            type(mesh_type)                        :: gen_mesh_cone
+        end function gen_mesh_cone
+
+        ! Mesh GenMeshCube(float width, float height, float length)
+        function gen_mesh_cube(width, height, length) bind(c, name='GenMeshCube')
+            import :: c_float, mesh_type
+            implicit none
+            real(kind=c_float), intent(in), value :: width
+            real(kind=c_float), intent(in), value :: height
+            real(kind=c_float), intent(in), value :: length
+            type(mesh_type)                       :: gen_mesh_cube
+        end function gen_mesh_cube
+
+        ! Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize)
+        function gen_mesh_cubicmap(cubicmap, cube_size) bind(c, name='GenMeshCubicmap')
+            import :: image_type, mesh_type, vector3_type
+            implicit none
+            type(image_type),   intent(in), value :: cubicmap
+            type(vector3_type), intent(in), value :: cube_size
+            type(mesh_type)                       :: gen_mesh_cubicmap
+        end function gen_mesh_cubicmap
+
+        ! Mesh GenMeshCylinder(float radius, float height, int slices)
+        function gen_mesh_cylinder(radius, height, slices) bind(c, name='GenMeshCylinder')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            real(kind=c_float),  intent(in), value :: height
+            integer(kind=c_int), intent(in), value :: slices
+            type(mesh_type)                        :: gen_mesh_cylinder
+        end function gen_mesh_cylinder
+
+        ! Mesh GenMeshHeightmap(Image heightmap, Vector3 size)
+        function gen_mesh_heightmap(heightmap, size) bind(c, name='GenMeshHeightmap')
+            import :: image_type, mesh_type, vector3_type
+            implicit none
+            type(image_type),   intent(in), value :: heightmap
+            type(vector3_type), intent(in), value :: size
+            type(mesh_type)                       :: gen_mesh_heightmap
+        end function gen_mesh_heightmap
+
+        ! Mesh GenMeshHemiSphere(float radius, int rings, int slices)
+        function gen_mesh_hemi_sphere(radius, rings, slices) bind(c, name='GenMeshHemiSphere')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            integer(kind=c_int), intent(in), value :: rings
+            integer(kind=c_int), intent(in), value :: slices
+            type(mesh_type)                        :: gen_mesh_hemi_sphere
+        end function gen_mesh_hemi_sphere
+
+        ! Mesh GenMeshKnot(float radius, float size, int radSeg, int sides)
+        function gen_mesh_knot(radius, size, rad_seg, sides) bind(c, name='GenMeshKnot')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            real(kind=c_float),  intent(in), value :: size
+            integer(kind=c_int), intent(in), value :: rad_seg
+            integer(kind=c_int), intent(in), value :: sides
+            type(mesh_type)                        :: gen_mesh_knot
+        end function gen_mesh_knot
+
+        ! Mesh GenMeshPlane(float width, float length, int resX, int resZ)
+        function gen_mesh_plane(width, length, res_x, res_z) bind(c, name='GenMeshPlane')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: width
+            real(kind=c_float),  intent(in), value :: length
+            integer(kind=c_int), intent(in), value :: res_x
+            integer(kind=c_int), intent(in), value :: res_z
+            type(mesh_type)                        :: gen_mesh_plane
+        end function gen_mesh_plane
+
+        ! Mesh GenMeshPoly(int sides, float radius)
+        function gen_mesh_poly(sides, radius) bind(c, name='GenMeshPoly')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            integer(kind=c_int), intent(in), value :: sides
+            real(kind=c_float),  intent(in), value :: radius
+            type(mesh_type)                        :: gen_mesh_poly
+        end function gen_mesh_poly
+
+        ! Mesh GenMeshSphere(float radius, int rings, int slices)
+        function gen_mesh_sphere(radius, rings, slices) bind(c, name='GenMeshSphere')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            integer(kind=c_int), intent(in), value :: rings
+            integer(kind=c_int), intent(in), value :: slices
+            type(mesh_type)                        :: gen_mesh_sphere
+        end function gen_mesh_sphere
+
         ! void GenMeshTangents(Mesh *mesh)
         subroutine gen_mesh_tangents(mesh) bind(c, name='GenMeshTangents')
             import :: mesh_type
             implicit none
             type(mesh_type), intent(in) :: mesh
         end subroutine gen_mesh_tangents
+
+        ! Mesh GenMeshTorus(float radius, float size, int radSeg, int sides)
+        function gen_mesh_torus(radius, size, rad_seg, sides) bind(c, name='GenMeshTorus')
+            import :: c_float, c_int, mesh_type
+            implicit none
+            real(kind=c_float),  intent(in), value :: radius
+            real(kind=c_float),  intent(in), value :: size
+            integer(kind=c_int), intent(in), value :: rad_seg
+            integer(kind=c_int), intent(in), value :: sides
+            type(mesh_type)                        :: gen_mesh_torus
+        end function gen_mesh_torus
 
         ! void GenTextureMipmaps(Texture2D *texture)
         subroutine gen_texture_mipmaps(texture) bind(c, name='GenTextureMipmaps')
@@ -3055,6 +3247,58 @@ module raylib
             integer(kind=c_int), intent(in), value :: max
             integer(kind=c_int)                    :: get_random_value
         end function get_random_value
+
+        ! RayCollision GetRayCollisionBox(Ray ray, BoundingBox box)
+        function get_ray_collision_box(ray, box) bind(c, name='GetRayCollisionBox')
+            import :: bounding_box_type, ray_collision_type, ray_type
+            implicit none
+            type(ray_type),          intent(in), value :: ray
+            type(bounding_box_type), intent(in), value :: box
+            type(ray_collision_type)                   :: get_ray_collision_box
+        end function get_ray_collision_box
+
+        ! RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform)
+        function get_ray_collision_mesh(ray, mesh, transform) bind(c, name='GetRayCollisionMesh')
+            import :: matrix_type, mesh_type, ray_collision_type, ray_type
+            implicit none
+            type(ray_type),    intent(in), value :: ray
+            type(mesh_type),   intent(in), value :: mesh
+            type(matrix_type), intent(in), value :: transform
+            type(ray_collision_type)             :: get_ray_collision_mesh
+        end function get_ray_collision_mesh
+
+        ! RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+        function get_ray_collision_quad(ray, p1, p2, p3, p4) bind(c, name='GetRayCollisionQuad')
+            import :: ray_collision_type, ray_type, vector3_type
+            implicit none
+            type(ray_type),     intent(in), value :: ray
+            type(vector3_type), intent(in), value :: p1
+            type(vector3_type), intent(in), value :: p2
+            type(vector3_type), intent(in), value :: p3
+            type(vector3_type), intent(in), value :: p4
+            type(ray_collision_type)              :: get_ray_collision_quad
+        end function get_ray_collision_quad
+
+        ! RayCollision GetRayCollisionSphere(Ray ray, Vector3 center, float radius)
+        function get_ray_collision_sphere(ray, center, radius) bind(c, name='GetRayCollisionSphere')
+            import :: c_float, ray_collision_type, ray_type, vector3_type
+            implicit none
+            type(ray_type),     intent(in), value :: ray
+            type(vector3_type), intent(in), value :: center
+            real(kind=c_float), intent(in), value :: radius
+            type(ray_collision_type)              :: get_ray_collision_sphere
+        end function get_ray_collision_sphere
+
+        ! RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3)
+        function get_ray_collision_triangle(ray, p1, p2, p3) bind(c, name='GetRayCollisionTriangle')
+            import :: ray_collision_type, ray_type, vector3_type
+            implicit none
+            type(ray_type),     intent(in), value :: ray
+            type(vector3_type), intent(in), value :: p1
+            type(vector3_type), intent(in), value :: p2
+            type(vector3_type), intent(in), value :: p3
+            type(ray_collision_type)              :: get_ray_collision_triangle
+        end function get_ray_collision_triangle
 
         ! int GetRenderHeight(void)
         function get_render_height() bind(c, name='GetRenderHeight')
@@ -3743,6 +3987,15 @@ module raylib
             logical(kind=c_bool)                   :: is_material_ready
         end function is_material_ready
 
+        ! bool IsModelAnimationValid(Model model, ModelAnimation anim)
+        function is_model_animation_valid(model, anim) bind(c, name='IsModelAnimationValid')
+            import :: c_bool, model_animation_type, model_type
+            implicit none
+            type(model_type),           intent(in), value :: model
+            type(model_animation_type), intent(in), value :: anim
+            logical(kind=c_bool)                          :: is_model_animation_valid
+        end function is_model_animation_valid
+
         ! bool IsModelReady(Model model)
         function is_model_ready(model) bind(c, name='IsModelReady')
             import :: c_bool, model_type
@@ -4102,6 +4355,22 @@ module raylib
             type(image_type)                          :: load_image_raw
         end function load_image_raw
 
+        ! Material LoadMaterialDefault(void)
+        function load_material_default() bind(c, name='LoadMaterialDefault')
+            import :: material_type
+            implicit none
+            type(material_type) :: load_material_default
+        end function load_material_default
+
+        ! Material *LoadMaterials(const char *fileName, int *materialCount)
+        function load_materials(file_name, material_count) bind(c, name='LoadMaterials')
+            import :: c_char, c_int, c_ptr
+            implicit none
+            character(kind=c_char), intent(in)  :: file_name
+            integer(kind=c_int),    intent(out) :: material_count
+            type(c_ptr)                         :: load_materials
+        end function load_materials
+
         ! Model LoadModel(const char *fileName)
         function load_model(file_name) bind(c, name='LoadModel')
             import :: c_char, model_type
@@ -4109,6 +4378,15 @@ module raylib
             character(kind=c_char), intent(in) :: file_name
             type(model_type)                   :: load_model
         end function load_model
+
+        ! ModelAnimation *LoadModelAnimations(const char *fileName, unsigned int *animCount)
+        function load_model_animations(file_name, anim_count) bind(c, name='LoadModelAnimations')
+            import :: c_char, c_ptr, c_unsigned_int
+            implicit none
+            character(kind=c_char),       intent(in)  :: file_name
+            integer(kind=c_unsigned_int), intent(out) :: anim_count
+            type(c_ptr)                               :: load_model_animations
+        end function load_model_animations
 
         ! Model LoadModelFromMesh(Mesh mesh)
         function load_model_from_mesh(mesh) bind(c, name='LoadModelFromMesh')
@@ -4477,12 +4755,44 @@ module raylib
             integer(kind=c_unsigned_int), intent(in), value :: flags
         end subroutine set_gestures_enabled
 
+        ! void SetLoadFileDataCallback(LoadFileDataCallback callback)
+        subroutine set_load_file_data_callback(callback) bind(c, name='SetLoadFileDataCallback')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: callback
+        end subroutine set_load_file_data_callback
+
+        ! void SetLoadFileTextCallback(LoadFileTextCallback callback)
+        subroutine set_load_file_text_callback(callback) bind(c, name='SetLoadFileTextCallback')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: callback
+        end subroutine set_load_file_text_callback
+
         ! void SetMasterVolume(float volume)
         subroutine set_master_volume(volume) bind(c, name='SetMasterVolume')
             import :: c_float
             implicit none
             real(kind=c_float), intent(in), value :: volume
         end subroutine set_master_volume
+
+        ! void SetMaterialTexture(Material *material, int mapType, Texture2D texture)
+        subroutine set_material_texture(material, map_type, texture) bind(c, name='SetMaterialTexture')
+            import :: c_int, material_type, texture2d_type
+            implicit none
+            type(material_type),  intent(inout)     :: material
+            integer(kind=c_int),  intent(in), value :: map_type
+            type(texture2d_type), intent(in), value :: texture
+        end subroutine set_material_texture
+
+        ! void SetModelMeshMaterial(Model *model, int meshId, int materialId)
+        subroutine set_model_mesh_material(model, mesh_id, material_id) bind(c, name='SetModelMeshMaterial')
+            import :: c_int, model_type
+            implicit none
+            type(model_type),    intent(inout)     :: model
+            integer(kind=c_int), intent(in), value :: mesh_id
+            integer(kind=c_int), intent(in), value :: material_id
+        end subroutine set_model_mesh_material
 
         ! void SetMouseCursor(int cursor)
         subroutine set_mouse_cursor(cursor) bind(c, name='SetMouseCursor')
@@ -4554,6 +4864,20 @@ module raylib
             implicit none
             integer(kind=c_unsigned_int), intent(in), value :: seed
         end subroutine set_random_seed
+
+        ! void SetSaveFileDataCallback(SaveFileDataCallback callback)
+        subroutine set_save_file_data_callback(callback) bind(c, name='SetSaveFileDataCallback')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: callback
+        end subroutine set_save_file_data_callback
+
+        ! void SetSaveFileTextCallback(SaveFileTextCallback callback)
+        subroutine set_save_file_text_callback(callback) bind(c, name='SetSaveFileTextCallback')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: callback
+        end subroutine set_save_file_text_callback
 
         ! void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType)
         subroutine set_shader_value(shader, loc_index, value, uniform_type) bind(c, name='SetShaderValue')
@@ -4648,6 +4972,13 @@ module raylib
             type(texture2d_type), intent(in), value :: texture
             integer(kind=c_int),  intent(in), value :: wrap
         end subroutine set_texture_wrap
+
+        ! void SetTraceLogCallback(TraceLogCallback callback)
+        subroutine set_trace_log_callback(callback) bind(c, name='SetTraceLogCallback')
+            import :: c_funptr
+            implicit none
+            type(c_funptr), intent(in), value :: callback
+        end subroutine set_trace_log_callback
 
         ! void SetTraceLogLevel(int logLevel)
         subroutine set_trace_log_level(log_level) bind(c, name='SetTraceLogLevel')
@@ -4975,6 +5306,13 @@ module raylib
             type(color_type), intent(inout) :: colors(*)
         end subroutine unload_image_palette
 
+        ! void UnloadMaterial(Material material)
+        subroutine unload_material(material) bind(c, name='UnloadMaterial')
+            import :: material_type
+            implicit none
+            type(material_type), intent(in), value :: material
+        end subroutine unload_material
+
         ! void UnloadMesh(Mesh mesh)
         subroutine unload_mesh(mesh) bind(c, name='UnloadMesh')
             import :: mesh_type
@@ -4988,6 +5326,21 @@ module raylib
             implicit none
             type(model_type), intent(in), value :: model
         end subroutine unload_model
+
+        ! void UnloadModelAnimation(ModelAnimation anim)
+        subroutine unload_model_animation(anim) bind(c, name='UnloadModelAnimation')
+            import :: model_animation_type
+            implicit none
+            type(model_animation_type), intent(in), value :: anim
+        end subroutine unload_model_animation
+
+        ! void UnloadModelAnimations(ModelAnimation *animations, unsigned int count)
+        subroutine unload_model_animations(animations, count) bind(c, name='UnloadModelAnimations')
+            import :: c_unsigned_int, model_animation_type
+            implicit none
+            type(model_animation_type),   intent(inout)     :: animations(*)
+            integer(kind=c_unsigned_int), intent(in), value :: count
+        end subroutine unload_model_animations
 
         ! void UnloadMusicStream(Music music)
         subroutine unload_music_stream(music) bind(c, name='UnloadMusicStream')
@@ -5078,6 +5431,15 @@ module raylib
             integer(kind=c_int), intent(in), value :: data_size
             integer(kind=c_int), intent(in), value :: offset
         end subroutine update_mesh_buffer
+
+        ! void UpdateModelAnimation(Model model, ModelAnimation anim, int frame)
+        subroutine update_model_animation(model, anim, frame) bind(c, name='UpdateModelAnimation')
+            import :: c_int, model_animation_type, model_type
+            implicit none
+            type(model_type),           intent(in), value :: model
+            type(model_animation_type), intent(in), value :: anim
+            integer(kind=c_int),        intent(in), value :: frame
+        end subroutine update_model_animation
 
         ! void UpdateMusicStream(Music music)
         subroutine update_music_stream(music) bind(c, name='UpdateMusicStream')
