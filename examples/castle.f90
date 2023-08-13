@@ -1,6 +1,6 @@
 ! castle.f90
 !
-! Example program that a 3-D model loaded from file. Based on the raylib
+! Example program that renders a 3-D model loaded from file. Based on the raylib
 ! example `models_waving_cubes.c`.
 !
 ! Author:  Philipp Engel
