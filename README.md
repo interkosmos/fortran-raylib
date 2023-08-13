@@ -94,6 +94,7 @@ $ ./example
 More examples can be found in `examples/`:
 
 * **camera** renders a cube in 3-D.
+* **castle** renders a 3-D model loaded from file.
 * **cubes** renders waving cubes.
 * **flags** shows window flags.
 * **fly** renders a 3-D scene, with keyboard and mouse controls.

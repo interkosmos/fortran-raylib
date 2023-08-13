@@ -22,6 +22,11 @@ source-dir = "examples"
 main = "camera.f90"
 
 [[executable]]
+name = "castle"
+source-dir = "examples"
+main = "castle.f90"
+
+[[executable]]
 name = "cubes"
 source-dir = "examples"
 main = "cubes.f90"
