@@ -46,15 +46,15 @@ program main
         call update_camera(camera, CAMERA_FIRST_PERSON)
 
         call begin_drawing()
-            call clear_background(raywhite)
+            call clear_background(RAYWHITE)
 
             call begin_mode3d(camera)
-                call draw_model(model, position, 1.0, white)
+                call draw_model(model, position, 1.0, WHITE)
                 call draw_grid(20, 10.0)
             call end_mode3d()
 
-            call draw_text('(c) castle 3d model by alberto cano' // c_null_char, &
-                           screen_width - 200, screen_height - 20, 10, gray)
+            call draw_text('(c) Castle 3D model by Alberto Cano' // c_null_char, &
+                           SCREEN_WIDTH - 200, SCREEN_HEIGHT - 20, 10, GRAY)
             call draw_fps(10, 10)
         call end_drawing()
     end do

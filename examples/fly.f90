@@ -126,17 +126,17 @@ program main
             call draw_rectangle(5, 5, 330, 100, fade(SKYBLUE, 0.5))
             call draw_rectangle_lines(5, 5, 330, 100, BLUE)
 
-            call draw_text('Camera controls:', 15, 15, 10, BLACK)
-            call draw_text('- Move keys: W, A, S, D, Space, Left-Ctrl', 15, 30, 10, BLACK)
-            call draw_text('- Look around: arrow keys or mouse', 15, 45, 10, BLACK)
-            call draw_text('- Camera mode keys: 1, 2, 3, 4', 15, 60, 10, BLACK)
-            call draw_text('- Zoom keys: num-plus, num-minus or mouse scroll', 15, 75, 10, BLACK)
-            call draw_text('- Camera projection key: P', 15, 90, 10, BLACK)
+            call draw_text('Camera controls:' // c_null_char, 15, 15, 10, BLACK)
+            call draw_text('- Move keys: W, A, S, D, Space, Left-Ctrl' // c_null_char, 15, 30, 10, BLACK)
+            call draw_text('- Look around: arrow keys or mouse' // c_null_char, 15, 45, 10, BLACK)
+            call draw_text('- Camera mode keys: 1, 2, 3, 4' // c_null_char, 15, 60, 10, BLACK)
+            call draw_text('- Zoom keys: num-plus, num-minus or mouse scroll' // c_null_char, 15, 75, 10, BLACK)
+            call draw_text('- Camera projection key: P' // c_null_char, 15, 90, 10, BLACK)
 
             call draw_rectangle(600, 5, 195, 100, fade(SKYBLUE, 0.5))
             call draw_rectangle_lines(600, 5, 195, 100, BLUE)
 
-            call draw_text('Camera status:', 610, 15, 10, BLACK)
+            call draw_text('Camera status:' // c_null_char, 610, 15, 10, BLACK)
 
             select case (camera_mode)
                 case (CAMERA_FREE)
