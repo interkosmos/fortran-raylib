@@ -19,6 +19,8 @@ $ make
 Build the *fortran-raylib* library by executing the provided Makefile:
 
 ```
+$ git clone --depth 1 https://github.com/interkosmos/fortran-raylib
+$ cd fortran-raylib/
 $ make
 ```
 
@@ -92,6 +94,7 @@ $ ./example
 More examples can be found in `examples/`:
 
 * **camera** renders a cube in 3-D.
+* **cubes** renders waving cubes.
 * **flags** shows window flags.
 * **fly** renders a 3-D scene, with keyboard and mouse controls.
 * **keys** demonstrates keyboard input.

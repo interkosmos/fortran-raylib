@@ -20,12 +20,27 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_util.o
 
-examples: $(TARGET)
+examples: camera cubes flags fly keys map window
+
+camera: $(TARGET) examples/camera.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
+
+cubes: $(TARGET) examples/cubes.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o cubes  examples/cubes.f90  $(TARGET) $(LDLIBS)
+
+flags: $(TARGET) examples/flags.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o flags  examples/flags.f90  $(TARGET) $(LDLIBS)
+
+fly: $(TARGET) examples/fly.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o fly    examples/fly.f90    $(TARGET) $(LDLIBS)
+
+keys: $(TARGET) examples/keys.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o keys   examples/keys.f90   $(TARGET) $(LDLIBS)
+
+map: $(TARGET) examples/map.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o map    examples/map.f90    $(TARGET) $(LDLIBS)
+
+window: $(TARGET) examples/window.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o window examples/window.f90 $(TARGET) $(LDLIBS)
 
 clean:
@@ -33,6 +48,7 @@ clean:
 	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ];   then rm *.o; fi
 	if [ -e $(TARGET) ]; then rm $(TARGET); fi
 	if [ -e camera ]; then rm camera; fi
+	if [ -e cubes ];  then rm cubes; fi
 	if [ -e flags ];  then rm flags; fi
 	if [ -e fly ];    then rm fly; fi
 	if [ -e keys ];   then rm keys; fi
