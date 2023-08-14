@@ -17,8 +17,9 @@ all: $(TARGET)
 $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib.f90
 	$(FC) $(FFLAGS) -c src/raylib_camera.f90
+	$(FC) $(FFLAGS) -c src/raylib_math.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
-	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_util.o
+	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
 examples: camera castle cubes flags fly keys map window
 

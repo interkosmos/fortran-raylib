@@ -7,7 +7,6 @@
 ! Licence: ISC
 program main
     use, intrinsic :: iso_c_binding
-    use, intrinsic :: iso_fortran_env, only: r8 => real64
     use :: raylib
     implicit none (type, external)
 
