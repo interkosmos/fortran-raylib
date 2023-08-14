@@ -106,11 +106,12 @@ program main
             ! Draw controls info.
             call draw_rectangle(30, 370, 260, 70, fade(GREEN, 0.5))
             call draw_rectangle_lines(30, 370, 260, 70, fade(DARKGREEN, 0.5))
-            call draw_text('Pitch controlled with: KEY_UP / KEY_DOWN', 40, 380, 10, DARKGRAY)
-            call draw_text('Roll controlled with: KEY_LEFT / KEY_RIGHT', 40, 400, 10, DARKGRAY)
-            call draw_text('Yaw controlled with: KEY_A / KEY_S', 40, 420, 10, DARKGRAY)
+            call draw_text('Pitch controlled with: KEY_UP / KEY_DOWN' // c_null_char, 40, 380, 10, DARKGRAY)
+            call draw_text('Roll controlled with: KEY_LEFT / KEY_RIGHT' // c_null_char, 40, 400, 10, DARKGRAY)
+            call draw_text('Yaw controlled with: KEY_A / KEY_S' // c_null_char, 40, 420, 10, DARKGRAY)
 
-            call draw_text('(c) WWI Plane Model created by GiaHanLam', SCREEN_WIDTH - 240, SCREEN_HEIGHT - 20, 10, DARKGRAY)
+            call draw_text('(c) WWI Plane Model created by GiaHanLam' // c_null_char, &
+                           SCREEN_WIDTH - 240, SCREEN_HEIGHT - 20, 10, DARKGRAY)
             call draw_fps(10, 10)
         call end_drawing()
     end do
