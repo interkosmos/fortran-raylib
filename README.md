@@ -100,6 +100,7 @@ More examples can be found in `examples/`:
 * **fly** renders a 3-D scene, with keyboard and mouse controls.
 * **keys** demonstrates keyboard input.
 * **map** renders a height map.
+* **truck** rotates a 3-D model loaded from file.
 * **window** opens a window with raylib.
 
 Build all examples with:

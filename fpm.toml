@@ -47,6 +47,16 @@ source-dir = "examples"
 main = "keys.f90"
 
 [[executable]]
+name = "map"
+source-dir = "examples"
+main = "map.f90"
+
+[[executable]]
+name = "truck"
+source-dir = "examples"
+main = "truck.f90"
+
+[[executable]]
 name = "window"
 source-dir = "examples"
 main = "window.f90"
