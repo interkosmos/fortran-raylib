@@ -101,6 +101,7 @@ More examples can be found in `examples/`:
 * **font** displays text using bitmap fonts.
 * **keys** demonstrates keyboard input.
 * **map** renders a height map.
+* **plane** demonstrates pitch/yaw/roll of a 3-D model.
 * **truck** rotates a 3-D model loaded from file.
 * **window** opens a window with raylib.
 

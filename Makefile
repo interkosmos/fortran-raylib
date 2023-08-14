@@ -21,7 +21,7 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: camera castle cubes flags camera3d font keys map truck window
+examples: camera camera3d castle cubes flags font keys map plane truck window
 
 camera: $(TARGET) examples/camera.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
@@ -47,6 +47,9 @@ keys: $(TARGET) examples/keys.f90
 map: $(TARGET) examples/map.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o map examples/map.f90 $(TARGET) $(LDLIBS)
 
+plane: $(TARGET) examples/plane.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o plane examples/plane.f90 $(TARGET) $(LDLIBS)
+
 truck: $(TARGET) examples/truck.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o truck examples/truck.f90 $(TARGET) $(LDLIBS)
 
@@ -65,5 +68,6 @@ clean:
 	if [ -e font ]; then rm font; fi
 	if [ -e keys ]; then rm keys; fi
 	if [ -e map ]; then rm map; fi
+	if [ -e plane ]; then rm plane; fi
 	if [ -e truck ]; then rm truck; fi
 	if [ -e window ]; then rm window; fi

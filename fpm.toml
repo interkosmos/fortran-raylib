@@ -57,6 +57,11 @@ source-dir = "examples"
 main = "map.f90"
 
 [[executable]]
+name = "plane"
+source-dir = "examples"
+main = "plane.f90"
+
+[[executable]]
 name = "truck"
 source-dir = "examples"
 main = "truck.f90"
