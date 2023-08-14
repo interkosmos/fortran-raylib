@@ -91,10 +91,7 @@ program main
             end if
         end if
 
-        rotation%x = pitch * (PI / 180.0)
-        rotation%y = yaw * (PI / 180.0)
-        rotation%z = roll * (PI / 180.0)
-
+        rotation = vector3_type(deg2rad(pitch), deg2rad(yaw), deg2rad(roll))
         model%transform = matrix_rotate_xyz(rotation)
 
         call begin_drawing()

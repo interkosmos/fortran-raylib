@@ -81,8 +81,8 @@ program main
                 camera%projection = CAMERA_ORTHOGRAPHIC
                 camera%fov_y      = 20.0 ! near plane width in CAMERA_ORTHOGRAPHIC
 
-                call camera_yaw(camera, -135 * (PI / 180.0), .true._c_bool)
-                call camera_pitch(camera, -45 * (PI / 180.0), .true._c_bool, .true._c_bool, .false._c_bool)
+                call camera_yaw(camera, deg2rad(-135.0), .true._c_bool)
+                call camera_pitch(camera, deg2rad(-45.0), .true._c_bool, .true._c_bool, .false._c_bool)
             else if (camera%projection == CAMERA_ORTHOGRAPHIC) then
                 ! Reset to default view
                 camera_mode = CAMERA_THIRD_PERSON

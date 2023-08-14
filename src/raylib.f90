@@ -1198,6 +1198,9 @@ module raylib
     public :: wave_format
     public :: window_should_close
 
+    public :: deg2rad
+    public :: rad2deg
+
     interface
         ! void AttachAudioMixedProcessor(AudioCallback processor)
         subroutine attach_audio_mixed_processor(processor) bind(c, name='AttachAudioMixedProcessor')
@@ -5560,4 +5563,16 @@ module raylib
             logical(kind=c_bool) :: window_should_close
         end function window_should_close
     end interface
+contains
+    elemental real function deg2rad(d) result(r)
+        real, intent(in) :: d
+
+        r = d * (PI / 180.0)
+    end function deg2rad
+
+    elemental real function rad2deg(r) result(d)
+        real, intent(in) :: r
+
+        d = r * (180.0 / PI)
+    end function rad2deg
 end module raylib
