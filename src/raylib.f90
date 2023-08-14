@@ -1064,6 +1064,7 @@ module raylib
     public :: load_wave_samples
     public :: maximize_window
     public :: measure_text
+    public :: measure_text_ex
     public :: mem_alloc
     public :: mem_free
     public :: mem_realloc
@@ -4536,6 +4537,17 @@ module raylib
             integer(kind=c_int),    intent(in), value :: font_size
             integer(kind=c_int)                       :: measure_text
         end function measure_text
+
+        ! Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing)
+        function measure_text_ex(font, text, font_size, spacing) bind(c, name='MeasureTextEx')
+            import :: c_char, c_float, font_type, vector2_type
+            implicit none
+            type(font_type),        intent(in), value :: font
+            character(kind=c_char), intent(in)        :: text
+            real(kind=c_float),     intent(in), value :: font_size
+            real(kind=c_float),     intent(in), value :: spacing
+            type(vector2_type)                        :: measure_text_ex
+        end function measure_text_ex
 
         ! void *MemAlloc(unsigned int size)
         function mem_alloc(size) bind(c, name='MemAlloc')
