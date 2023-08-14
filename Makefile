@@ -21,7 +21,7 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: camera castle cubes flags fly keys map truck window
+examples: camera castle cubes flags fly font keys map truck window
 
 camera: $(TARGET) examples/camera.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
@@ -37,6 +37,9 @@ flags: $(TARGET) examples/flags.f90
 
 fly: $(TARGET) examples/fly.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o fly examples/fly.f90 $(TARGET) $(LDLIBS)
+
+font: $(TARGET) examples/font.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o font examples/font.f90 $(TARGET) $(LDLIBS)
 
 keys: $(TARGET) examples/keys.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o keys examples/keys.f90 $(TARGET) $(LDLIBS)

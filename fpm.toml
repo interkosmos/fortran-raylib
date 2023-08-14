@@ -42,6 +42,11 @@ source-dir = "examples"
 main = "fly.f90"
 
 [[executable]]
+name = "font"
+source-dir = "examples"
+main = "font.f90"
+
+[[executable]]
 name = "keys"
 source-dir = "examples"
 main = "keys.f90"

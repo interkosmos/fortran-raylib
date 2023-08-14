@@ -98,6 +98,7 @@ More examples can be found in `examples/`:
 * **cubes** renders waving cubes.
 * **flags** shows window flags.
 * **fly** renders a 3-D scene, with keyboard and mouse controls.
+* **font** displays text using bitmap fonts.
 * **keys** demonstrates keyboard input.
 * **map** renders a height map.
 * **truck** rotates a 3-D model loaded from file.
