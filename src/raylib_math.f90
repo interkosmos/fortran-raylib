@@ -34,10 +34,10 @@ module raylib_math
     public :: matrix_perspective
     public :: matrix_rotate
     public :: matrix_rotate_x
-    public :: matrix_rotate_x_y_z
+    public :: matrix_rotate_xyz
     public :: matrix_rotate_y
     public :: matrix_rotate_z
-    public :: matrix_rotate_z_y_x
+    public :: matrix_rotate_zyx
     public :: matrix_scale
     public :: matrix_subtract
     public :: matrix_to_float_v
@@ -269,12 +269,12 @@ module raylib_math
         end function matrix_rotate_x
 
         ! Matrix MatrixRotateXYZ(Vector3 angle)
-        function matrix_rotate_x_y_z(angle) bind(c, name='MatrixRotateXYZ')
+        function matrix_rotate_xyz(angle) bind(c, name='MatrixRotateXYZ')
             import :: matrix_type, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: angle
-            type(matrix_type)                     :: matrix_rotate_x_y_z
-        end function matrix_rotate_x_y_z
+            type(matrix_type)                     :: matrix_rotate_xyz
+        end function matrix_rotate_xyz
 
         ! Matrix MatrixRotateY(float angle)
         function matrix_rotate_y(angle) bind(c, name='MatrixRotateY')
@@ -293,12 +293,12 @@ module raylib_math
         end function matrix_rotate_z
 
         ! Matrix MatrixRotateZYX(Vector3 angle)
-        function matrix_rotate_z_y_x(angle) bind(c, name='MatrixRotateZYX')
+        function matrix_rotate_zyx(angle) bind(c, name='MatrixRotateZYX')
             import :: matrix_type, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: angle
-            type(matrix_type)                     :: matrix_rotate_z_y_x
-        end function matrix_rotate_z_y_x
+            type(matrix_type)                     :: matrix_rotate_zyx
+        end function matrix_rotate_zyx
 
         ! Matrix MatrixScale(float x, float y, float z)
         function matrix_scale(x, y, z) bind(c, name='MatrixScale')
