@@ -1,6 +1,8 @@
 ! truck.f90
 !
-! Example program that rotates a 3-D model loaded from file.
+! Example program that rotates a 3-D model loaded from file. Enables VSync and
+! MSAA4.
+!
 ! Model (CC0) source: https://kenney.nl/assets/car-kit
 !
 ! Author:  Philipp Engel
@@ -8,7 +10,6 @@
 program main
     use, intrinsic :: iso_c_binding
     use :: raylib
-    use :: raylib_math
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -21,8 +22,8 @@ program main
     type(vector3_type)  :: rotation
     type(vector3_type)  :: scale
 
+    call set_config_flags(ior(FLAG_VSYNC_HINT, FLAG_MSAA_4X_HINT))
     call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
-    call set_target_fps(60)
     call disable_cursor()
 
     ! Define camera to look into our 3-D world.
