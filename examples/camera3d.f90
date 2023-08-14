@@ -1,4 +1,4 @@
-! fly.f90
+! camera3d.f90
 !
 ! Example program that shows a 3-D scene from first-person. Based on the raylib
 ! example `core_3d_camera_first_person.c`.

@@ -22,6 +22,11 @@ source-dir = "examples"
 main = "camera.f90"
 
 [[executable]]
+name = "camera3d"
+source-dir = "examples"
+main = "camera3d.f90"
+
+[[executable]]
 name = "castle"
 source-dir = "examples"
 main = "castle.f90"
@@ -35,11 +40,6 @@ main = "cubes.f90"
 name = "flags"
 source-dir = "examples"
 main = "flags.f90"
-
-[[executable]]
-name = "fly"
-source-dir = "examples"
-main = "fly.f90"
 
 [[executable]]
 name = "font"

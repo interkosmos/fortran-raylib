@@ -26,14 +26,14 @@ program main
     call set_target_fps(60)
 
     fonts = [ &
-        load_font('share/alagard.png' // c_null_char), &
-        load_font('share/pixelplay.png' // c_null_char), &
-        load_font('share/mecha.png' // c_null_char), &
-        load_font('share/setback.png' // c_null_char), &
-        load_font('share/romulus.png' // c_null_char), &
-        load_font('share/pixantiqua.png' // c_null_char), &
-        load_font('share/alpha_beta.png' // c_null_char), &
-        load_font('share/jupiter_crash.png' // c_null_char) &
+        load_font('share/fonts/alagard.png' // c_null_char), &
+        load_font('share/fonts/pixelplay.png' // c_null_char), &
+        load_font('share/fonts/mecha.png' // c_null_char), &
+        load_font('share/fonts/setback.png' // c_null_char), &
+        load_font('share/fonts/romulus.png' // c_null_char), &
+        load_font('share/fonts/pixantiqua.png' // c_null_char), &
+        load_font('share/fonts/alpha_beta.png' // c_null_char), &
+        load_font('share/fonts/jupiter_crash.png' // c_null_char) &
     ]
 
     messages = [ character(len=72) :: &
