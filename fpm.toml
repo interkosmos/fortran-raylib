@@ -17,56 +17,71 @@ source-dir = "src"
 library = true
 
 [[executable]]
-name = "camera"
 source-dir = "examples"
+name = "camera"
 main = "camera.f90"
 
 [[executable]]
-name = "camera3d"
 source-dir = "examples"
+name = "camera3d"
 main = "camera3d.f90"
 
 [[executable]]
-name = "castle"
 source-dir = "examples"
+name = "castle"
 main = "castle.f90"
 
 [[executable]]
-name = "cubes"
 source-dir = "examples"
+name = "cubes"
 main = "cubes.f90"
 
 [[executable]]
-name = "flags"
 source-dir = "examples"
+name = "flags"
 main = "flags.f90"
 
 [[executable]]
-name = "font"
 source-dir = "examples"
+name = "font"
 main = "font.f90"
 
 [[executable]]
-name = "keys"
 source-dir = "examples"
+name = "geometric"
+main = "geometric.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "julia"
+main = "julia.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "keys"
 main = "keys.f90"
 
 [[executable]]
-name = "map"
 source-dir = "examples"
+name = "map"
 main = "map.f90"
 
 [[executable]]
-name = "plane"
 source-dir = "examples"
+name = "plane"
 main = "plane.f90"
 
 [[executable]]
-name = "truck"
 source-dir = "examples"
+name = "shapes"
+main = "shapes.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "truck"
 main = "truck.f90"
 
 [[executable]]
-name = "window"
 source-dir = "examples"
+name = "window"
 main = "window.f90"

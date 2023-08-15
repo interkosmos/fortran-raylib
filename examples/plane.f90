@@ -21,9 +21,6 @@ program main
     type(vector3_type)   :: position
     type(vector3_type)   :: rotation
 
-    type(material_type),     pointer :: material_ptrs(:)
-    type(material_map_type), pointer :: material_map_ptrs(:)
-
     call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
     call set_target_fps(60)
     call disable_cursor()
@@ -35,14 +32,10 @@ program main
     camera%fov_y      = 30.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model = load_model('share/plane.obj' // c_null_char)
+    model   = load_model('share/plane.obj' // c_null_char)
     texture = load_texture('share/plane_diffuse.png' // c_null_char)
 
-    ! We have to add 1 to the array indices as a work-around, as we can't set
-    ! the lower bounds of the pointer arrays with `c_f_pointer()`.
-    call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
-    call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
-    material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
+    call set_model_diffuse(model, texture)
 
     ! Initial values.
     pitch = 0.0
@@ -97,7 +90,7 @@ program main
         call begin_drawing()
             call clear_background(RAYWHITE)
 
-            ! Draw 3D model (recomended to draw 3D always before 2D).
+            ! Draw 3D model (recommended to draw 3D always before 2D).
             call begin_mode3d(camera)
                 call draw_model(model, position, 1.0, WHITE)
                 call draw_grid(10, 10.0)
@@ -110,7 +103,7 @@ program main
             call draw_text('Roll controlled with: KEY_LEFT / KEY_RIGHT' // c_null_char, 40, 400, 10, DARKGRAY)
             call draw_text('Yaw controlled with: KEY_A / KEY_S' // c_null_char, 40, 420, 10, DARKGRAY)
 
-            call draw_text('(c) WWI Plane Model created by GiaHanLam' // c_null_char, &
+            call draw_text('(c) WWI plane model created by GiaHanLam' // c_null_char, &
                            SCREEN_WIDTH - 240, SCREEN_HEIGHT - 20, 10, DARKGRAY)
             call draw_fps(10, 10)
         call end_drawing()
@@ -119,4 +112,18 @@ program main
     call unload_texture(texture)
     call unload_model(model)
     call close_window()
+contains
+    subroutine set_model_diffuse(model, texture)
+        type(model_type),     intent(inout) :: model
+        type(texture2d_type), intent(inout) :: texture
+
+        type(material_type),     pointer :: material_ptrs(:)
+        type(material_map_type), pointer :: material_map_ptrs(:)
+
+        ! We have to add 1 to the array indices as a work-around, as we can't set
+        ! the lower bounds of the pointer arrays with `c_f_pointer()`.
+        call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
+        call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
+        material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
+    end subroutine set_model_diffuse
 end program main

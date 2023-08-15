@@ -18,7 +18,7 @@ program main
     type(mesh_type)      :: mesh
     type(model_type)     :: model
     type(texture2d_type) :: texture
-    type(vector3_type)   :: map_position
+    type(vector3_type)   :: position
 
     type(material_type),     pointer :: material_ptrs(:)
     type(material_map_type), pointer :: material_map_ptrs(:)
@@ -44,7 +44,7 @@ program main
     call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
     material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
 
-    map_position = vector3_type(-8.0, 0.0, -8.0)
+    position = vector3_type(-8.0, 0.0, -8.0)
 
     call unload_image(image)
 
@@ -55,7 +55,7 @@ program main
             call clear_background(RAYWHITE)
 
             call begin_mode3d(camera)
-                call draw_model(model, map_position, 1.0, RED)
+                call draw_model(model, position, 1.0, RED)
                 call draw_grid(20, 1.0)
             call end_mode3d()
 

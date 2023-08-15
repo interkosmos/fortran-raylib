@@ -98,10 +98,13 @@ More examples can be found in `examples/`:
 * **castle** renders a 3-D model loaded from file.
 * **cubes** renders waving cubes.
 * **flags** shows window flags.
+* **geometric** renders basic geometric shapes.
 * **font** displays text using bitmap fonts.
+* **julia** renders animated Julia set (GLSL).
 * **keys** demonstrates keyboard input.
 * **map** renders a height map.
 * **plane** demonstrates pitch/yaw/roll of a 3-D model.
+* **shapes** renders basic shapes.
 * **truck** rotates a 3-D model loaded from file.
 * **window** opens a window with raylib.
 

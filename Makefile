@@ -21,7 +21,8 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: camera camera3d castle cubes flags font keys map plane truck window
+examples: camera camera3d castle cubes flags font geometric julia keys map \
+          plane shapes truck window
 
 camera: $(TARGET) examples/camera.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
@@ -41,6 +42,12 @@ flags: $(TARGET) examples/flags.f90
 font: $(TARGET) examples/font.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o font examples/font.f90 $(TARGET) $(LDLIBS)
 
+geometric: $(TARGET) examples/geometric.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o geometric examples/geometric.f90 $(TARGET) $(LDLIBS)
+
+julia: $(TARGET) examples/julia.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o julia examples/julia.f90 $(TARGET) $(LDLIBS)
+
 keys: $(TARGET) examples/keys.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o keys examples/keys.f90 $(TARGET) $(LDLIBS)
 
@@ -50,6 +57,9 @@ map: $(TARGET) examples/map.f90
 plane: $(TARGET) examples/plane.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o plane examples/plane.f90 $(TARGET) $(LDLIBS)
 
+shapes: $(TARGET) examples/shapes.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o shapes examples/shapes.f90 $(TARGET) $(LDLIBS)
+
 truck: $(TARGET) examples/truck.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o truck examples/truck.f90 $(TARGET) $(LDLIBS)
 
@@ -58,7 +68,7 @@ window: $(TARGET) examples/window.f90
 
 clean:
 	if [ `ls -1 *.mod 2>/dev/null | wc -l` -gt 0 ]; then rm *.mod; fi
-	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ];   then rm *.o; fi
+	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ]; then rm *.o; fi
 	if [ -e $(TARGET) ]; then rm $(TARGET); fi
 	if [ -e camera ]; then rm camera; fi
 	if [ -e camera3d ]; then rm camera3d; fi
@@ -66,8 +76,11 @@ clean:
 	if [ -e cubes ]; then rm cubes; fi
 	if [ -e flags ]; then rm flags; fi
 	if [ -e font ]; then rm font; fi
+	if [ -e geometric ]; then rm geometric; fi
+	if [ -e julia ]; then rm julia; fi
 	if [ -e keys ]; then rm keys; fi
 	if [ -e map ]; then rm map; fi
 	if [ -e plane ]; then rm plane; fi
+	if [ -e shapes ]; then rm shapes; fi
 	if [ -e truck ]; then rm truck; fi
 	if [ -e window ]; then rm window; fi

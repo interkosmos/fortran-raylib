@@ -18,9 +18,6 @@ program main
     type(texture2d_type) :: texture
     type(vector3_type)   :: position
 
-    type(material_type),     pointer :: material_ptrs(:)
-    type(material_map_type), pointer :: material_map_ptrs(:)
-
     call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
     call set_target_fps(60)
     call disable_cursor()
@@ -32,14 +29,10 @@ program main
     camera%fov_y      = 45.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model = load_model('share/castle.obj' // c_null_char)
+    model   = load_model('share/castle.obj' // c_null_char)
     texture = load_texture('share/castle_diffuse.png' // c_null_char)
 
-    ! We have to add 1 to the array indices as a work-around, as we can't set
-    ! the lower bounds of the pointer arrays with `c_f_pointer()`.
-    call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
-    call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
-    material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
+    call set_model_diffuse(model, texture)
 
     do while (.not. window_should_close())
         call update_camera(camera, CAMERA_FIRST_PERSON)
@@ -60,6 +53,19 @@ program main
 
     call unload_texture(texture)
     call unload_model(model)
-
     call close_window()
+contains
+    subroutine set_model_diffuse(model, texture)
+        type(model_type),     intent(inout) :: model
+        type(texture2d_type), intent(inout) :: texture
+
+        type(material_type),     pointer :: material_ptrs(:)
+        type(material_map_type), pointer :: material_map_ptrs(:)
+
+        ! We have to add 1 to the array indices as a work-around, as we can't set
+        ! the lower bounds of the pointer arrays with `c_f_pointer()`.
+        call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
+        call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
+        material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
+    end subroutine set_model_diffuse
 end program main
