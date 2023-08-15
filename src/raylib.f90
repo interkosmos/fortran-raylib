@@ -77,15 +77,6 @@ module raylib
         integer(kind=c_int) :: format  = 0
     end type image_type
 
-    ! Texture
-    type, bind(c), public :: texture_type
-        integer(kind=c_unsigned_int) :: id      = 0
-        integer(kind=c_int)          :: width   = 0
-        integer(kind=c_int)          :: height  = 0
-        integer(kind=c_int)          :: mipmaps = 0
-        integer(kind=c_int)          :: format  = 0
-    end type texture_type
-
     ! Texture2D
     type, bind(c), public :: texture2d_type
         integer(kind=c_unsigned_int) :: id      = 0
@@ -107,15 +98,15 @@ module raylib
     ! RenderTexture
     type, bind(c), public :: render_texture_type
         integer(kind=c_unsigned_int) :: id = 0
-        type(texture_type)           :: texture
-        type(texture_type)           :: depth
+        type(texture2d_type)         :: texture
+        type(texture2d_type)         :: depth
     end type render_texture_type
 
     ! RenderTexture2D
     type, bind(c), public :: render_texture2d_type
         integer(kind=c_unsigned_int) :: id = 0
-        type(texture_type)           :: texture
-        type(texture_type)           :: depth
+        type(texture2d_type)         :: texture
+        type(texture2d_type)         :: depth
     end type render_texture2d_type
 
     ! NPatchInfo
@@ -4460,7 +4451,7 @@ module raylib
             type(sound_type)                   :: load_sound_from_wave
         end function load_sound_from_wave
 
-        ! Texture2D LoadTexture(const char *fileName)                                                       // Load texture from file into GPU memory (VRAM)
+        ! Texture2D LoadTexture(const char *fileName)
         function load_texture(file_name) bind(c, name='LoadTexture')
             import :: c_char, texture2d_type
             implicit none
