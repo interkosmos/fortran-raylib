@@ -33,6 +33,11 @@ main = "castle.f90"
 
 [[executable]]
 source-dir = "examples"
+name = "collision"
+main = "collision.f90"
+
+[[executable]]
+source-dir = "examples"
 name = "cubes"
 main = "cubes.f90"
 
@@ -60,6 +65,11 @@ main = "julia.f90"
 source-dir = "examples"
 name = "keys"
 main = "keys.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "log"
+main = "log.f90"
 
 [[executable]]
 source-dir = "examples"

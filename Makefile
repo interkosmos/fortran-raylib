@@ -21,7 +21,7 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: camera camera3d castle cubes flags font geometric julia keys map \
+examples: camera camera3d castle collision cubes flags font geometric julia keys log map \
           plane shapes truck window
 
 camera: $(TARGET) examples/camera.f90
@@ -32,6 +32,9 @@ camera3d: $(TARGET) examples/camera3d.f90
 
 castle: $(TARGET) examples/castle.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o castle examples/castle.f90 $(TARGET) $(LDLIBS)
+
+collision: $(TARGET) examples/collision.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o collision examples/collision.f90 $(TARGET) $(LDLIBS)
 
 cubes: $(TARGET) examples/cubes.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o cubes examples/cubes.f90 $(TARGET) $(LDLIBS)
@@ -50,6 +53,9 @@ julia: $(TARGET) examples/julia.f90
 
 keys: $(TARGET) examples/keys.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o keys examples/keys.f90 $(TARGET) $(LDLIBS)
+
+log: $(TARGET) examples/log.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o log examples/log.f90 $(TARGET) $(LDLIBS)
 
 map: $(TARGET) examples/map.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o map examples/map.f90 $(TARGET) $(LDLIBS)
@@ -73,12 +79,14 @@ clean:
 	if [ -e camera ]; then rm camera; fi
 	if [ -e camera3d ]; then rm camera3d; fi
 	if [ -e castle ]; then rm castle; fi
+	if [ -e collision ]; then rm collision; fi
 	if [ -e cubes ]; then rm cubes; fi
 	if [ -e flags ]; then rm flags; fi
 	if [ -e font ]; then rm font; fi
 	if [ -e geometric ]; then rm geometric; fi
 	if [ -e julia ]; then rm julia; fi
 	if [ -e keys ]; then rm keys; fi
+	if [ -e log ]; then rm log; fi
 	if [ -e map ]; then rm map; fi
 	if [ -e plane ]; then rm plane; fi
 	if [ -e shapes ]; then rm shapes; fi

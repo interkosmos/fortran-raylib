@@ -96,12 +96,14 @@ More examples can be found in `examples/`:
 * **camera** renders a cube in 3-D.
 * **camera3d** renders a 3-D scene, with keyboard and mouse controls.
 * **castle** renders a 3-D model loaded from file.
+* **collision** shows 2-D collision detection.
 * **cubes** renders waving cubes.
 * **flags** shows window flags.
 * **geometric** renders basic geometric shapes.
 * **font** displays text using bitmap fonts.
 * **julia** renders animated Julia set (GLSL).
 * **keys** demonstrates keyboard input.
+* **log** adds a custom logging routine.
 * **map** renders a height map.
 * **plane** demonstrates pitch/yaw/roll of a 3-D model.
 * **shapes** renders basic shapes.
