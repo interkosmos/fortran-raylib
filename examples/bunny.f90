@@ -61,7 +61,7 @@ program main
             y = bunnies(i)%position%y + texture%height / 2
 
             if (x > SCREEN_WIDTH  .or. x < 0)      bunnies(i)%speed%x = -1 * bunnies(i)%speed%x
-            if (y > SCREEN_HEIGHT .or. y - 40 < 0) bunnies(i)%speed%y = -1 * bunnies(i)%speed%x
+            if (y > SCREEN_HEIGHT .or. y - 40 < 0) bunnies(i)%speed%y = -1 * bunnies(i)%speed%y
         end do
 
         call begin_drawing()
