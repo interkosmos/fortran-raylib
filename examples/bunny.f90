@@ -39,7 +39,7 @@ program main
         if (is_mouse_button_down(MOUSE_BUTTON_LEFT)) then
             ! Create more bunnies.
             do i = 1, 100
-                if (nbunnies > MAX_BUNNIES) exit
+                if (nbunnies >= MAX_BUNNIES) exit
                 nbunnies = nbunnies + 1
 
                 bunnies(nbunnies)%position = get_mouse_position()
