@@ -21,8 +21,11 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: camera camera3d castle collision cubes flags font geometric julia keys log map \
-          plane shapes truck window
+examples: bunny camera camera3d castle collision cubes explosion flags font geometric julia keys \
+          log map maze plane shapes truck window
+
+bunny: $(TARGET) examples/bunny.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o bunny examples/bunny.f90 $(TARGET) $(LDLIBS)
 
 camera: $(TARGET) examples/camera.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o camera examples/camera.f90 $(TARGET) $(LDLIBS)
@@ -38,6 +41,9 @@ collision: $(TARGET) examples/collision.f90
 
 cubes: $(TARGET) examples/cubes.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o cubes examples/cubes.f90 $(TARGET) $(LDLIBS)
+
+explosion: $(TARGET) examples/explosion.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o explosion examples/explosion.f90 $(TARGET) $(LDLIBS)
 
 flags: $(TARGET) examples/flags.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o flags examples/flags.f90 $(TARGET) $(LDLIBS)
@@ -60,6 +66,9 @@ log: $(TARGET) examples/log.f90
 map: $(TARGET) examples/map.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o map examples/map.f90 $(TARGET) $(LDLIBS)
 
+maze: $(TARGET) examples/maze.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o maze examples/maze.f90 $(TARGET) $(LDLIBS)
+
 plane: $(TARGET) examples/plane.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o plane examples/plane.f90 $(TARGET) $(LDLIBS)
 
@@ -76,11 +85,13 @@ clean:
 	if [ `ls -1 *.mod 2>/dev/null | wc -l` -gt 0 ]; then rm *.mod; fi
 	if [ `ls -1 *.o 2>/dev/null | wc -l` -gt 0 ]; then rm *.o; fi
 	if [ -e $(TARGET) ]; then rm $(TARGET); fi
+	if [ -e bunny ]; then rm bunny; fi
 	if [ -e camera ]; then rm camera; fi
 	if [ -e camera3d ]; then rm camera3d; fi
 	if [ -e castle ]; then rm castle; fi
 	if [ -e collision ]; then rm collision; fi
 	if [ -e cubes ]; then rm cubes; fi
+	if [ -e explosion ]; then rm explosion; fi
 	if [ -e flags ]; then rm flags; fi
 	if [ -e font ]; then rm font; fi
 	if [ -e geometric ]; then rm geometric; fi
@@ -88,6 +99,7 @@ clean:
 	if [ -e keys ]; then rm keys; fi
 	if [ -e log ]; then rm log; fi
 	if [ -e map ]; then rm map; fi
+	if [ -e maze ]; then rm maze; fi
 	if [ -e plane ]; then rm plane; fi
 	if [ -e shapes ]; then rm shapes; fi
 	if [ -e truck ]; then rm truck; fi

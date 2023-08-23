@@ -8,13 +8,18 @@ description = "Fortran 2018 ISO C binding interfaces to raylib"
 keywords = [ "graphics", "raylib" ]
 
 [build]
-link = [ "raylib", "GL", "pthread", "m" ]
+link = [ "libraylib.a", "GL", "pthread", "m" ]
 
 [library]
 source-dir = "src"
 
 [install]
 library = true
+
+[[executable]]
+source-dir = "examples"
+name = "bunny"
+main = "bunny.f90"
 
 [[executable]]
 source-dir = "examples"
@@ -40,6 +45,11 @@ main = "collision.f90"
 source-dir = "examples"
 name = "cubes"
 main = "cubes.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "explosion"
+main = "explosion.f90"
 
 [[executable]]
 source-dir = "examples"
@@ -75,6 +85,11 @@ main = "log.f90"
 source-dir = "examples"
 name = "map"
 main = "map.f90"
+
+[[executable]]
+source-dir = "examples"
+name = "maze"
+main = "maze.f90"
 
 [[executable]]
 source-dir = "examples"

@@ -22,11 +22,11 @@ program main
     call set_target_fps(60)
 
     box_a = rectangle_type(10.0, &
-                           get_screen_height() / 2.0 - 50.0, &
+                           SCREEN_HEIGHT / 2.0 - 50.0, &
                            200.0, &
                            100.0)
-    box_b = rectangle_type(get_screen_width() / 2.0 - 30.0, &
-                           get_screen_height() / 2.0 - 30.0, &
+    box_b = rectangle_type(SCREEN_WIDTH / 2.0 - 30.0, &
+                           SCREEN_HEIGHT / 2.0 - 30.0, &
                            60.0, &
                            60.0)
     speed = 4
@@ -38,20 +38,20 @@ program main
     do while (.not. window_should_close())
         if (.not. pause) box_a%x = box_a%x + speed
 
-        if ((box_a%x + box_a%width >= get_screen_width()) .or. (box_a%x <= 0)) &
+        if ((box_a%x + box_a%width >= SCREEN_WIDTH) .or. (box_a%x <= 0)) &
             speed = -1 * speed
 
         box_b%x = get_mouse_x() - box_b%width / 2.0
         box_b%y = get_mouse_y() - box_b%height / 2.0
 
-        if (box_b%x + box_b%width >= get_screen_width()) then
-            box_b%x = get_screen_width() - box_b%width
+        if (box_b%x + box_b%width >= SCREEN_WIDTH) then
+            box_b%x = SCREEN_WIDTH - box_b%width
         else if (box_b%x <= 0) then
             box_b%x = 0.0
         end if
 
-        if (box_b%y + box_b%height >= get_screen_height()) then
-            box_b%y = get_screen_height() - box_b%height
+        if (box_b%y + box_b%height >= SCREEN_HEIGHT) then
+            box_b%y = SCREEN_HEIGHT - box_b%height
         else if (box_b%y <= limit) then
             box_b%y = real(limit)
         end if
@@ -65,9 +65,9 @@ program main
             call clear_background(RAYWHITE)
 
             if (collision) then
-                call draw_rectangle(0, 0, screen_width, limit, RED)
+                call draw_rectangle(0, 0, SCREEN_WIDTH, limit, RED)
             else
-                call draw_rectangle(0, 0, screen_width, limit, BLACK)
+                call draw_rectangle(0, 0, SCREEN_WIDTH, limit, BLACK)
             end if
 
             call draw_rectangle_rec(box_a, GOLD)
@@ -76,11 +76,11 @@ program main
             if (collision) then
                 call draw_rectangle_rec(box_c, LIME)
                 call draw_text('COLLISION!' // c_null_char, &
-                               get_screen_width() / 2 - measure_text('COLLISION!' // c_null_char, 20) / 2, &
+                               SCREEN_WIDTH / 2 - measure_text('COLLISION!' // c_null_char, 20) / 2, &
                                limit / 2 - 10, 20, BLACK)
 
                 write (str, '("Collision Area: ", i0)') int(box_c%width) * int(box_c%height)
-                call draw_text(trim(str) // c_null_char, get_screen_width() / 2 - 100, &
+                call draw_text(trim(str) // c_null_char, SCREEN_WIDTH / 2 - 100, &
                                limit + 10, 20, BLACK)
             end if
 
