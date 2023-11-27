@@ -3,11 +3,11 @@
 
 FC      = gfortran
 AR      = ar
-FFLAGS  = -O2 -std=f2018 -Wall -Wno-conversion -fmax-errors=1 -fno-range-check
+FFLAGS  = -g -std=f2018 -Wall -Wno-conversion -fmax-errors=1 -fno-range-check
 ARFLAGS = rcs
 LDFLAGS = -L/usr/local/lib/ -I./include/
 RAYLIB  = -lraylib
-LDLIBS  = $(RAYLIB) -lGL -lglfw -lpthread -lm
+LDLIBS  = $(RAYLIB) -lGL -lpthread -lm
 TARGET  = libfortran-raylib.a
 
 .PHONY: all clean examples

@@ -12,12 +12,12 @@ module raylib_math
 
     ! float3
     type, bind(c), public :: float3_type
-        real(kind=c_float) :: v(0:2)
+        real(kind=c_float) :: v(0:2) = 0.0
     end type float3_type
 
     ! float16
     type, bind(c), public :: float16_type
-        real(kind=c_float) :: v(0:15)
+        real(kind=c_float) :: v(0:15) = 0.0
     end type float16_type
 
     public :: clamp

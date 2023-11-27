@@ -1,5 +1,5 @@
 name = "fortran-raylib"
-version = "0.1.0"
+version = "0.2.0"
 license = "ISC"
 author = "Philipp Engel"
 maintainer = "@interkosmos"
@@ -8,7 +8,7 @@ description = "Fortran 2018 ISO C binding interfaces to raylib"
 keywords = [ "graphics", "raylib" ]
 
 [build]
-link = [ "libraylib.a", "GL", "pthread", "m" ]
+link = [ "raylib", "GL", "pthread", "m" ]
 
 [library]
 source-dir = "src"

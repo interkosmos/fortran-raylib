@@ -1,20 +1,27 @@
 # fortran-raylib
 
 A work-in-progress collection of interface bindings to
-[raylib](https://www.raylib.com/) 4.5, for 2-D and 3-D game programming in
-Fortran 2018.
+[raylib](https://www.raylib.com/) 4.5/4.6/5.0/5.1, for 2-D and 3-D game
+programming in Fortran 2018.
 
 ## Build Instructions
 
 Install the raylib package suitable for your operating system, or build from
-[source](https://github.com/raysan5/raylib/releases/tag/4.5.0):
+[source](https://github.com/raysan5/raylib/releases/tag/5.0):
 
 ```
-$ cd raylib-4.5.0/
+$ cd raylib-5.0/
 $ mkdir build && cd build/
-$ cmake -DUSE_EXTERNAL_GLFW=ON ..
-$ make
+$ cmake ..
+$ make PLATFORM=PLATFORM_DESKTOP
 ```
+Select platform `PLATFORM_DESKTOP_SDL` for the SDL 2.0 backend instead:
+
+```
+$ make PLATFORM=PLATFORM_DESKTOP_SDL
+```
+
+### Make
 
 Build the *fortran-raylib* library by executing the provided Makefile:
 
@@ -24,10 +31,19 @@ $ cd fortran-raylib/
 $ make
 ```
 
-You may have to overwrite the libraries to link (argument `LDLIBS`), depending
-on you operating system.
+Pass argument `RAYLIB` to override the raylib library to link. For example, if
+the static library `libraylib.a` is in the same directory:
 
-Or, instead with *fpm*:
+```
+$ make RAYLIB=libraylib.a
+```
+
+You may have to set the libraries to link manually (argument `LDLIBS`),
+depending on you operating system.
+
+### Fortran Package Manager
+
+Building the library and all examples with *fpm*:
 
 ```
 $ fpm build --profile release --flag "-fno-range-check"
@@ -41,12 +57,14 @@ your project:
 fortran-raylib = { git = "https://github.com/interkosmos/fortran-raylib.git" }
 ```
 
+### Linking
+
 Link your Fortran application against `libfortran-raylib.a`, `-lraylib`, and
 additional platform-dependent libraries:
 
 | System          | Linker Libraries                                                                                         |
 |-----------------|----------------------------------------------------------------------------------------------------------|
-| FreeBSD         | `-lraylib -lglfw -lGL -lpthread -lm`                                                                     |
+| FreeBSD         | `-lraylib -lGL -lpthread -lm`                                                                     |
 | Linux           | `-lraylib -lGL -lm -lpthread -ldl -lrt -lX11`                                                            |
 | Linux (Wayland) | `-lraylib -lGL -lm -lpthread -ldl -lrt -lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon`      |
 | macOS           | `-lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo` |
@@ -85,7 +103,7 @@ Compile and link the example program:
 
 ```
 $ gfortran -L/usr/local/lib -I/usr/local/include -o example example.f90 \
-  libfortran-raylib.a -lraylib -lGL -lglfw -lpthread -lm
+  libfortran-raylib.a -lraylib -lGL -lpthread -lm
 $ ./example
 ```
 
@@ -119,7 +137,7 @@ Build all examples with:
 $ make examples
 ```
 
-To link against the static raylib library, run:
+To link against a static raylib library, run:
 
 ```
 $ make examples RAYLIB=libraylib.a
@@ -129,6 +147,8 @@ $ make examples RAYLIB=libraylib.a
 
 Some issues have to be regarded when calling raylib from Fortran:
 
+* Model loading is broken in raylib 5.0
+  ([issue](https://github.com/raysan5/raylib/issues/3576)).
 * All procedure names and dummy arguments have been converted to snake case.
 * As Fortran does not feature unsigned data types, use the compiler flag
   `-fno-range-check` to allow signed values to be written into unsigned
