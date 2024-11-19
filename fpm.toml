@@ -8,7 +8,7 @@ description = "Fortran 2018 ISO C binding interfaces to raylib"
 keywords = [ "graphics", "raylib" ]
 
 [build]
-link = [ "raylib", "GL", "pthread", "m" ]
+link = [ "raylib", "glfw", "GL", "pthread", "m" ]
 
 [library]
 source-dir = "src"
@@ -103,8 +103,8 @@ main = "shapes.f90"
 
 [[executable]]
 source-dir = "examples"
-name = "truck"
-main = "truck.f90"
+name = "ship"
+main = "ship.f90"
 
 [[executable]]
 source-dir = "examples"

@@ -1,21 +1,22 @@
 # fortran-raylib
 
 A work-in-progress collection of interface bindings to
-[raylib](https://www.raylib.com/) 4.5/4.6/5.0/5.1, for 2-D and 3-D game
-programming in Fortran 2018.
+[raylib](https://www.raylib.com/) 5.5, for 2-D and 3-D game programming in
+Fortran 2018.
 
 ## Build Instructions
 
 Install the raylib package suitable for your operating system, or build from
-[source](https://github.com/raysan5/raylib/releases/tag/5.0):
+[source](https://github.com/raysan5/raylib/releases/tag/5.5):
 
 ```
-$ cd raylib-5.0/
+$ cd raylib-5.5/
 $ mkdir build && cd build/
 $ cmake ..
 $ make PLATFORM=PLATFORM_DESKTOP
+$ make install
 ```
-Select platform `PLATFORM_DESKTOP_SDL` for the SDL 2.0 backend instead:
+Select platform `PLATFORM_DESKTOP_SDL` for the SDL 2.0 back-end:
 
 ```
 $ make PLATFORM=PLATFORM_DESKTOP_SDL
@@ -64,7 +65,7 @@ additional platform-dependent libraries:
 
 | System          | Linker Libraries                                                                                         |
 |-----------------|----------------------------------------------------------------------------------------------------------|
-| FreeBSD         | `-lraylib -lGL -lpthread -lm`                                                                     |
+| FreeBSD         | `-lraylib -lglfw -lGL -lpthread -lm`                                                                     |
 | Linux           | `-lraylib -lGL -lm -lpthread -ldl -lrt -lX11`                                                            |
 | Linux (Wayland) | `-lraylib -lGL -lm -lpthread -ldl -lrt -lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon`      |
 | macOS           | `-lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo` |
@@ -102,10 +103,12 @@ end program main
 Compile and link the example program:
 
 ```
-$ gfortran -L/usr/local/lib -I/usr/local/include -o example example.f90 \
-  libfortran-raylib.a -lraylib -lGL -lpthread -lm
+$ gfortran -L/usr/local/lib -o example example.f90 libfortran-raylib.a -lraylib -lGL -lpthread -lm
 $ ./example
 ```
+
+Depending on the build flags chosen for *raylib*, you may have to link with
+`-lglfw` additionally.
 
 ## Further Examples
 
@@ -128,7 +131,7 @@ More examples can be found in `examples/`:
 * **maze** renders a 3-D maze in first-person view.
 * **plane** demonstrates pitch/yaw/roll of a 3-D model.
 * **shapes** renders basic shapes.
-* **truck** rotates a 3-D model loaded from file.
+* **ship** rotates a 3-D model loaded from file.
 * **window** opens a window with raylib.
 
 Build all examples with:
@@ -147,7 +150,7 @@ $ make examples RAYLIB=libraylib.a
 
 Some issues have to be regarded when calling raylib from Fortran:
 
-* Model loading is broken in raylib 5.0
+* Loading models in Wavefront OBJ format is broken since raylib 5.0
   ([issue](https://github.com/raysan5/raylib/issues/3576)).
 * All procedure names and dummy arguments have been converted to snake case.
 * As Fortran does not feature unsigned data types, use the compiler flag
@@ -161,7 +164,7 @@ Some issues have to be regarded when calling raylib from Fortran:
 * If a function returns `type(c_ptr)`, the result has to be converted to a
   Fortran pointer with the intrinsic subroutine `c_f_pointer()` first. C char
   pointers may be converted with utility subroutine `c_f_str_ptr()` from module
-  `raylib_util`.
+  `raylib_util`, or the intrinsic `c_f_strpointer()` (Fortran 2023).
 
 ## Licence
 

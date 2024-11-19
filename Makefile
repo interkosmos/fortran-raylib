@@ -3,11 +3,11 @@
 
 FC      = gfortran
 AR      = ar
-FFLAGS  = -g -std=f2018 -Wall -Wno-conversion -fmax-errors=1 -fno-range-check
+FFLAGS  = -O2 -std=f2018 -Wall -Wno-conversion -fmax-errors=1 -fno-range-check
 ARFLAGS = rcs
-LDFLAGS = -L/usr/local/lib/ -I./include/
+LDFLAGS = -L/usr/local/lib
 RAYLIB  = -lraylib
-LDLIBS  = $(RAYLIB) -lGL -lpthread -lm
+LDLIBS  = $(RAYLIB) -lglfw -lGL -lpthread -lm
 TARGET  = libfortran-raylib.a
 
 .PHONY: all clean examples
@@ -21,8 +21,8 @@ $(TARGET): src/raylib.f90 src/raylib_util.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
 	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
 
-examples: bunny camera camera3d castle collision cubes explosion flags font geometric julia keys \
-          log map maze plane shapes truck window
+examples: bunny camera camera3d castle collision cubes explosion flags font \
+          geometric julia keys log map maze plane shapes ship window
 
 bunny: $(TARGET) examples/bunny.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o bunny examples/bunny.f90 $(TARGET) $(LDLIBS)
@@ -75,8 +75,8 @@ plane: $(TARGET) examples/plane.f90
 shapes: $(TARGET) examples/shapes.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o shapes examples/shapes.f90 $(TARGET) $(LDLIBS)
 
-truck: $(TARGET) examples/truck.f90
-	$(FC) $(FFLAGS) $(LDFLAGS) -o truck examples/truck.f90 $(TARGET) $(LDLIBS)
+ship: $(TARGET) examples/ship.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o ship examples/ship.f90 $(TARGET) $(LDLIBS)
 
 window: $(TARGET) examples/window.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o window examples/window.f90 $(TARGET) $(LDLIBS)
@@ -102,5 +102,5 @@ clean:
 	if [ -e maze ]; then rm maze; fi
 	if [ -e plane ]; then rm plane; fi
 	if [ -e shapes ]; then rm shapes; fi
-	if [ -e truck ]; then rm truck; fi
+	if [ -e ship ]; then rm ship; fi
 	if [ -e window ]; then rm window; fi

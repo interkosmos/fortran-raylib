@@ -1,9 +1,9 @@
-! truck.f90
+! ship.f90
 !
 ! Example program that rotates a 3-D model loaded from file. Enables VSync and
 ! MSAA4.
 !
-! Model (CC0) source: https://kenney.nl/assets/car-kit
+! Model (CC0) source: https://opengameart.org/content/lowpoly-ship-pack
 !
 ! Author:  Philipp Engel
 ! Licence: ISC
@@ -33,7 +33,7 @@ program main
     camera%fov_y      = 45.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model = load_model('share/truck.obj' // c_null_char)
+    model = load_model('share/ship.glb' // c_null_char)
 
     angle    = 0.0
     rotation = vector3_type(0.0, 1.0, 0.0)

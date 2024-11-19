@@ -72,7 +72,8 @@ contains
         type(material_map_type), pointer :: material_map_ptrs(:)
 
         ! We have to add 1 to the array indices as a work-around, as we can't set
-        ! the lower bounds of the pointer arrays with `c_f_pointer()`.
+        ! the lower bounds of the pointer arrays with `c_f_pointer()` yet
+        ! (new Fortran 2023 feature).
         call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
         call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
         material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
