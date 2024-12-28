@@ -74,7 +74,7 @@ program main
                 ! Converting 255 into an unsigned char requires the compiler
                 ! flag `-fno-range-check`. Otherwise, we would have to convert
                 ! via the intrinsic `transfer()`.
-                if (pixels(y * cubic%width + x)%r == int(255, c_unsigned_char) .and. &
+                if (pixels(y * cubic%width + x)%r == int(Z'FF', c_unsigned_char) .and. &
                     check_collision_circle_rec(player, radius, rectangle)) then
                     camera%position = old_camera
                 end if
