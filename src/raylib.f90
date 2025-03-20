@@ -10,8 +10,10 @@ module raylib
     implicit none (type, external)
     private
 
-    integer, parameter, public :: c_unsigned_int  = c_int
+    integer, parameter, public :: c_unsigned      = c_int
     integer, parameter, public :: c_unsigned_char = c_signed_char
+
+    integer, parameter, public :: RL_MAX_SHADER_LOCATIONS = 32
 
     real, parameter, public :: PI = acos(-1.0)
 
@@ -79,34 +81,34 @@ module raylib
 
     ! Texture2D
     type, bind(c), public :: texture2d_type
-        integer(kind=c_unsigned_int) :: id      = 0
-        integer(kind=c_int)          :: width   = 0
-        integer(kind=c_int)          :: height  = 0
-        integer(kind=c_int)          :: mipmaps = 0
-        integer(kind=c_int)          :: format  = 0
+        integer(kind=c_unsigned) :: id      = 0
+        integer(kind=c_int)      :: width   = 0
+        integer(kind=c_int)      :: height  = 0
+        integer(kind=c_int)      :: mipmaps = 0
+        integer(kind=c_int)      :: format  = 0
     end type texture2d_type
 
     ! TextureCubemap
     type, bind(c), public :: texture_cubemap_type
-        integer(kind=c_unsigned_int) :: id      = 0_c_unsigned_int
-        integer(kind=c_int)          :: width   = 0
-        integer(kind=c_int)          :: height  = 0
-        integer(kind=c_int)          :: mipmaps = 0
-        integer(kind=c_int)          :: format  = 0
+        integer(kind=c_unsigned) :: id      = 0_c_unsigned
+        integer(kind=c_int)      :: width   = 0
+        integer(kind=c_int)      :: height  = 0
+        integer(kind=c_int)      :: mipmaps = 0
+        integer(kind=c_int)      :: format  = 0
     end type texture_cubemap_type
 
     ! RenderTexture
     type, bind(c), public :: render_texture_type
-        integer(kind=c_unsigned_int) :: id = 0_c_unsigned_int
-        type(texture2d_type)         :: texture
-        type(texture2d_type)         :: depth
+        integer(kind=c_unsigned) :: id = 0_c_unsigned
+        type(texture2d_type)     :: texture
+        type(texture2d_type)     :: depth
     end type render_texture_type
 
     ! RenderTexture2D
     type, bind(c), public :: render_texture2d_type
-        integer(kind=c_unsigned_int) :: id = 0_c_unsigned_int
-        type(texture2d_type)         :: texture
-        type(texture2d_type)         :: depth
+        integer(kind=c_unsigned) :: id = 0_c_unsigned
+        type(texture2d_type)     :: texture
+        type(texture2d_type)     :: depth
     end type render_texture2d_type
 
     ! NPatchInfo
@@ -157,27 +159,27 @@ module raylib
 
     ! Mesh
     type, bind(c), public :: mesh_type
-        integer(kind=c_int)          :: vertex_count    = 0
-        integer(kind=c_int)          :: triangle_count  = 0
-        type(c_ptr)                  :: vertices        = c_null_ptr !! float *
-        type(c_ptr)                  :: texcoords       = c_null_ptr !! float *
-        type(c_ptr)                  :: texcoords2      = c_null_ptr !! float *
-        type(c_ptr)                  :: normals         = c_null_ptr !! float *
-        type(c_ptr)                  :: tangents        = c_null_ptr !! float *
-        type(c_ptr)                  :: colors          = c_null_ptr !! unsigned char *
-        type(c_ptr)                  :: indices         = c_null_ptr !! unsigned short *
-        type(c_ptr)                  :: anim_vertices   = c_null_ptr !! float *
-        type(c_ptr)                  :: anim_normals    = c_null_ptr !! float *
-        type(c_ptr)                  :: bone_ids        = c_null_ptr !! unsigned char *
-        type(c_ptr)                  :: bone_weights    = c_null_ptr !! float *
-        integer(kind=c_unsigned_int) :: vao_id          = 0_c_unsigned_int
-        type(c_ptr)                  :: vbo_id          = c_null_ptr !! unsigned int *
+        integer(kind=c_int)      :: vertex_count    = 0
+        integer(kind=c_int)      :: triangle_count  = 0
+        type(c_ptr)              :: vertices        = c_null_ptr !! float *
+        type(c_ptr)              :: texcoords       = c_null_ptr !! float *
+        type(c_ptr)              :: texcoords2      = c_null_ptr !! float *
+        type(c_ptr)              :: normals         = c_null_ptr !! float *
+        type(c_ptr)              :: tangents        = c_null_ptr !! float *
+        type(c_ptr)              :: colors          = c_null_ptr !! unsigned char *
+        type(c_ptr)              :: indices         = c_null_ptr !! unsigned short *
+        type(c_ptr)              :: anim_vertices   = c_null_ptr !! float *
+        type(c_ptr)              :: anim_normals    = c_null_ptr !! float *
+        type(c_ptr)              :: bone_ids        = c_null_ptr !! unsigned char *
+        type(c_ptr)              :: bone_weights    = c_null_ptr !! float *
+        integer(kind=c_unsigned) :: vao_id          = 0_c_unsigned
+        type(c_ptr)              :: vbo_id          = c_null_ptr !! unsigned int *
     end type mesh_type
 
     ! Shader
     type, bind(c), public :: shader_type
-        integer(kind=c_unsigned_int) :: id   = 0_c_unsigned_int
-        type(c_ptr)                  :: locs = c_null_ptr !! int *
+        integer(kind=c_unsigned) :: id   = 0_c_unsigned
+        type(c_ptr)              :: locs = c_null_ptr !! int * (RL_MAX_SHADER_LOCATIONS)
     end type shader_type
 
     ! MaterialMap
@@ -251,35 +253,35 @@ module raylib
 
     ! Wave
     type, bind(c), public :: wave_type
-        integer(kind=c_unsigned_int) :: frame_count = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: sample_rate = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: sample_size = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: channels    = 0_c_unsigned_int
-        type(c_ptr)                  :: data        = c_null_ptr !! void *
+        integer(kind=c_unsigned) :: frame_count = 0_c_unsigned
+        integer(kind=c_unsigned) :: sample_rate = 0_c_unsigned
+        integer(kind=c_unsigned) :: sample_size = 0_c_unsigned
+        integer(kind=c_unsigned) :: channels    = 0_c_unsigned
+        type(c_ptr)              :: data        = c_null_ptr !! void *
     end type wave_type
 
     ! AudioStream
     type, bind(c), public :: audio_stream_type
-        type(c_ptr)                  :: buffer      = c_null_ptr !! rAudioBuffer *
-        type(c_ptr)                  :: processor   = c_null_ptr !! rAudioProcessor *
-        integer(kind=c_unsigned_int) :: sample_rate = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: sample_size = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: channels    = 0_c_unsigned_int
+        type(c_ptr)              :: buffer      = c_null_ptr !! rAudioBuffer *
+        type(c_ptr)              :: processor   = c_null_ptr !! rAudioProcessor *
+        integer(kind=c_unsigned) :: sample_rate = 0_c_unsigned
+        integer(kind=c_unsigned) :: sample_size = 0_c_unsigned
+        integer(kind=c_unsigned) :: channels    = 0_c_unsigned
     end type audio_stream_type
 
     ! Sound
     type, bind(c), public :: sound_type
-        type(audio_stream_type)      :: stream
-        integer(kind=c_unsigned_int) :: frame_count = 0
+        type(audio_stream_type)  :: stream
+        integer(kind=c_unsigned) :: frame_count = 0
     end type sound_type
 
     ! Music
     type, bind(c), public :: music_type
-        type(audio_stream_type)      :: stream
-        integer(kind=c_unsigned_int) :: frame_count = 0_c_unsigned_int
-        logical(kind=c_bool)         :: looping     = .false._c_bool
-        integer(kind=c_int)          :: ctx_type    = 0
-        type(c_ptr)                  :: ctx_data    = c_null_ptr !! void *
+        type(audio_stream_type)  :: stream
+        integer(kind=c_unsigned) :: frame_count = 0_c_unsigned
+        logical(kind=c_bool)     :: looping     = .false._c_bool
+        integer(kind=c_int)      :: ctx_type    = 0
+        type(c_ptr)              :: ctx_data    = c_null_ptr !! void *
     end type music_type
 
     ! VrDeviceInfo
@@ -310,9 +312,9 @@ module raylib
 
     ! FilePathList
     type, bind(c), public :: file_path_list_type
-        integer(kind=c_unsigned_int) :: capacity = 0_c_unsigned_int
-        integer(kind=c_unsigned_int) :: count    = 0_c_unsigned_int
-        type(c_ptr)                  :: paths    = c_null_ptr !! char **
+        integer(kind=c_unsigned) :: capacity = 0_c_unsigned
+        integer(kind=c_unsigned) :: count    = 0_c_unsigned
+        type(c_ptr)              :: paths    = c_null_ptr !! char **
     end type file_path_list_type
 
     type(color_type), parameter, public :: LIGHTGRAY  = color_type(200, 200, 200, 255)
@@ -1258,26 +1260,26 @@ module raylib
     abstract interface
         ! unsigned char *(*LoadFileDataCallback)(const char *fileName, unsigned int *bytesRead)
         function load_file_data_callback(file_name, bytes_read) bind(c)
-            import :: c_ptr, c_unsigned_int
+            import :: c_ptr, c_unsigned
             implicit none
-            type(c_ptr),                  intent(in), value :: file_name
-            integer(kind=c_unsigned_int), intent(out)       :: bytes_read
-            type(c_ptr)                                     :: load_file_data_callback
+            type(c_ptr),              intent(in), value :: file_name
+            integer(kind=c_unsigned), intent(out)       :: bytes_read
+            type(c_ptr)                                 :: load_file_data_callback
         end function load_file_data_callback
 
         ! bool (*SaveFileDataCallback)(const char *fileName, void *data, unsigned int bytesToWrite)
         function save_file_data_callback(file_name, data, bytes_to_write) bind(c)
-            import :: c_bool, c_ptr, c_unsigned_int
+            import :: c_bool, c_ptr, c_unsigned
             implicit none
-            type(c_ptr),                  intent(in), value :: file_name
-            type(c_ptr),                  intent(in), value :: data
-            integer(kind=c_unsigned_int), intent(in), value :: bytes_to_write
-            logical(kind=c_bool)                            :: save_file_data_callback
+            type(c_ptr),              intent(in), value :: file_name
+            type(c_ptr),              intent(in), value :: data
+            integer(kind=c_unsigned), intent(in), value :: bytes_to_write
+            logical(kind=c_bool)                        :: save_file_data_callback
         end function save_file_data_callback
 
         ! char *(*LoadFileTextCallback)(const char *fileName)
         function load_file_text_callback(file_name) bind(c)
-            import :: c_ptr, c_unsigned_int
+            import :: c_ptr
             implicit none
             type(c_ptr), intent(in), value :: file_name
             type(c_ptr)                    :: load_file_text_callback
@@ -1526,9 +1528,9 @@ module raylib
 
         ! void ClearWindowState(unsigned int flags)
         subroutine clear_window_state(flags) bind(c, name='ClearWindowState')
-            import :: c_unsigned_int
+            import :: c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: flags
+            integer(kind=c_unsigned), intent(in), value :: flags
         end subroutine clear_window_state
 
         ! void CloseAudioDevice(void)
@@ -1651,11 +1653,11 @@ module raylib
 
         ! unsigned int ComputeCRC32(unsigned char *data, int dataSize)
         function compute_crc32(data, data_size) bind(c, name='ComputeCRC32')
-            import :: c_char, c_int, c_unsigned_int
+            import :: c_char, c_int, c_unsigned
             implicit none
             character(kind=c_char), intent(in)        :: data
             integer(kind=c_int),    intent(in), value :: data_size
-            integer(kind=c_unsigned_int)              :: compute_crc32
+            integer(kind=c_unsigned)                  :: compute_crc32
         end function compute_crc32
 
         ! unsigned int *ComputeMD5(unsigned char *data, int dataSize)
@@ -2084,7 +2086,7 @@ module raylib
             implicit none
             type(mesh_type),     intent(in), value :: mesh
             type(material_type), intent(in), value :: material
-            type(matrix_type),   intent(inout)     :: transforms
+            type(matrix_type),   intent(inout)     :: transforms(*)
             integer(kind=c_int), intent(in), value :: instances
         end subroutine draw_mesh_instanced
 
@@ -3181,10 +3183,10 @@ module raylib
 
         ! Color GetColor(unsigned int hexValue)
         function get_color(hex_value) bind(c, name='GetColor')
-            import :: c_unsigned_int, color_type
+            import :: c_unsigned, color_type
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: hex_value
-            type(color_type)                                :: get_color
+            integer(kind=c_unsigned), intent(in), value :: hex_value
+            type(color_type)                            :: get_color
         end function get_color
 
         ! int GetCurrentMonitor(void)
@@ -4411,10 +4413,10 @@ module raylib
 
         ! bool IsGestureDetected(unsigned int gesture)
         function is_gesture_detected(gesture) bind(c, name='IsGestureDetected')
-            import :: c_bool, c_unsigned_int
+            import :: c_bool, c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: gesture
-            logical(kind=c_bool)                            :: is_gesture_detected
+            integer(kind=c_unsigned), intent(in), value :: gesture
+            logical(kind=c_bool)                        :: is_gesture_detected
         end function is_gesture_detected
 
         ! bool IsImageReady(Image image)
@@ -4645,20 +4647,20 @@ module raylib
 
         ! bool IsWindowState(unsigned int flag)
         function is_window_state(flag) bind(c, name='IsWindowState')
-            import :: c_bool, c_unsigned_int
+            import :: c_bool, c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: flag
-            logical(kind=c_bool)                            :: is_window_state
+            integer(kind=c_unsigned), intent(in), value :: flag
+            logical(kind=c_bool)                        :: is_window_state
         end function is_window_state
 
         ! AudioStream LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels)
         function load_audio_stream(sample_rate, sample_size, channels) bind(c, name='LoadAudioStream')
-            import :: audio_stream_type, c_unsigned_int
+            import :: audio_stream_type, c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: sample_rate
-            integer(kind=c_unsigned_int), intent(in), value :: sample_size
-            integer(kind=c_unsigned_int), intent(in), value :: channels
-            type(audio_stream_type)                         :: load_audio_stream
+            integer(kind=c_unsigned), intent(in), value :: sample_rate
+            integer(kind=c_unsigned), intent(in), value :: sample_size
+            integer(kind=c_unsigned), intent(in), value :: channels
+            type(audio_stream_type)                     :: load_audio_stream
         end function load_audio_stream
 
         ! int *LoadCodepoints(const char *text, int *count)
@@ -4923,12 +4925,12 @@ module raylib
 
         ! int *LoadRandomSequence(unsigned int count, int min, int max)
         function load_random_sequence(count, min, max) bind(c, name='LoadRandomSequence')
-            import :: c_int, c_ptr, c_unsigned_int
+            import :: c_int, c_ptr, c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: count
-            integer(kind=c_int),          intent(in), value :: min
-            integer(kind=c_int),          intent(in), value :: max
-            type(c_ptr)                                     :: load_random_sequence
+            integer(kind=c_unsigned), intent(in), value :: count
+            integer(kind=c_int),      intent(in), value :: min
+            integer(kind=c_int),      intent(in), value :: max
+            type(c_ptr)                                 :: load_random_sequence
         end function load_random_sequence
 
         ! RenderTexture2D LoadRenderTexture(int width, int height)
@@ -5084,10 +5086,10 @@ module raylib
 
         ! void *MemAlloc(unsigned int size)
         function mem_alloc(size) bind(c, name='MemAlloc')
-            import :: c_ptr, c_unsigned_int
+            import :: c_ptr, c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: size
-            type(c_ptr)                                     :: mem_alloc
+            integer(kind=c_unsigned), intent(in), value :: size
+            type(c_ptr)                                 :: mem_alloc
         end function mem_alloc
 
         ! void MemFree(void *ptr)
@@ -5099,11 +5101,11 @@ module raylib
 
         ! void *MemRealloc(void *ptr, unsigned int size)
         function mem_realloc(ptr, size) bind(c, name='MemRealloc')
-            import :: c_ptr, c_unsigned_int
+            import :: c_ptr, c_unsigned
             implicit none
-            type(c_ptr),                  intent(in), value :: ptr
-            integer(kind=c_unsigned_int), intent(in), value :: size
-            type(c_ptr)                                     :: mem_realloc
+            type(c_ptr),              intent(in), value :: ptr
+            integer(kind=c_unsigned), intent(in), value :: size
+            type(c_ptr)                                 :: mem_realloc
         end function mem_realloc
 
         ! void MinimizeWindow(void)
@@ -5297,9 +5299,9 @@ module raylib
 
         ! void SetConfigFlags(unsigned int flags)
         subroutine set_config_flags(flags) bind(c, name='SetConfigFlags')
-            import :: c_unsigned_int
+            import :: c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: flags
+            integer(kind=c_unsigned), intent(in), value :: flags
         end subroutine set_config_flags
 
         ! void SetExitKey(int key)
@@ -5319,9 +5321,9 @@ module raylib
 
         ! void SetGesturesEnabled(unsigned int flags)
         subroutine set_gestures_enabled(flags) bind(c, name='SetGesturesEnabled')
-            import :: c_unsigned_int
+            import :: c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: flags
+            integer(kind=c_unsigned), intent(in), value :: flags
         end subroutine set_gestures_enabled
 
         ! void SetLoadFileDataCallback(LoadFileDataCallback callback)
@@ -5429,9 +5431,9 @@ module raylib
 
         ! void SetRandomSeed(unsigned int seed)
         subroutine set_random_seed(seed) bind(c, name='SetRandomSeed')
-            import :: c_unsigned_int
+            import :: c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: seed
+            integer(kind=c_unsigned), intent(in), value :: seed
         end subroutine set_random_seed
 
         ! void SetSaveFileDataCallback(SaveFileDataCallback callback)
@@ -5630,9 +5632,9 @@ module raylib
 
         ! void SetWindowState(unsigned int flags)
         subroutine set_window_state(flags) bind(c, name='SetWindowState')
-            import :: c_unsigned_int
+            import :: c_unsigned
             implicit none
-            integer(kind=c_unsigned_int), intent(in), value :: flags
+            integer(kind=c_unsigned), intent(in), value :: flags
         end subroutine set_window_state
 
         ! void SetWindowTitle(const char *title)
@@ -5736,10 +5738,10 @@ module raylib
 
         ! unsigned int TextLength(const char *text)
         function text_length(text) bind(c, name='TextLength')
-            import :: c_char, c_unsigned_int
+            import :: c_char, c_unsigned
             implicit none
             character(kind=c_char), intent(in) :: text
-            integer(kind=c_unsigned_int)       :: text_length
+            integer(kind=c_unsigned)           :: text_length
         end function text_length
 
         ! char *TextReplace(char *text, const char *replace, const char *by)
