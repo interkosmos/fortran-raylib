@@ -138,7 +138,7 @@ More examples can be found in `examples/`:
 * **map** renders a height map.
 * **maze** renders a 3-D maze in first-person view.
 * **mesh** demonstrates mesh instancing.
-* **plane** demonstrates pitch/yaw/roll of a 3-D model.
+* **plane** shows pitch/yaw/roll of a 3-D model.
 * **shapes** renders basic shapes.
 * **ship** rotates a 3-D model loaded from file.
 * **window** opens a window with raylib.

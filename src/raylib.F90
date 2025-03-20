@@ -22,8 +22,8 @@ module raylib
 
 #endif
 
-    integer, parameter, public :: RL_MAX_SHADER_LOCATIONS = 32
-    integer, parameter, public :: MAX_MATERIAL_MAPS       = 12
+    integer, parameter, public :: MAX_MATERIAL_MAPS    = 12
+    integer, parameter, public :: MAX_SHADER_LOCATIONS = 32
 
     real, parameter, public :: PI = acos(-1.0)
 
@@ -329,26 +329,26 @@ module raylib
         type(c_ptr)              :: paths    = c_null_ptr !! char **
     end type file_path_list_type
 
-    integer(c_unsigned_char), parameter :: z130 = int(z'82', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z131 = int(z'83', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z135 = int(z'87', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z158 = int(z'9E', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z161 = int(z'A1', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z172 = int(z'AC', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z176 = int(z'B0', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z190 = int(z'BE', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z191 = int(z'BF', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z194 = int(z'C2', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z200 = int(z'C8', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z203 = int(z'CB', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z211 = int(z'D3', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z228 = int(z'E4', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z230 = int(z'E6', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z241 = int(z'F1', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z245 = int(z'F5', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z249 = int(z'F9', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z253 = int(z'FD', c_unsigned_char)
-    integer(c_unsigned_char), parameter :: z255 = int(z'FF', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z130 = int(z'82', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z131 = int(z'83', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z135 = int(z'87', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z158 = int(z'9E', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z161 = int(z'A1', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z172 = int(z'AC', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z176 = int(z'B0', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z190 = int(z'BE', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z191 = int(z'BF', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z194 = int(z'C2', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z200 = int(z'C8', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z203 = int(z'CB', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z211 = int(z'D3', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z228 = int(z'E4', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z230 = int(z'E6', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z241 = int(z'F1', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z245 = int(z'F5', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z249 = int(z'F9', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z253 = int(z'FD', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: z255 = int(z'FF', c_unsigned_char)
 
     type(color_type), parameter, public :: LIGHTGRAY  = color_type(z200, z200, z200, z255)
     type(color_type), parameter, public :: GRAY       = color_type(z130, z130, z130, z255)

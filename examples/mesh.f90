@@ -83,7 +83,7 @@ program main
 
     shader = load_shader(VS_FILE_NAME // c_null_char, FS_FILE_NAME // c_null_char)
 
-    call c_f_pointer(shader%locs, locs, [ RL_MAX_SHADER_LOCATIONS + 1 ])
+    call c_f_pointer(shader%locs, locs, [ MAX_SHADER_LOCATIONS + 1 ])
     locs(SHADER_LOC_MATRIX_MVP + 1)  = get_shader_location(shader, 'mvp' // c_null_char)
     locs(SHADER_LOC_VECTOR_VIEW + 1) = get_shader_location(shader, 'viewPos' // c_null_char)
 
