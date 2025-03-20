@@ -48,7 +48,7 @@ program main
                 bunnies(nbunnies)%color    = color_type(r = int(get_random_value( 50, 240), c_unsigned_char), &
                                                         g = int(get_random_value( 80, 240), c_unsigned_char), &
                                                         b = int(get_random_value(100, 240), c_unsigned_char), &
-                                                        a = int(255, c_unsigned_char))
+                                                        a = int(z'FF', c_unsigned_char))
             end do
         end if
 

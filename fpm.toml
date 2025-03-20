@@ -93,6 +93,11 @@ main = "maze.f90"
 
 [[executable]]
 source-dir = "examples"
+name = "mesh"
+main = "mesh.f90"
+
+[[executable]]
+source-dir = "examples"
 name = "plane"
 main = "plane.f90"
 

@@ -71,10 +71,7 @@ program main
                                            map_position%z - 0.5 + y, &
                                            1.0, 1.0)
 
-                ! Converting 255 into an unsigned char requires the compiler
-                ! flag `-fno-range-check`. Otherwise, we would have to convert
-                ! via the intrinsic `transfer()`.
-                if (pixels(y * cubic%width + x)%r == int(255, c_unsigned_char) .and. &
+                if (pixels(y * cubic%width + x)%r == int(z'FF', c_unsigned_char) .and. &
                     check_collision_circle_rec(player, radius, rectangle)) then
                     camera%position = old_camera
                 end if
@@ -122,7 +119,7 @@ contains
         ! We have to add 1 to the array indices as a work-around, as we can't set
         ! the lower bounds of the pointer arrays with `c_f_pointer()`.
         call c_f_pointer(model%materials, material_ptrs, [ model%material_count ])
-        call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MATERIAL_MAP_BRDF + 1 ])
+        call c_f_pointer(material_ptrs(1)%maps, material_map_ptrs, [ MAX_MATERIAL_MAPS + 1 ])
         material_map_ptrs(MATERIAL_MAP_DIFFUSE + 1)%texture = texture
     end subroutine set_model_diffuse
 end program main

@@ -1,4 +1,4 @@
-! raylib.f90
+! raylib.F90
 !
 ! A collection of auto-generated Fortran 2018 interface bindings to
 ! raylib 5.5.
@@ -10,10 +10,20 @@ module raylib
     implicit none (type, external)
     private
 
+#if defined (__flang__)
+
+    public :: c_unsigned
+    public :: c_unsigned_char
+
+#else
+
     integer, parameter, public :: c_unsigned      = c_int
     integer, parameter, public :: c_unsigned_char = c_signed_char
 
+#endif
+
     integer, parameter, public :: RL_MAX_SHADER_LOCATIONS = 32
+    integer, parameter, public :: MAX_MATERIAL_MAPS       = 12
 
     real, parameter, public :: PI = acos(-1.0)
 
@@ -56,10 +66,10 @@ module raylib
 
     ! Color
     type, bind(c), public :: color_type
-        integer(kind=c_unsigned_char) :: r = 0_c_unsigned_char
-        integer(kind=c_unsigned_char) :: g = 0_c_unsigned_char
-        integer(kind=c_unsigned_char) :: b = 0_c_unsigned_char
-        integer(kind=c_unsigned_char) :: a = 255_c_unsigned_char
+        integer(kind=c_unsigned_char) :: r = int(z'00', c_unsigned_char)
+        integer(kind=c_unsigned_char) :: g = int(z'00', c_unsigned_char)
+        integer(kind=c_unsigned_char) :: b = int(z'00', c_unsigned_char)
+        integer(kind=c_unsigned_char) :: a = int(z'FF', c_unsigned_char)
     end type color_type
 
     ! Rectangle
@@ -162,8 +172,8 @@ module raylib
         integer(kind=c_int)      :: vertex_count    = 0
         integer(kind=c_int)      :: triangle_count  = 0
         type(c_ptr)              :: vertices        = c_null_ptr !! float *
-        type(c_ptr)              :: texcoords       = c_null_ptr !! float *
-        type(c_ptr)              :: texcoords2      = c_null_ptr !! float *
+        type(c_ptr)              :: tex_coords      = c_null_ptr !! float *
+        type(c_ptr)              :: tex_coords2     = c_null_ptr !! float *
         type(c_ptr)              :: normals         = c_null_ptr !! float *
         type(c_ptr)              :: tangents        = c_null_ptr !! float *
         type(c_ptr)              :: colors          = c_null_ptr !! unsigned char *
@@ -172,6 +182,8 @@ module raylib
         type(c_ptr)              :: anim_normals    = c_null_ptr !! float *
         type(c_ptr)              :: bone_ids        = c_null_ptr !! unsigned char *
         type(c_ptr)              :: bone_weights    = c_null_ptr !! float *
+        type(c_ptr)              :: bone_matrices   = c_null_ptr !! Matrix *
+        integer(kind=c_int)      :: bone_count      = 0
         integer(kind=c_unsigned) :: vao_id          = 0_c_unsigned
         type(c_ptr)              :: vbo_id          = c_null_ptr !! unsigned int *
     end type mesh_type
@@ -192,7 +204,7 @@ module raylib
     ! Material
     type, bind(c), public :: material_type
         type(shader_type)  :: shader
-        type(c_ptr)        :: maps        = c_null_ptr !! MaterialMap *
+        type(c_ptr)        :: maps        = c_null_ptr !! MaterialMap * (MAX_MATERIAL_MAPS)
         real(kind=c_float) :: params(0:3) = 0.0
     end type material_type
 
@@ -317,32 +329,53 @@ module raylib
         type(c_ptr)              :: paths    = c_null_ptr !! char **
     end type file_path_list_type
 
-    type(color_type), parameter, public :: LIGHTGRAY  = color_type(200, 200, 200, 255)
-    type(color_type), parameter, public :: GRAY       = color_type(130, 130, 130, 255)
-    type(color_type), parameter, public :: DARKGRAY   = color_type( 80,  80,  80, 255)
-    type(color_type), parameter, public :: YELLOW     = color_type(253, 249,   0, 255)
-    type(color_type), parameter, public :: GOLD       = color_type(255, 203,   0, 255)
-    type(color_type), parameter, public :: ORANGE     = color_type(255, 161,   0, 255)
-    type(color_type), parameter, public :: PINK       = color_type(255, 109, 194, 255)
-    type(color_type), parameter, public :: RED        = color_type(230,  41,  55, 255)
-    type(color_type), parameter, public :: MAROON     = color_type(190,  33,  55, 255)
-    type(color_type), parameter, public :: GREEN      = color_type(  0, 228,  48, 255)
-    type(color_type), parameter, public :: LIME       = color_type(  0, 158,  47, 255)
-    type(color_type), parameter, public :: DARKGREEN  = color_type(  0, 117,  44, 255)
-    type(color_type), parameter, public :: SKYBLUE    = color_type(102, 191, 255, 255)
-    type(color_type), parameter, public :: BLUE       = color_type(  0, 121, 241, 255)
-    type(color_type), parameter, public :: DARKBLUE   = color_type(  0,  82, 172, 255)
-    type(color_type), parameter, public :: PURPLE     = color_type(200, 122, 255, 255)
-    type(color_type), parameter, public :: VIOLET     = color_type(135,  60, 190, 255)
-    type(color_type), parameter, public :: DARKPURPLE = color_type(112,  31, 126, 255)
-    type(color_type), parameter, public :: BEIGE      = color_type(211, 176, 131, 255)
-    type(color_type), parameter, public :: BROWN      = color_type(127, 106,  79, 255)
-    type(color_type), parameter, public :: DARKBROWN  = color_type( 76,  63,  47, 255)
-    type(color_type), parameter, public :: WHITE      = color_type(255, 255, 255, 255)
-    type(color_type), parameter, public :: BLACK      = color_type(  0,   0,   0, 255)
-    type(color_type), parameter, public :: BLANK      = color_type(  0,   0,   0,   0)
-    type(color_type), parameter, public :: MAGENTA    = color_type(255,   0, 255, 255)
-    type(color_type), parameter, public :: RAYWHITE   = color_type(245, 245, 245, 255)
+    integer(c_unsigned_char), parameter :: z130 = int(z'82', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z131 = int(z'83', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z135 = int(z'87', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z158 = int(z'9E', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z161 = int(z'A1', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z172 = int(z'AC', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z176 = int(z'B0', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z190 = int(z'BE', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z191 = int(z'BF', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z194 = int(z'C2', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z200 = int(z'C8', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z203 = int(z'CB', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z211 = int(z'D3', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z228 = int(z'E4', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z230 = int(z'E6', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z241 = int(z'F1', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z245 = int(z'F5', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z249 = int(z'F9', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z253 = int(z'FD', c_unsigned_char)
+    integer(c_unsigned_char), parameter :: z255 = int(z'FF', c_unsigned_char)
+
+    type(color_type), parameter, public :: LIGHTGRAY  = color_type(z200, z200, z200, z255)
+    type(color_type), parameter, public :: GRAY       = color_type(z130, z130, z130, z255)
+    type(color_type), parameter, public :: DARKGRAY   = color_type(  80,   80,   80, z255)
+    type(color_type), parameter, public :: YELLOW     = color_type(z253, z249,    0, z255)
+    type(color_type), parameter, public :: GOLD       = color_type(z255, z203,    0, z255)
+    type(color_type), parameter, public :: ORANGE     = color_type(z255, z161,    0, z255)
+    type(color_type), parameter, public :: PINK       = color_type(z255,  109, z194, z255)
+    type(color_type), parameter, public :: RED        = color_type(z230,   41,   55, z255)
+    type(color_type), parameter, public :: MAROON     = color_type(z190,   33,   55, z255)
+    type(color_type), parameter, public :: GREEN      = color_type(   0, z228,   48, z255)
+    type(color_type), parameter, public :: LIME       = color_type(   0, z158,   47, z255)
+    type(color_type), parameter, public :: DARKGREEN  = color_type(   0,  117,   44, z255)
+    type(color_type), parameter, public :: SKYBLUE    = color_type( 102, z191, z255, z255)
+    type(color_type), parameter, public :: BLUE       = color_type(   0,  121, z241, z255)
+    type(color_type), parameter, public :: DARKBLUE   = color_type(   0,   82, z172, z255)
+    type(color_type), parameter, public :: PURPLE     = color_type(z200,  122, z255, z255)
+    type(color_type), parameter, public :: VIOLET     = color_type(z135,   60, z190, z255)
+    type(color_type), parameter, public :: DARKPURPLE = color_type( 112,   31,  126, z255)
+    type(color_type), parameter, public :: BEIGE      = color_type(z211, z176, z131, z255)
+    type(color_type), parameter, public :: BROWN      = color_type( 127,  106,   79, z255)
+    type(color_type), parameter, public :: DARKBROWN  = color_type(  76,   63,   47, z255)
+    type(color_type), parameter, public :: WHITE      = color_type(z255, z255, z255, z255)
+    type(color_type), parameter, public :: BLACK      = color_type(   0,    0,    0, z255)
+    type(color_type), parameter, public :: BLANK      = color_type(   0,    0,    0,    0)
+    type(color_type), parameter, public :: MAGENTA    = color_type(z255,    0, z255, z255)
+    type(color_type), parameter, public :: RAYWHITE   = color_type(z245, z245, z245, z255)
 
     ! ConfigFlags
     integer(kind=c_int), parameter, public :: FLAG_VSYNC_HINT               = int(z'00000040')

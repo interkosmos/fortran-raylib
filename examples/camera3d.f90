@@ -42,8 +42,8 @@ program main
                                     z = real(get_random_value(-15, 15)))
         colors(i)    = color_type(r = get_random_value(20, 255), &
                                   g = get_random_value(10, 55), &
-                                  b = 30, &
-                                  a = 255)
+                                  b = int(30, c_unsigned_char), &
+                                  a = int(z'FF', c_unsigned_char))
     end do
 
 
