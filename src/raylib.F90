@@ -10,7 +10,7 @@ module raylib
     implicit none (type, external)
     private
 
-#if defined (__flang__)
+#if defined (__flang__) || (defined (__GFORTRAN__) && __GNUC__ > 15) || (defined (__GFORTRAN__) && __GNUC__ == 15 && __GNUC_MINOR__ >= 2)
 
     public :: c_unsigned
     public :: c_unsigned_char
@@ -191,7 +191,7 @@ module raylib
     ! Shader
     type, bind(c), public :: shader_type
         integer(kind=c_unsigned) :: id   = 0_c_unsigned
-        type(c_ptr)              :: locs = c_null_ptr !! int * (RL_MAX_SHADER_LOCATIONS)
+        type(c_ptr)              :: locs = c_null_ptr !! int * (MAX_SHADER_LOCATIONS)
     end type shader_type
 
     ! MaterialMap
@@ -329,53 +329,53 @@ module raylib
         type(c_ptr)              :: paths    = c_null_ptr !! char **
     end type file_path_list_type
 
-    integer(kind=c_unsigned_char), parameter :: z130 = int(z'82', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z131 = int(z'83', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z135 = int(z'87', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z158 = int(z'9E', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z161 = int(z'A1', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z172 = int(z'AC', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z176 = int(z'B0', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z190 = int(z'BE', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z191 = int(z'BF', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z194 = int(z'C2', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z200 = int(z'C8', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z203 = int(z'CB', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z211 = int(z'D3', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z228 = int(z'E4', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z230 = int(z'E6', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z241 = int(z'F1', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z245 = int(z'F5', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z249 = int(z'F9', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z253 = int(z'FD', c_unsigned_char)
-    integer(kind=c_unsigned_char), parameter :: z255 = int(z'FF', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z130 = int(z'82', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z131 = int(z'83', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z135 = int(z'87', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z158 = int(z'9E', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z161 = int(z'A1', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z172 = int(z'AC', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z176 = int(z'B0', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z190 = int(z'BE', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z191 = int(z'BF', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z194 = int(z'C2', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z200 = int(z'C8', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z203 = int(z'CB', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z211 = int(z'D3', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z228 = int(z'E4', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z230 = int(z'E6', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z241 = int(z'F1', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z245 = int(z'F5', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z249 = int(z'F9', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z253 = int(z'FD', c_unsigned_char)
+    integer(kind=c_unsigned_char), parameter :: Z255 = int(z'FF', c_unsigned_char)
 
-    type(color_type), parameter, public :: LIGHTGRAY  = color_type(z200, z200, z200, z255)
-    type(color_type), parameter, public :: GRAY       = color_type(z130, z130, z130, z255)
-    type(color_type), parameter, public :: DARKGRAY   = color_type(  80,   80,   80, z255)
-    type(color_type), parameter, public :: YELLOW     = color_type(z253, z249,    0, z255)
-    type(color_type), parameter, public :: GOLD       = color_type(z255, z203,    0, z255)
-    type(color_type), parameter, public :: ORANGE     = color_type(z255, z161,    0, z255)
-    type(color_type), parameter, public :: PINK       = color_type(z255,  109, z194, z255)
-    type(color_type), parameter, public :: RED        = color_type(z230,   41,   55, z255)
-    type(color_type), parameter, public :: MAROON     = color_type(z190,   33,   55, z255)
-    type(color_type), parameter, public :: GREEN      = color_type(   0, z228,   48, z255)
-    type(color_type), parameter, public :: LIME       = color_type(   0, z158,   47, z255)
-    type(color_type), parameter, public :: DARKGREEN  = color_type(   0,  117,   44, z255)
-    type(color_type), parameter, public :: SKYBLUE    = color_type( 102, z191, z255, z255)
-    type(color_type), parameter, public :: BLUE       = color_type(   0,  121, z241, z255)
-    type(color_type), parameter, public :: DARKBLUE   = color_type(   0,   82, z172, z255)
-    type(color_type), parameter, public :: PURPLE     = color_type(z200,  122, z255, z255)
-    type(color_type), parameter, public :: VIOLET     = color_type(z135,   60, z190, z255)
-    type(color_type), parameter, public :: DARKPURPLE = color_type( 112,   31,  126, z255)
-    type(color_type), parameter, public :: BEIGE      = color_type(z211, z176, z131, z255)
-    type(color_type), parameter, public :: BROWN      = color_type( 127,  106,   79, z255)
-    type(color_type), parameter, public :: DARKBROWN  = color_type(  76,   63,   47, z255)
-    type(color_type), parameter, public :: WHITE      = color_type(z255, z255, z255, z255)
-    type(color_type), parameter, public :: BLACK      = color_type(   0,    0,    0, z255)
+    type(color_type), parameter, public :: LIGHTGRAY  = color_type(Z200, Z200, Z200, Z255)
+    type(color_type), parameter, public :: GRAY       = color_type(Z130, Z130, Z130, Z255)
+    type(color_type), parameter, public :: DARKGRAY   = color_type(  80,   80,   80, Z255)
+    type(color_type), parameter, public :: YELLOW     = color_type(Z253, Z249,    0, Z255)
+    type(color_type), parameter, public :: GOLD       = color_type(Z255, Z203,    0, Z255)
+    type(color_type), parameter, public :: ORANGE     = color_type(Z255, Z161,    0, Z255)
+    type(color_type), parameter, public :: PINK       = color_type(Z255,  109, Z194, Z255)
+    type(color_type), parameter, public :: RED        = color_type(Z230,   41,   55, Z255)
+    type(color_type), parameter, public :: MAROON     = color_type(Z190,   33,   55, Z255)
+    type(color_type), parameter, public :: GREEN      = color_type(   0, Z228,   48, Z255)
+    type(color_type), parameter, public :: LIME       = color_type(   0, Z158,   47, Z255)
+    type(color_type), parameter, public :: DARKGREEN  = color_type(   0,  117,   44, Z255)
+    type(color_type), parameter, public :: SKYBLUE    = color_type( 102, Z191, Z255, Z255)
+    type(color_type), parameter, public :: BLUE       = color_type(   0,  121, Z241, Z255)
+    type(color_type), parameter, public :: DARKBLUE   = color_type(   0,   82, Z172, Z255)
+    type(color_type), parameter, public :: PURPLE     = color_type(Z200,  122, Z255, Z255)
+    type(color_type), parameter, public :: VIOLET     = color_type(Z135,   60, Z190, Z255)
+    type(color_type), parameter, public :: DARKPURPLE = color_type( 112,   31,  126, Z255)
+    type(color_type), parameter, public :: BEIGE      = color_type(Z211, Z176, Z131, Z255)
+    type(color_type), parameter, public :: BROWN      = color_type( 127,  106,   79, Z255)
+    type(color_type), parameter, public :: DARKBROWN  = color_type(  76,   63,   47, Z255)
+    type(color_type), parameter, public :: WHITE      = color_type(Z255, Z255, Z255, Z255)
+    type(color_type), parameter, public :: BLACK      = color_type(   0,    0,    0, Z255)
     type(color_type), parameter, public :: BLANK      = color_type(   0,    0,    0,    0)
-    type(color_type), parameter, public :: MAGENTA    = color_type(z255,    0, z255, z255)
-    type(color_type), parameter, public :: RAYWHITE   = color_type(z245, z245, z245, z255)
+    type(color_type), parameter, public :: MAGENTA    = color_type(Z255,    0, Z255, Z255)
+    type(color_type), parameter, public :: RAYWHITE   = color_type(Z245, Z245, Z245, Z255)
 
     ! ConfigFlags
     integer(kind=c_int), parameter, public :: FLAG_VSYNC_HINT               = int(z'00000040')
@@ -406,116 +406,116 @@ module raylib
     integer(kind=c_int), parameter, public :: LOG_NONE    = 7
 
     ! KeyboardKey
-    integer(kind=c_int), parameter, public :: KEY_NULL            = 0
-    integer(kind=c_int), parameter, public :: KEY_APOSTROPHE      = 39
-    integer(kind=c_int), parameter, public :: KEY_COMMA           = 44
-    integer(kind=c_int), parameter, public :: KEY_MINUS           = 45
-    integer(kind=c_int), parameter, public :: KEY_PERIOD          = 46
-    integer(kind=c_int), parameter, public :: KEY_SLASH           = 47
-    integer(kind=c_int), parameter, public :: KEY_ZERO            = 48
-    integer(kind=c_int), parameter, public :: KEY_ONE             = 49
-    integer(kind=c_int), parameter, public :: KEY_TWO             = 50
-    integer(kind=c_int), parameter, public :: KEY_THREE           = 51
-    integer(kind=c_int), parameter, public :: KEY_FOUR            = 52
-    integer(kind=c_int), parameter, public :: KEY_FIVE            = 53
-    integer(kind=c_int), parameter, public :: KEY_SIX             = 54
-    integer(kind=c_int), parameter, public :: KEY_SEVEN           = 55
-    integer(kind=c_int), parameter, public :: KEY_EIGHT           = 56
-    integer(kind=c_int), parameter, public :: KEY_NINE            = 57
-    integer(kind=c_int), parameter, public :: KEY_SEMICOLON       = 59
-    integer(kind=c_int), parameter, public :: KEY_EQUAL           = 61
-    integer(kind=c_int), parameter, public :: KEY_A               = 65
-    integer(kind=c_int), parameter, public :: KEY_B               = 66
-    integer(kind=c_int), parameter, public :: KEY_C               = 67
-    integer(kind=c_int), parameter, public :: KEY_D               = 68
-    integer(kind=c_int), parameter, public :: KEY_E               = 69
-    integer(kind=c_int), parameter, public :: KEY_F               = 70
-    integer(kind=c_int), parameter, public :: KEY_G               = 71
-    integer(kind=c_int), parameter, public :: KEY_H               = 72
-    integer(kind=c_int), parameter, public :: KEY_I               = 73
-    integer(kind=c_int), parameter, public :: KEY_J               = 74
-    integer(kind=c_int), parameter, public :: KEY_K               = 75
-    integer(kind=c_int), parameter, public :: KEY_L               = 76
-    integer(kind=c_int), parameter, public :: KEY_M               = 77
-    integer(kind=c_int), parameter, public :: KEY_N               = 78
-    integer(kind=c_int), parameter, public :: KEY_O               = 79
-    integer(kind=c_int), parameter, public :: KEY_P               = 80
-    integer(kind=c_int), parameter, public :: KEY_Q               = 81
-    integer(kind=c_int), parameter, public :: KEY_R               = 82
-    integer(kind=c_int), parameter, public :: KEY_S               = 83
-    integer(kind=c_int), parameter, public :: KEY_T               = 84
-    integer(kind=c_int), parameter, public :: KEY_U               = 85
-    integer(kind=c_int), parameter, public :: KEY_V               = 86
-    integer(kind=c_int), parameter, public :: KEY_W               = 87
-    integer(kind=c_int), parameter, public :: KEY_X               = 88
-    integer(kind=c_int), parameter, public :: KEY_Y               = 89
-    integer(kind=c_int), parameter, public :: KEY_Z               = 90
-    integer(kind=c_int), parameter, public :: KEY_LEFT_BRACKET    = 91
-    integer(kind=c_int), parameter, public :: KEY_BACKSLASH       = 92
-    integer(kind=c_int), parameter, public :: KEY_RIGHT_BRACKET   = 93
-    integer(kind=c_int), parameter, public :: KEY_GRAVE           = 96
-    integer(kind=c_int), parameter, public :: KEY_SPACE           = 32
-    integer(kind=c_int), parameter, public :: KEY_ESCAPE          = 256
-    integer(kind=c_int), parameter, public :: KEY_ENTER           = 257
-    integer(kind=c_int), parameter, public :: KEY_TAB             = 258
-    integer(kind=c_int), parameter, public :: KEY_BACKSPACE       = 259
-    integer(kind=c_int), parameter, public :: KEY_INSERT          = 260
-    integer(kind=c_int), parameter, public :: KEY_DELETE          = 261
-    integer(kind=c_int), parameter, public :: KEY_RIGHT           = 262
-    integer(kind=c_int), parameter, public :: KEY_LEFT            = 263
-    integer(kind=c_int), parameter, public :: KEY_DOWN            = 264
-    integer(kind=c_int), parameter, public :: KEY_UP              = 265
-    integer(kind=c_int), parameter, public :: KEY_PAGE_UP         = 266
-    integer(kind=c_int), parameter, public :: KEY_PAGE_DOWN       = 267
-    integer(kind=c_int), parameter, public :: KEY_HOME            = 268
-    integer(kind=c_int), parameter, public :: KEY_END             = 269
-    integer(kind=c_int), parameter, public :: KEY_CAPS_LOCK       = 280
-    integer(kind=c_int), parameter, public :: KEY_SCROLL_LOCK     = 281
-    integer(kind=c_int), parameter, public :: KEY_NUM_LOCK        = 282
-    integer(kind=c_int), parameter, public :: KEY_PRINT_SCREEN    = 283
-    integer(kind=c_int), parameter, public :: KEY_PAUSE           = 284
-    integer(kind=c_int), parameter, public :: KEY_F1              = 290
-    integer(kind=c_int), parameter, public :: KEY_F2              = 291
-    integer(kind=c_int), parameter, public :: KEY_F3              = 292
-    integer(kind=c_int), parameter, public :: KEY_F4              = 293
-    integer(kind=c_int), parameter, public :: KEY_F5              = 294
-    integer(kind=c_int), parameter, public :: KEY_F6              = 295
-    integer(kind=c_int), parameter, public :: KEY_F7              = 296
-    integer(kind=c_int), parameter, public :: KEY_F8              = 297
-    integer(kind=c_int), parameter, public :: KEY_F9              = 298
-    integer(kind=c_int), parameter, public :: KEY_F10             = 299
-    integer(kind=c_int), parameter, public :: KEY_F11             = 300
-    integer(kind=c_int), parameter, public :: KEY_F12             = 301
-    integer(kind=c_int), parameter, public :: KEY_LEFT_SHIFT      = 340
-    integer(kind=c_int), parameter, public :: KEY_LEFT_CONTROL    = 341
-    integer(kind=c_int), parameter, public :: KEY_LEFT_ALT        = 342
-    integer(kind=c_int), parameter, public :: KEY_LEFT_SUPER      = 343
-    integer(kind=c_int), parameter, public :: KEY_RIGHT_SHIFT     = 344
-    integer(kind=c_int), parameter, public :: KEY_RIGHT_CONTROL   = 345
-    integer(kind=c_int), parameter, public :: KEY_RIGHT_ALT       = 346
-    integer(kind=c_int), parameter, public :: KEY_RIGHT_SUPER     = 347
-    integer(kind=c_int), parameter, public :: KEY_KB_MENU         = 348
-    integer(kind=c_int), parameter, public :: KEY_KP_0            = 320
-    integer(kind=c_int), parameter, public :: KEY_KP_1            = 321
-    integer(kind=c_int), parameter, public :: KEY_KP_2            = 322
-    integer(kind=c_int), parameter, public :: KEY_KP_3            = 323
-    integer(kind=c_int), parameter, public :: KEY_KP_4            = 324
-    integer(kind=c_int), parameter, public :: KEY_KP_5            = 325
-    integer(kind=c_int), parameter, public :: KEY_KP_6            = 326
-    integer(kind=c_int), parameter, public :: KEY_KP_7            = 327
-    integer(kind=c_int), parameter, public :: KEY_KP_8            = 328
-    integer(kind=c_int), parameter, public :: KEY_KP_9            = 329
-    integer(kind=c_int), parameter, public :: KEY_KP_DECIMAL      = 330
-    integer(kind=c_int), parameter, public :: KEY_KP_DIVIDE       = 331
-    integer(kind=c_int), parameter, public :: KEY_KP_MULTIPLY     = 332
-    integer(kind=c_int), parameter, public :: KEY_KP_SUBTRACT     = 333
-    integer(kind=c_int), parameter, public :: KEY_KP_ADD          = 334
-    integer(kind=c_int), parameter, public :: KEY_KP_ENTER        = 335
-    integer(kind=c_int), parameter, public :: KEY_KP_EQUAL        = 336
-    integer(kind=c_int), parameter, public :: KEY_BACK            = 4
-    integer(kind=c_int), parameter, public :: KEY_MENU            = 82
-    integer(kind=c_int), parameter, public :: KEY_VOLUME_UP       = 24
-    integer(kind=c_int), parameter, public :: KEY_VOLUME_DOWN     = 25
+    integer(kind=c_int), parameter, public :: KEY_NULL          = 0
+    integer(kind=c_int), parameter, public :: KEY_APOSTROPHE    = 39
+    integer(kind=c_int), parameter, public :: KEY_COMMA         = 44
+    integer(kind=c_int), parameter, public :: KEY_MINUS         = 45
+    integer(kind=c_int), parameter, public :: KEY_PERIOD        = 46
+    integer(kind=c_int), parameter, public :: KEY_SLASH         = 47
+    integer(kind=c_int), parameter, public :: KEY_ZERO          = 48
+    integer(kind=c_int), parameter, public :: KEY_ONE           = 49
+    integer(kind=c_int), parameter, public :: KEY_TWO           = 50
+    integer(kind=c_int), parameter, public :: KEY_THREE         = 51
+    integer(kind=c_int), parameter, public :: KEY_FOUR          = 52
+    integer(kind=c_int), parameter, public :: KEY_FIVE          = 53
+    integer(kind=c_int), parameter, public :: KEY_SIX           = 54
+    integer(kind=c_int), parameter, public :: KEY_SEVEN         = 55
+    integer(kind=c_int), parameter, public :: KEY_EIGHT         = 56
+    integer(kind=c_int), parameter, public :: KEY_NINE          = 57
+    integer(kind=c_int), parameter, public :: KEY_SEMICOLON     = 59
+    integer(kind=c_int), parameter, public :: KEY_EQUAL         = 61
+    integer(kind=c_int), parameter, public :: KEY_A             = 65
+    integer(kind=c_int), parameter, public :: KEY_B             = 66
+    integer(kind=c_int), parameter, public :: KEY_C             = 67
+    integer(kind=c_int), parameter, public :: KEY_D             = 68
+    integer(kind=c_int), parameter, public :: KEY_E             = 69
+    integer(kind=c_int), parameter, public :: KEY_F             = 70
+    integer(kind=c_int), parameter, public :: KEY_G             = 71
+    integer(kind=c_int), parameter, public :: KEY_H             = 72
+    integer(kind=c_int), parameter, public :: KEY_I             = 73
+    integer(kind=c_int), parameter, public :: KEY_J             = 74
+    integer(kind=c_int), parameter, public :: KEY_K             = 75
+    integer(kind=c_int), parameter, public :: KEY_L             = 76
+    integer(kind=c_int), parameter, public :: KEY_M             = 77
+    integer(kind=c_int), parameter, public :: KEY_N             = 78
+    integer(kind=c_int), parameter, public :: KEY_O             = 79
+    integer(kind=c_int), parameter, public :: KEY_P             = 80
+    integer(kind=c_int), parameter, public :: KEY_Q             = 81
+    integer(kind=c_int), parameter, public :: KEY_R             = 82
+    integer(kind=c_int), parameter, public :: KEY_S             = 83
+    integer(kind=c_int), parameter, public :: KEY_T             = 84
+    integer(kind=c_int), parameter, public :: KEY_U             = 85
+    integer(kind=c_int), parameter, public :: KEY_V             = 86
+    integer(kind=c_int), parameter, public :: KEY_W             = 87
+    integer(kind=c_int), parameter, public :: KEY_X             = 88
+    integer(kind=c_int), parameter, public :: KEY_Y             = 89
+    integer(kind=c_int), parameter, public :: KEY_Z             = 90
+    integer(kind=c_int), parameter, public :: KEY_LEFT_BRACKET  = 91
+    integer(kind=c_int), parameter, public :: KEY_BACKSLASH     = 92
+    integer(kind=c_int), parameter, public :: KEY_RIGHT_BRACKET = 93
+    integer(kind=c_int), parameter, public :: KEY_GRAVE         = 96
+    integer(kind=c_int), parameter, public :: KEY_SPACE         = 32
+    integer(kind=c_int), parameter, public :: KEY_ESCAPE        = 256
+    integer(kind=c_int), parameter, public :: KEY_ENTER         = 257
+    integer(kind=c_int), parameter, public :: KEY_TAB           = 258
+    integer(kind=c_int), parameter, public :: KEY_BACKSPACE     = 259
+    integer(kind=c_int), parameter, public :: KEY_INSERT        = 260
+    integer(kind=c_int), parameter, public :: KEY_DELETE        = 261
+    integer(kind=c_int), parameter, public :: KEY_RIGHT         = 262
+    integer(kind=c_int), parameter, public :: KEY_LEFT          = 263
+    integer(kind=c_int), parameter, public :: KEY_DOWN          = 264
+    integer(kind=c_int), parameter, public :: KEY_UP            = 265
+    integer(kind=c_int), parameter, public :: KEY_PAGE_UP       = 266
+    integer(kind=c_int), parameter, public :: KEY_PAGE_DOWN     = 267
+    integer(kind=c_int), parameter, public :: KEY_HOME          = 268
+    integer(kind=c_int), parameter, public :: KEY_END           = 269
+    integer(kind=c_int), parameter, public :: KEY_CAPS_LOCK     = 280
+    integer(kind=c_int), parameter, public :: KEY_SCROLL_LOCK   = 281
+    integer(kind=c_int), parameter, public :: KEY_NUM_LOCK      = 282
+    integer(kind=c_int), parameter, public :: KEY_PRINT_SCREEN  = 283
+    integer(kind=c_int), parameter, public :: KEY_PAUSE         = 284
+    integer(kind=c_int), parameter, public :: KEY_F1            = 290
+    integer(kind=c_int), parameter, public :: KEY_F2            = 291
+    integer(kind=c_int), parameter, public :: KEY_F3            = 292
+    integer(kind=c_int), parameter, public :: KEY_F4            = 293
+    integer(kind=c_int), parameter, public :: KEY_F5            = 294
+    integer(kind=c_int), parameter, public :: KEY_F6            = 295
+    integer(kind=c_int), parameter, public :: KEY_F7            = 296
+    integer(kind=c_int), parameter, public :: KEY_F8            = 297
+    integer(kind=c_int), parameter, public :: KEY_F9            = 298
+    integer(kind=c_int), parameter, public :: KEY_F10           = 299
+    integer(kind=c_int), parameter, public :: KEY_F11           = 300
+    integer(kind=c_int), parameter, public :: KEY_F12           = 301
+    integer(kind=c_int), parameter, public :: KEY_LEFT_SHIFT    = 340
+    integer(kind=c_int), parameter, public :: KEY_LEFT_CONTROL  = 341
+    integer(kind=c_int), parameter, public :: KEY_LEFT_ALT      = 342
+    integer(kind=c_int), parameter, public :: KEY_LEFT_SUPER    = 343
+    integer(kind=c_int), parameter, public :: KEY_RIGHT_SHIFT   = 344
+    integer(kind=c_int), parameter, public :: KEY_RIGHT_CONTROL = 345
+    integer(kind=c_int), parameter, public :: KEY_RIGHT_ALT     = 346
+    integer(kind=c_int), parameter, public :: KEY_RIGHT_SUPER   = 347
+    integer(kind=c_int), parameter, public :: KEY_KB_MENU       = 348
+    integer(kind=c_int), parameter, public :: KEY_KP_0          = 320
+    integer(kind=c_int), parameter, public :: KEY_KP_1          = 321
+    integer(kind=c_int), parameter, public :: KEY_KP_2          = 322
+    integer(kind=c_int), parameter, public :: KEY_KP_3          = 323
+    integer(kind=c_int), parameter, public :: KEY_KP_4          = 324
+    integer(kind=c_int), parameter, public :: KEY_KP_5          = 325
+    integer(kind=c_int), parameter, public :: KEY_KP_6          = 326
+    integer(kind=c_int), parameter, public :: KEY_KP_7          = 327
+    integer(kind=c_int), parameter, public :: KEY_KP_8          = 328
+    integer(kind=c_int), parameter, public :: KEY_KP_9          = 329
+    integer(kind=c_int), parameter, public :: KEY_KP_DECIMAL    = 330
+    integer(kind=c_int), parameter, public :: KEY_KP_DIVIDE     = 331
+    integer(kind=c_int), parameter, public :: KEY_KP_MULTIPLY   = 332
+    integer(kind=c_int), parameter, public :: KEY_KP_SUBTRACT   = 333
+    integer(kind=c_int), parameter, public :: KEY_KP_ADD        = 334
+    integer(kind=c_int), parameter, public :: KEY_KP_ENTER      = 335
+    integer(kind=c_int), parameter, public :: KEY_KP_EQUAL      = 336
+    integer(kind=c_int), parameter, public :: KEY_BACK          = 4
+    integer(kind=c_int), parameter, public :: KEY_MENU          = 82
+    integer(kind=c_int), parameter, public :: KEY_VOLUME_UP     = 24
+    integer(kind=c_int), parameter, public :: KEY_VOLUME_DOWN   = 25
 
     ! MouseButton
     integer(kind=c_int), parameter, public :: MOUSE_BUTTON_LEFT    = 0
@@ -584,32 +584,32 @@ module raylib
     integer(kind=c_int), parameter, public :: MATERIAL_MAP_SPECULAR   = 1
 
     ! ShaderLocationIndex
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_POSITION    = 0
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TEXCOORD01  = 1
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TEXCOORD02  = 2
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_NORMAL      = 3
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TANGENT     = 4
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_COLOR       = 5
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_MVP         = 6
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_VIEW        = 7
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_PROJECTION  = 8
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_MODEL       = 9
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_NORMAL      = 10
-    integer(kind=c_int), parameter, public :: SHADER_LOC_VECTOR_VIEW        = 11
-    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_DIFFUSE      = 12
-    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_SPECULAR     = 13
-    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_AMBIENT      = 14
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_ALBEDO         = 15
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_METALNESS      = 16
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_NORMAL         = 17
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_ROUGHNESS      = 18
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_OCCLUSION      = 19
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_EMISSION       = 20
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_HEIGHT         = 21
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_CUBEMAP        = 22
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_IRRADIANCE     = 23
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_PREFILTER      = 24
-    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_BRDF           = 25
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_POSITION   = 0
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TEXCOORD01 = 1
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TEXCOORD02 = 2
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_NORMAL     = 3
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_TANGENT    = 4
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VERTEX_COLOR      = 5
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_MVP        = 6
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_VIEW       = 7
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_PROJECTION = 8
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_MODEL      = 9
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MATRIX_NORMAL     = 10
+    integer(kind=c_int), parameter, public :: SHADER_LOC_VECTOR_VIEW       = 11
+    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_DIFFUSE     = 12
+    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_SPECULAR    = 13
+    integer(kind=c_int), parameter, public :: SHADER_LOC_COLOR_AMBIENT     = 14
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_ALBEDO        = 15
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_METALNESS     = 16
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_NORMAL        = 17
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_ROUGHNESS     = 18
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_OCCLUSION     = 19
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_EMISSION      = 20
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_HEIGHT        = 21
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_CUBEMAP       = 22
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_IRRADIANCE    = 23
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_PREFILTER     = 24
+    integer(kind=c_int), parameter, public :: SHADER_LOC_MAP_BRDF          = 25
 
     ! ShaderUniformDataType
     integer(kind=c_int), parameter, public :: SHADER_UNIFORM_FLOAT     = 0
