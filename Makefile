@@ -1,6 +1,7 @@
 .POSIX:
 .SUFFIXES:
 
+PREFIX  = /usr/local
 FC      = gfortran
 AR      = ar
 FFLAGS  = -O2 -std=f2018
@@ -8,18 +9,37 @@ ARFLAGS = rcs
 LDFLAGS = -L/usr/local/lib
 RAYLIB  = -lraylib
 LDLIBS  = $(RAYLIB) -lglfw -lGL -lpthread -lm
+INCDIR  = $(PREFIX)/include/libfortran-raylib
+LIBDIR  = $(PREFIX)/lib
 TARGET  = libfortran-raylib.a
 
-.PHONY: all clean examples
+SRC = src/raylib.F90 \
+      src/raylib_camera.f90 \
+      src/raylib_math.f90 \
+      src/raylib_util.f90
+OBJ = raylib.o \
+      raylib_camera.o \
+      raylib_math.o \
+      raylib_util.o
+
+.PHONY: all clean examples install
 
 all: $(TARGET)
 
-$(TARGET): src/raylib.F90 src/raylib_util.f90
+$(TARGET): $(SRC)
 	$(FC) $(FFLAGS) -c src/raylib.F90
 	$(FC) $(FFLAGS) -c src/raylib_camera.f90
 	$(FC) $(FFLAGS) -c src/raylib_math.f90
 	$(FC) $(FFLAGS) -c src/raylib_util.f90
-	$(AR) $(ARFLAGS) $(TARGET) raylib.o raylib_camera.o raylib_math.o raylib_util.o
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJ)
+
+install: $(TARGET)
+	@echo "--- Installing $(TARGET) to $(LIBDIR)/ ..."
+	install -d $(LIBDIR)
+	install -m 644 $(TARGET) $(LIBDIR)/
+	@echo "--- Installing modules to $(INCDIR)/ ..."
+	install -d $(INCDIR)
+	install -m 644 *.mod $(INCDIR)/
 
 examples: bunny camera camera3d castle collision cubes explosion flags font \
           geometric julia keys log map maze mesh plane shapes ship window
