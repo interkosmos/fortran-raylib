@@ -1,16 +1,22 @@
 ! raylib.F90
 !
-! A collection of auto-generated Fortran 2018 interface bindings to
-! raylib 5.5.
+! A collection of auto-generated Fortran 2018 interface bindings to raylib 5.5.
+! Pass argument `-DHAS_UNSIGNED` to the Fortran compiler to enable intrinsic
+! unsigned types (additionally to `-funsigned` when using GNU Fortran).
 !
 ! Author:  Philipp Engel
 ! Licence: ISC
 module raylib
-    use, intrinsic :: iso_c_binding
+    use, intrinsic :: iso_c_binding, only: c_bool, c_char, c_double, c_float, c_funptr, &
+                                           c_int, c_long, c_null_char, c_null_ptr, c_ptr, &
+                                           c_signed_char
+#if HAS_UNSIGNED
+    use, intrinsic :: iso_c_binding, only: c_unsigned, c_unsigned_char
+#endif
     implicit none (type, external)
     private
 
-#if defined (__flang__) || (defined (__GFORTRAN__) && __GNUC__ > 15) || (defined (__GFORTRAN__) && __GNUC__ == 15 && __GNUC_MINOR__ >= 2)
+#if HAS_UNSIGNED
 
     public :: c_unsigned
     public :: c_unsigned_char
