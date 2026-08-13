@@ -2,6 +2,7 @@
 
 ![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)
 ![License](https://img.shields.io/github/license/interkosmos/fortran-raylib)
+![Version](https://img.shields.io/badge/raylib-6.0-green?logo=raylib)
 
 A work-in-progress collection of interface bindings to
 [raylib](https://www.raylib.com/) 6.0, for 2-D and 3-D game programming in
