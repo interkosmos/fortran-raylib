@@ -18,12 +18,12 @@ $ cd raylib-6.0/
 $ mkdir build && cd build/
 $ cmake .. -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Desktop -DWITH_PIC=ON -DBUILD_SHARED_LIBS=ON
 $ cmake --build .
-$ cmake --install . --prefix /opt
 ```
-Select platform `PLATFORM_DESKTOP_SDL` for the SDL 2.0 back-end:
+
+Install the library to `/opt/lib`:
 
 ```
-$ make PLATFORM=PLATFORM_DESKTOP_SDL
+$ cmake --install . --prefix /opt
 ```
 
 ### Make
@@ -119,8 +119,10 @@ $ gfortran -L/usr/local/lib -o example example.f90 libfortran-raylib.a -lraylib 
 $ ./example
 ```
 
-Depending on the build flags chosen for *raylib*, you may have to link with
-`-lglfw` additionally.
+Depending on the build flags chosen for *raylib*, you may have to additionally
+link against `-lglfw`. If _libraylib_ is not installed to `/usr/lib` or
+`/usr/local/lib`, add the library search path (for instance,
+`-Wl,-rpath=/opt/lib -L/opt/lib` if installed to `/opt/lib`).
 
 ## Further Examples
 
@@ -156,7 +158,7 @@ $ make examples
 To link against a static raylib library, run:
 
 ```
-$ make examples RAYLIB=libraylib.a
+$ make examples RAYLIB=/path/to/libraylib.a
 ```
 
 ## Compatibility

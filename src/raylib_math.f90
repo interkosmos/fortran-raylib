@@ -1165,9 +1165,9 @@ module raylib_math
     end interface
 contains
     ! Matrix MatrixMultiplyValue(Matrix left, float value)
-    function matrix_multiply_value(left, value) result(matrix)
+    pure function matrix_multiply_value(left, value) result(matrix)
         type(matrix_type), intent(in) :: left
-        real(c_float),     intent(in) :: value
+        real,              intent(in) :: value
         type(matrix_type)             :: matrix
 
         matrix = matrix_type( &

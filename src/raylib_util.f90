@@ -6,6 +6,24 @@ module raylib_util
     implicit none (type, external)
     private
 
+    public :: c_free
+    public :: c_strlen
+
+    interface
+        subroutine c_free(ptr) bind(c, name='free')
+            import :: c_ptr, c_size_t
+            implicit none
+            type(c_ptr), intent(in), value :: ptr
+        end subroutine c_free
+
+        function c_strlen(str) bind(c, name='strlen')
+            import :: c_ptr, c_size_t
+            implicit none
+            type(c_ptr), intent(in), value :: str
+            integer(c_size_t)              :: c_strlen
+        end function c_strlen
+    end interface
+
     public :: c_f_str_ptr
     public :: f_c_str
 contains
@@ -13,15 +31,6 @@ contains
         !! Copies a C string, passed as a C pointer, to a Fortran string.
         type(c_ptr),               intent(in)  :: c !! C string pointer.
         character(:), allocatable, intent(out) :: f !! Fortran string.
-
-        interface
-            function c_strlen(str) bind(c, name='strlen')
-                import :: c_ptr, c_size_t
-                implicit none
-                type(c_ptr), intent(in), value :: str
-                integer(c_size_t)              :: c_strlen
-            end function c_strlen
-        end interface
 
         copy_block: block
             integer(c_size_t) :: n
