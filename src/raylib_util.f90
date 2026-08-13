@@ -6,16 +6,9 @@ module raylib_util
     implicit none (type, external)
     private
 
-    public :: c_free
     public :: c_strlen
 
     interface
-        subroutine c_free(ptr) bind(c, name='free')
-            import :: c_ptr, c_size_t
-            implicit none
-            type(c_ptr), intent(in), value :: ptr
-        end subroutine c_free
-
         function c_strlen(str) bind(c, name='strlen')
             import :: c_ptr, c_size_t
             implicit none
