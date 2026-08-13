@@ -1,35 +1,41 @@
-! raylib_math.f90
-!
-! Fortran 2018 interface bindings to `raymath.h`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 module raylib_math
-    use, intrinsic :: iso_c_binding
+    !! Fortran 2018 interface bindings to `raymath.h`.
     use :: raylib
     implicit none (type, external)
     private
 
     ! float3
     type, bind(c), public :: float3_type
-        real(kind=c_float) :: v(0:2) = 0.0
+        real(c_float) :: v(0:2) = 0.0
     end type float3_type
 
     ! float16
     type, bind(c), public :: float16_type
-        real(kind=c_float) :: v(0:15) = 0.0
+        real(c_float) :: v(0:15) = 0.0
     end type float16_type
+
+    ! MatrixUnit
+    type(matrix_type), parameter, public :: MATRIX_UNIT = matrix_type( &
+        m0 = 1.0, m4 = 0.0,  m8 = 0.0, m12 = 0.0, &
+        m1 = 0.0, m5 = 1.0,  m9 = 0.0, m13 = 0.0, &
+        m2 = 0.0, m6 = 0.0, m10 = 1.0, m14 = 0.0, &
+        m3 = 0.0, m7 = 0.0, m11 = 0.0, m15 = 1.0  &
+    )
 
     public :: clamp
     public :: float_equals
     public :: lerp
     public :: matrix_add
+    public :: matrix_compose
     public :: matrix_determinant
     public :: matrix_frustum
     public :: matrix_identity
     public :: matrix_invert
     public :: matrix_look_at
     public :: matrix_multiply
+    public :: matrix_multiply_value
     public :: matrix_ortho
     public :: matrix_perspective
     public :: matrix_rotate
@@ -74,6 +80,7 @@ module raylib_math
     public :: vector2_angle
     public :: vector2_clamp
     public :: vector2_clamp_value
+    public :: vector2_cross_product
     public :: vector2_distance
     public :: vector2_distance_sqr
     public :: vector2_divide
@@ -138,29 +145,29 @@ module raylib_math
         function clamp(value, min, max) bind(c, name='Clamp')
             import :: c_float
             implicit none
-            real(kind=c_float), intent(in), value :: value
-            real(kind=c_float), intent(in), value :: min
-            real(kind=c_float), intent(in), value :: max
-            real(kind=c_float)                    :: clamp
+            real(c_float), intent(in), value :: value
+            real(c_float), intent(in), value :: min
+            real(c_float), intent(in), value :: max
+            real(c_float)                    :: clamp
         end function clamp
 
         ! int FloatEquals(float x, float y)
         function float_equals(x, y) bind(c, name='FloatEquals')
             import :: c_float, c_int
             implicit none
-            real(kind=c_float), intent(in), value :: x
-            real(kind=c_float), intent(in), value :: y
-            integer(kind=c_int)                   :: float_equals
+            real(c_float), intent(in), value :: x
+            real(c_float), intent(in), value :: y
+            integer(c_int)                   :: float_equals
         end function float_equals
 
         ! float Lerp(float start, float end, float amount)
         function lerp(start, end, amount) bind(c, name='Lerp')
             import :: c_float
             implicit none
-            real(kind=c_float), intent(in), value :: start
-            real(kind=c_float), intent(in), value :: end
-            real(kind=c_float), intent(in), value :: amount
-            real(kind=c_float)                    :: lerp
+            real(c_float), intent(in), value :: start
+            real(c_float), intent(in), value :: end
+            real(c_float), intent(in), value :: amount
+            real(c_float)                    :: lerp
         end function lerp
 
         ! Matrix MatrixAdd(Matrix left, Matrix right)
@@ -172,25 +179,35 @@ module raylib_math
             type(matrix_type)                    :: matrix_add
         end function matrix_add
 
+        ! Matrix MatrixCompose(Vector3 translation, Quaternion rotation, Vector3 scale)
+        function matrix_compose(translation, rotation, scale) bind(c, name='MatrixCompose')
+            import :: quaternion_type, matrix_type, vector3_type
+            implicit none
+            type(vector3_type),    intent(in), value :: translation
+            type(quaternion_type), intent(in), value :: rotation
+            type(vector3_type),    intent(in), value :: scale
+            type(matrix_type)                        :: matrix_compose
+        end function matrix_compose
+
         ! float MatrixDeterminant(Matrix mat)
         function matrix_determinant(mat) bind(c, name='MatrixDeterminant')
             import :: c_float, matrix_type
             implicit none
             type(matrix_type), intent(in), value :: mat
-            real(kind=c_float)                   :: matrix_determinant
+            real(c_float)                        :: matrix_determinant
         end function matrix_determinant
 
         ! Matrix MatrixFrustum(double left, double right, double bottom, double top, double near, double far)
         function matrix_frustum(left, right, bottom, top, near, far) bind(c, name='MatrixFrustum')
             import :: c_double, matrix_type
             implicit none
-            real(kind=c_double), intent(in), value :: left
-            real(kind=c_double), intent(in), value :: right
-            real(kind=c_double), intent(in), value :: bottom
-            real(kind=c_double), intent(in), value :: top
-            real(kind=c_double), intent(in), value :: near
-            real(kind=c_double), intent(in), value :: far
-            type(matrix_type)                      :: matrix_frustum
+            real(c_double), intent(in), value :: left
+            real(c_double), intent(in), value :: right
+            real(c_double), intent(in), value :: bottom
+            real(c_double), intent(in), value :: top
+            real(c_double), intent(in), value :: near
+            real(c_double), intent(in), value :: far
+            type(matrix_type)                 :: matrix_frustum
         end function matrix_frustum
 
         ! Matrix MatrixIdentity(void)
@@ -231,24 +248,24 @@ module raylib_math
         function matrix_ortho(left, right, bottom, top, near, far) bind(c, name='MatrixOrtho')
             import :: c_double, matrix_type
             implicit none
-            real(kind=c_double), intent(in), value :: left
-            real(kind=c_double), intent(in), value :: right
-            real(kind=c_double), intent(in), value :: bottom
-            real(kind=c_double), intent(in), value :: top
-            real(kind=c_double), intent(in), value :: near
-            real(kind=c_double), intent(in), value :: far
-            type(matrix_type)                      :: matrix_ortho
+            real(c_double), intent(in), value :: left
+            real(c_double), intent(in), value :: right
+            real(c_double), intent(in), value :: bottom
+            real(c_double), intent(in), value :: top
+            real(c_double), intent(in), value :: near
+            real(c_double), intent(in), value :: far
+            type(matrix_type)                 :: matrix_ortho
         end function matrix_ortho
 
         ! Matrix MatrixPerspective(double fovy, double aspect, double near, double far)
         function matrix_perspective(fovy, aspect, near, far) bind(c, name='MatrixPerspective')
             import :: c_double, matrix_type
             implicit none
-            real(kind=c_double), intent(in), value :: fovy
-            real(kind=c_double), intent(in), value :: aspect
-            real(kind=c_double), intent(in), value :: near
-            real(kind=c_double), intent(in), value :: far
-            type(matrix_type)                      :: matrix_perspective
+            real(c_double), intent(in), value :: fovy
+            real(c_double), intent(in), value :: aspect
+            real(c_double), intent(in), value :: near
+            real(c_double), intent(in), value :: far
+            type(matrix_type)                 :: matrix_perspective
         end function matrix_perspective
 
         ! Matrix MatrixRotate(Vector3 axis, float angle)
@@ -256,7 +273,7 @@ module raylib_math
             import :: c_float, matrix_type, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: axis
-            real(kind=c_float), intent(in), value :: angle
+            real(c_float),      intent(in), value :: angle
             type(matrix_type)                     :: matrix_rotate
         end function matrix_rotate
 
@@ -264,8 +281,8 @@ module raylib_math
         function matrix_rotate_x(angle) bind(c, name='MatrixRotateX')
             import :: c_float, matrix_type
             implicit none
-            real(kind=c_float), intent(in), value :: angle
-            type(matrix_type)                     :: matrix_rotate_x
+            real(c_float), intent(in), value :: angle
+            type(matrix_type)                :: matrix_rotate_x
         end function matrix_rotate_x
 
         ! Matrix MatrixRotateXYZ(Vector3 angle)
@@ -280,16 +297,16 @@ module raylib_math
         function matrix_rotate_y(angle) bind(c, name='MatrixRotateY')
             import :: c_float, matrix_type
             implicit none
-            real(kind=c_float), intent(in), value :: angle
-            type(matrix_type)                     :: matrix_rotate_y
+            real(c_float), intent(in), value :: angle
+            type(matrix_type)                :: matrix_rotate_y
         end function matrix_rotate_y
 
         ! Matrix MatrixRotateZ(float angle)
         function matrix_rotate_z(angle) bind(c, name='MatrixRotateZ')
             import :: c_float, matrix_type
             implicit none
-            real(kind=c_float), intent(in), value :: angle
-            type(matrix_type)                     :: matrix_rotate_z
+            real(c_float), intent(in), value :: angle
+            type(matrix_type)                :: matrix_rotate_z
         end function matrix_rotate_z
 
         ! Matrix MatrixRotateZYX(Vector3 angle)
@@ -304,10 +321,10 @@ module raylib_math
         function matrix_scale(x, y, z) bind(c, name='MatrixScale')
             import :: c_float, matrix_type
             implicit none
-            real(kind=c_float), intent(in), value :: x
-            real(kind=c_float), intent(in), value :: y
-            real(kind=c_float), intent(in), value :: z
-            type(matrix_type)                     :: matrix_scale
+            real(c_float), intent(in), value :: x
+            real(c_float), intent(in), value :: y
+            real(c_float), intent(in), value :: z
+            type(matrix_type)                :: matrix_scale
         end function matrix_scale
 
         ! Matrix MatrixSubtract(Matrix left, Matrix right)
@@ -332,17 +349,17 @@ module raylib_math
             import :: c_float, matrix_type
             implicit none
             type(matrix_type), intent(in), value :: mat
-            real(kind=c_float)                   :: matrix_trace
+            real(c_float)                        :: matrix_trace
         end function matrix_trace
 
         ! Matrix MatrixTranslate(float x, float y, float z)
         function matrix_translate(x, y, z) bind(c, name='MatrixTranslate')
             import :: c_float, matrix_type
             implicit none
-            real(kind=c_float), intent(in), value :: x
-            real(kind=c_float), intent(in), value :: y
-            real(kind=c_float), intent(in), value :: z
-            type(matrix_type)                     :: matrix_translate
+            real(c_float), intent(in), value :: x
+            real(c_float), intent(in), value :: y
+            real(c_float), intent(in), value :: z
+            type(matrix_type)                :: matrix_translate
         end function matrix_translate
 
         ! Matrix MatrixTranspose(Matrix mat)
@@ -357,10 +374,10 @@ module raylib_math
         function normalize(value, start, end) bind(c, name='Normalize')
             import :: c_float
             implicit none
-            real(kind=c_float), intent(in), value :: value
-            real(kind=c_float), intent(in), value :: start
-            real(kind=c_float), intent(in), value :: end
-            real(kind=c_float)                    :: normalize
+            real(c_float), intent(in), value :: value
+            real(c_float), intent(in), value :: start
+            real(c_float), intent(in), value :: end
+            real(c_float)                    :: normalize
         end function normalize
 
         ! Quaternion QuaternionAdd(Quaternion q1, Quaternion q2)
@@ -377,7 +394,7 @@ module raylib_math
             import :: c_float, quaternion_type
             implicit none
             type(quaternion_type), intent(in), value :: q
-            real(kind=c_float),    intent(in), value :: add
+            real(c_float),         intent(in), value :: add
             type(quaternion_type)                    :: quaternion_add_value
         end function quaternion_add_value
 
@@ -396,7 +413,7 @@ module raylib_math
             implicit none
             type(quaternion_type), intent(in), value :: p
             type(quaternion_type), intent(in), value :: q
-            integer(kind=c_int)                      :: quaternion_equals
+            integer(c_int)                           :: quaternion_equals
         end function quaternion_equals
 
         ! Quaternion QuaternionFromAxisAngle(Vector3 axis, float angle)
@@ -404,7 +421,7 @@ module raylib_math
             import :: c_float, quaternion_type, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: axis
-            real(kind=c_float), intent(in), value :: angle
+            real(c_float),      intent(in), value :: angle
             type(quaternion_type)                 :: quaternion_from_axis_angle
         end function quaternion_from_axis_angle
 
@@ -412,10 +429,10 @@ module raylib_math
         function quaternion_from_euler(pitch, yaw, roll) bind(c, name='QuaternionFromEuler')
             import :: c_float, quaternion_type
             implicit none
-            real(kind=c_float), intent(in), value :: pitch
-            real(kind=c_float), intent(in), value :: yaw
-            real(kind=c_float), intent(in), value :: roll
-            type(quaternion_type)                 :: quaternion_from_euler
+            real(c_float), intent(in), value :: pitch
+            real(c_float), intent(in), value :: yaw
+            real(c_float), intent(in), value :: roll
+            type(quaternion_type)            :: quaternion_from_euler
         end function quaternion_from_euler
 
         ! Quaternion QuaternionFromMatrix(Matrix mat)
@@ -455,7 +472,7 @@ module raylib_math
             import :: c_float, quaternion_type
             implicit none
             type(quaternion_type), intent(in), value :: q
-            real(kind=c_float)                       :: quaternion_length
+            real(c_float)                            :: quaternion_length
         end function quaternion_length
 
         ! Quaternion QuaternionLerp(Quaternion q1, Quaternion q2, float amount)
@@ -464,7 +481,7 @@ module raylib_math
             implicit none
             type(quaternion_type), intent(in), value :: q1
             type(quaternion_type), intent(in), value :: q2
-            real(kind=c_float),    intent(in), value :: amount
+            real(c_float),         intent(in), value :: amount
             type(quaternion_type)                    :: quaternion_lerp
         end function quaternion_lerp
 
@@ -483,7 +500,7 @@ module raylib_math
             implicit none
             type(quaternion_type), intent(in), value :: q1
             type(quaternion_type), intent(in), value :: q2
-            real(kind=c_float),    intent(in), value :: amount
+            real(c_float),         intent(in), value :: amount
             type(quaternion_type)                    :: quaternion_nlerp
         end function quaternion_nlerp
 
@@ -500,7 +517,7 @@ module raylib_math
             import :: c_float, quaternion_type
             implicit none
             type(quaternion_type), intent(in), value :: q
-            real(kind=c_float),    intent(in), value :: mul
+            real(c_float),         intent(in), value :: mul
             type(quaternion_type)                    :: quaternion_scale
         end function quaternion_scale
 
@@ -510,7 +527,7 @@ module raylib_math
             implicit none
             type(quaternion_type), intent(in), value :: q1
             type(quaternion_type), intent(in), value :: q2
-            real(kind=c_float),    intent(in), value :: amount
+            real(c_float),         intent(in), value :: amount
             type(quaternion_type)                    :: quaternion_slerp
         end function quaternion_slerp
 
@@ -528,7 +545,7 @@ module raylib_math
             import :: c_float, quaternion_type
             implicit none
             type(quaternion_type), intent(in), value :: q
-            real(kind=c_float),    intent(in), value :: sub
+            real(c_float),         intent(in), value :: sub
             type(quaternion_type)                    :: quaternion_subtract_value
         end function quaternion_subtract_value
 
@@ -538,7 +555,7 @@ module raylib_math
             implicit none
             type(quaternion_type), intent(in), value :: q
             type(vector3_type),    intent(inout)     :: out_axis(*)
-            real(kind=c_float),    intent(out)       :: out_angle
+            real(c_float),         intent(out)       :: out_angle
         end subroutine quaternion_to_axis_angle
 
         ! Vector3 QuaternionToEuler(Quaternion q)
@@ -570,12 +587,12 @@ module raylib_math
         function remap(value, input_start, input_end, output_start, output_end) bind(c, name='Remap')
             import :: c_float
             implicit none
-            real(kind=c_float), intent(in), value :: value
-            real(kind=c_float), intent(in), value :: input_start
-            real(kind=c_float), intent(in), value :: input_end
-            real(kind=c_float), intent(in), value :: output_start
-            real(kind=c_float), intent(in), value :: output_end
-            real(kind=c_float)                    :: remap
+            real(c_float), intent(in), value :: value
+            real(c_float), intent(in), value :: input_start
+            real(c_float), intent(in), value :: input_end
+            real(c_float), intent(in), value :: output_start
+            real(c_float), intent(in), value :: output_end
+            real(c_float)                    :: remap
         end function remap
 
         ! Vector2 Vector2Add(Vector2 v1, Vector2 v2)
@@ -592,7 +609,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: add
+            real(c_float),      intent(in), value :: add
             type(vector2_type)                    :: vector2_add_value
         end function vector2_add_value
 
@@ -602,7 +619,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v1
             type(vector2_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector2_angle
+            real(c_float)                         :: vector2_angle
         end function vector2_angle
 
         ! Vector2 Vector2Clamp(Vector2 v, Vector2 min, Vector2 max)
@@ -620,10 +637,19 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: min
-            real(kind=c_float), intent(in), value :: max
+            real(c_float),      intent(in), value :: min
+            real(c_float),      intent(in), value :: max
             type(vector2_type)                    :: vector2_clamp_value
         end function vector2_clamp_value
+
+        ! float Vector2CrossProduct(Vector2 v1, Vector2 v2)
+        function vector2_cross_product(v1, v2) bind(c, name='Vector2CrossProduct')
+            import :: c_float, vector2_type
+            implicit none
+            type(vector2_type), intent(in), value :: v1
+            type(vector2_type), intent(in), value :: v2
+            real(c_float)                         :: vector2_cross_product
+        end function vector2_cross_product
 
         ! float Vector2Distance(Vector2 v1, Vector2 v2)
         function vector2_distance(v1, v2) bind(c, name='Vector2Distance')
@@ -631,7 +657,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v1
             type(vector2_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector2_distance
+            real(c_float)                         :: vector2_distance
         end function vector2_distance
 
         ! float Vector2DistanceSqr(Vector2 v1, Vector2 v2)
@@ -640,7 +666,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v1
             type(vector2_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector2_distance_sqr
+            real(c_float)                         :: vector2_distance_sqr
         end function vector2_distance_sqr
 
         ! Vector2 Vector2Divide(Vector2 v1, Vector2 v2)
@@ -658,7 +684,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v1
             type(vector2_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector2_dot_product
+            real(c_float)                         :: vector2_dot_product
         end function vector2_dot_product
 
         ! int Vector2Equals(Vector2 p, Vector2 q)
@@ -667,7 +693,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: p
             type(vector2_type), intent(in), value :: q
-            integer(kind=c_int)                   :: vector2_equals
+            integer(c_int)                        :: vector2_equals
         end function vector2_equals
 
         ! Vector2 Vector2Invert(Vector2 v)
@@ -683,7 +709,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float)                    :: vector2_length
+            real(c_float)                         :: vector2_length
         end function vector2_length
 
         ! float Vector2LengthSqr(Vector2 v)
@@ -691,7 +717,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float)                    :: vector2_length_sqr
+            real(c_float)                         :: vector2_length_sqr
         end function vector2_length_sqr
 
         ! Vector2 Vector2Lerp(Vector2 v1, Vector2 v2, float amount)
@@ -700,7 +726,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v1
             type(vector2_type), intent(in), value :: v2
-            real(kind=c_float), intent(in), value :: amount
+            real(c_float),      intent(in), value :: amount
             type(vector2_type)                    :: vector2_lerp
         end function vector2_lerp
 
@@ -710,7 +736,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: start
             type(vector2_type), intent(in), value :: end
-            real(kind=c_float)                    :: vector2_line_angle
+            real(c_float)                         :: vector2_line_angle
         end function vector2_line_angle
 
         ! Vector2 Vector2MoveTowards(Vector2 v, Vector2 target, float maxDistance)
@@ -719,7 +745,7 @@ module raylib_math
             implicit none
             type(vector2_type), intent(in), value :: v
             type(vector2_type), intent(in), value :: target
-            real(kind=c_float), intent(in), value :: max_distance
+            real(c_float),      intent(in), value :: max_distance
             type(vector2_type)                    :: vector2_move_towards
         end function vector2_move_towards
 
@@ -769,7 +795,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: angle
+            real(c_float),      intent(in), value :: angle
             type(vector2_type)                    :: vector2_rotate
         end function vector2_rotate
 
@@ -778,7 +804,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: scale
+            real(c_float),      intent(in), value :: scale
             type(vector2_type)                    :: vector2_scale
         end function vector2_scale
 
@@ -796,7 +822,7 @@ module raylib_math
             import :: c_float, vector2_type
             implicit none
             type(vector2_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: sub
+            real(c_float),      intent(in), value :: sub
             type(vector2_type)                    :: vector2_subtract_value
         end function vector2_subtract_value
 
@@ -830,7 +856,7 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: add
+            real(c_float),      intent(in), value :: add
             type(vector3_type)                    :: vector3_add_value
         end function vector3_add_value
 
@@ -840,7 +866,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v1
             type(vector3_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector3_angle
+            real(c_float)                         :: vector3_angle
         end function vector3_angle
 
         ! Vector3 Vector3Barycenter(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
@@ -869,8 +895,8 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: min
-            real(kind=c_float), intent(in), value :: max
+            real(c_float),      intent(in), value :: min
+            real(c_float),      intent(in), value :: max
             type(vector3_type)                    :: vector3_clamp_value
         end function vector3_clamp_value
 
@@ -889,7 +915,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v1
             type(vector3_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector3_distance
+            real(c_float)                         :: vector3_distance
         end function vector3_distance
 
         ! float Vector3DistanceSqr(Vector3 v1, Vector3 v2)
@@ -898,7 +924,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v1
             type(vector3_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector3_distance_sqr
+            real(c_float)                         :: vector3_distance_sqr
         end function vector3_distance_sqr
 
         ! Vector3 Vector3Divide(Vector3 v1, Vector3 v2)
@@ -916,7 +942,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v1
             type(vector3_type), intent(in), value :: v2
-            real(kind=c_float)                    :: vector3_dot_product
+            real(c_float)                         :: vector3_dot_product
         end function vector3_dot_product
 
         ! int Vector3Equals(Vector3 p, Vector3 q)
@@ -925,7 +951,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: p
             type(vector3_type), intent(in), value :: q
-            integer(kind=c_int)                   :: vector3_equals
+            integer(c_int)                        :: vector3_equals
         end function vector3_equals
 
         ! Vector3 Vector3Invert(Vector3 v)
@@ -941,7 +967,7 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float)                    :: vector3_length
+            real(c_float)                         :: vector3_length
         end function vector3_length
 
         ! float Vector3LengthSqr(const Vector3 v)
@@ -949,7 +975,7 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float)                    :: vector3_length_sqr
+            real(c_float)                         :: vector3_length_sqr
         end function vector3_length_sqr
 
         ! Vector3 Vector3Lerp(Vector3 v1, Vector3 v2, float amount)
@@ -958,7 +984,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v1
             type(vector3_type), intent(in), value :: v2
-            real(kind=c_float), intent(in), value :: amount
+            real(c_float),      intent(in), value :: amount
             type(vector3_type)                    :: vector3_lerp
         end function vector3_lerp
 
@@ -1043,7 +1069,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v
             type(vector3_type), intent(in), value :: n
-            real(kind=c_float), intent(in), value :: r
+            real(c_float),      intent(in), value :: r
             type(vector3_type)                    :: vector3_refract
         end function vector3_refract
 
@@ -1053,7 +1079,7 @@ module raylib_math
             implicit none
             type(vector3_type), intent(in), value :: v
             type(vector3_type), intent(in), value :: axis
-            real(kind=c_float), intent(in), value :: angle
+            real(c_float),      intent(in), value :: angle
             type(vector3_type)                    :: vector3_rotate_by_axis_angle
         end function vector3_rotate_by_axis_angle
 
@@ -1071,7 +1097,7 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: scalar
+            real(c_float),      intent(in), value :: scalar
             type(vector3_type)                    :: vector3_scale
         end function vector3_scale
 
@@ -1089,7 +1115,7 @@ module raylib_math
             import :: c_float, vector3_type
             implicit none
             type(vector3_type), intent(in), value :: v
-            real(kind=c_float), intent(in), value :: sub
+            real(c_float),      intent(in), value :: sub
             type(vector3_type)                    :: vector3_subtract_value
         end function vector3_subtract_value
 
@@ -1131,10 +1157,24 @@ module raylib_math
         function wrap(value, min, max) bind(c, name='Wrap')
             import :: c_float
             implicit none
-            real(kind=c_float), intent(in), value :: value
-            real(kind=c_float), intent(in), value :: min
-            real(kind=c_float), intent(in), value :: max
-            real(kind=c_float)                    :: wrap
+            real(c_float), intent(in), value :: value
+            real(c_float), intent(in), value :: min
+            real(c_float), intent(in), value :: max
+            real(c_float)                    :: wrap
         end function wrap
     end interface
+contains
+    ! Matrix MatrixMultiplyValue(Matrix left, float value)
+    function matrix_multiply_value(left, value) result(matrix)
+        type(matrix_type), intent(in) :: left
+        real(c_float),     intent(in) :: value
+        type(matrix_type)             :: matrix
+
+        matrix = matrix_type( &
+            m0 = left%m0 * value, m4 = left%m4 * value,  m8 = left%m8  * value, m12 = left%m12 * value, &
+            m1 = left%m1 * value, m5 = left%m5 * value,  m9 = left%m9  * value, m13 = left%m13 * value, &
+            m2 = left%m2 * value, m6 = left%m6 * value, m10 = left%m10 * value, m14 = left%m14 * value, &
+            m3 = left%m3 * value, m7 = left%m7 * value, m11 = left%m11 * value, m15 = left%m15 * value  &
+        )
+    end function matrix_multiply_value
 end module raylib_math

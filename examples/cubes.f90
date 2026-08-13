@@ -1,14 +1,11 @@
-! cubes.f90
-!
-! Example program that renders waving cubes. Based on the raylib
-! example `models_waving_cubes.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program that renders waving cubes. Based on the raylib example
+    !! `models_waving_cubes.c`.
     use, intrinsic :: iso_fortran_env, only: r8 => real64
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: NBLOCKS       = 15
@@ -17,12 +14,12 @@ program main
 
     integer             :: x, y, z
     real                :: block_scale, cube_size, scale, scatter
-    real(kind=r8)       :: camera_time, time
+    real(r8)            :: camera_time, time
     type(camera3d_type) :: camera
     type(color_type)    :: cube_color
     type(vector3_type)  :: cube_pos
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
     call disable_cursor()
 

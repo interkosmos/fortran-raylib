@@ -1,13 +1,11 @@
-! julia.f90
-!
-! Example program that renders animated Julia set, using the GLSL 3.30 shader
-! `share/julia.fs`. Based on the raylib example `shaders_julia_set.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that renders animated Julia set, using the GLSL 3.30
+    !! shader `share/julia.fs`. Based on the raylib example
+    !! `shaders_julia_set.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -21,12 +19,12 @@ program main
     logical :: pause
     logical :: controls
 
-    real(kind=c_float)         :: amount
-    real(kind=c_float)         :: points(2, 6)
-    real(kind=c_float), target :: c(2)
-    real(kind=c_float), target :: offset(2)
-    real(kind=c_float), target :: zoom
-    real(kind=c_float), target :: screen_dims(2)
+    real(c_float)         :: amount
+    real(c_float)         :: points(2, 6)
+    real(c_float), target :: c(2)
+    real(c_float), target :: offset(2)
+    real(c_float), target :: zoom
+    real(c_float), target :: screen_dims(2)
 
     type(render_texture2d_type) :: target
     type(shader_type)           :: shader
@@ -41,12 +39,12 @@ program main
                        -0.835000, -0.232100, &
                        -0.701760, -0.384200 ], [ 2, 6 ])
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     ! Load julia set shader. Passing `NULL` for vertex shader forces
     ! usage of internal default vertex shader.
-    shader = load_shader(c_null_char, 'share/julia.fs' // c_null_char)
+    shader = load_shader(c_null_char, f_c_str('share/julia.fs'))
 
     ! Create a RenderTexture2D to be used for render to texture.
     target = load_render_texture(get_screen_width(), get_screen_height())
@@ -65,14 +63,14 @@ program main
     ! Get variable (uniform) locations on the shader to connect with the
     ! program. If uniform variable could not be found in the shader, function
     ! returns -1.
-    c_idx      = get_shader_location(shader, 'c' // c_null_char)
-    offset_idx = get_shader_location(shader, 'offset' // c_null_char)
-    zoom_idx   = get_shader_location(shader, 'zoom' // c_null_char)
+    c_idx      = get_shader_location(shader, f_c_str('c'))
+    offset_idx = get_shader_location(shader, f_c_str('offset'))
+    zoom_idx   = get_shader_location(shader, f_c_str('zoom'))
 
     screen_dims = [ real(get_screen_width()), real(get_screen_height()) ]
 
     call set_shader_value(shader, &
-                          get_shader_location(shader, 'screenDims' // c_null_char), &
+                          get_shader_location(shader, f_c_str('screenDims')), &
                           c_loc(screen_dims), &
                           SHADER_UNIFORM_VEC2)
 
@@ -164,11 +162,11 @@ program main
             call end_shader_mode()
 
             if (controls) then
-                call draw_text('Press Mouse buttons right/left to zoom in/out and move' // c_null_char, 10, 15, 10, RAYWHITE)
-                call draw_text('Press KEY_F1 to toggle these controls' // c_null_char, 10, 30, 10, RAYWHITE)
-                call draw_text('Press KEYS [1 - 6] to change point of interest' // c_null_char, 10, 45, 10, RAYWHITE)
-                call draw_text('Press KEY_LEFT | KEY_RIGHT to change speed' // c_null_char, 10, 60, 10, RAYWHITE)
-                call draw_text('Press KEY_SPACE to pause movement animation' // c_null_char, 10, 75, 10, RAYWHITE)
+                call draw_text(f_c_str('Press Mouse buttons right/left to zoom in/out and move'), 10, 15, 10, RAYWHITE)
+                call draw_text(f_c_str('Press KEY_F1 to toggle these controls'), 10, 30, 10, RAYWHITE)
+                call draw_text(f_c_str('Press KEYS [1 - 6] to change point of interest'), 10, 45, 10, RAYWHITE)
+                call draw_text(f_c_str('Press KEY_LEFT | KEY_RIGHT to change speed'), 10, 60, 10, RAYWHITE)
+                call draw_text(f_c_str('Press KEY_SPACE to pause movement animation'), 10, 75, 10, RAYWHITE)
             end if
         call end_drawing()
     end do

@@ -1,14 +1,11 @@
-! plane.f90
-!
-! Example program that shows pitch/yaw/roll of a 3-D model. Based on the
-! raylib example `models_yaw_pitch_roll.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that shows pitch/yaw/roll of a 3-D model. Based on the
+    !! raylib example `models_yaw_pitch_roll.c`.
     use :: raylib
     use :: raylib_math
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -21,7 +18,7 @@ program main
     type(vector3_type)   :: position
     type(vector3_type)   :: rotation
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
     call disable_cursor()
 
@@ -32,8 +29,8 @@ program main
     camera%fov_y      = 30.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model   = load_model('share/plane.obj' // c_null_char)
-    texture = load_texture('share/plane_diffuse.png' // c_null_char)
+    model   = load_model(f_c_str('share/plane.obj'))
+    texture = load_texture(f_c_str('share/plane_diffuse.png'))
 
     call set_model_diffuse(model, texture)
 
@@ -99,11 +96,11 @@ program main
             ! Draw controls info.
             call draw_rectangle(30, 370, 260, 70, fade(GREEN, 0.5))
             call draw_rectangle_lines(30, 370, 260, 70, fade(DARKGREEN, 0.5))
-            call draw_text('Pitch controlled with: KEY_UP / KEY_DOWN' // c_null_char, 40, 380, 10, DARKGRAY)
-            call draw_text('Roll controlled with: KEY_LEFT / KEY_RIGHT' // c_null_char, 40, 400, 10, DARKGRAY)
-            call draw_text('Yaw controlled with: KEY_A / KEY_S' // c_null_char, 40, 420, 10, DARKGRAY)
+            call draw_text(f_c_str('Pitch controlled with: KEY_UP / KEY_DOWN'), 40, 380, 10, DARKGRAY)
+            call draw_text(f_c_str('Roll controlled with: KEY_LEFT / KEY_RIGHT'), 40, 400, 10, DARKGRAY)
+            call draw_text(f_c_str('Yaw controlled with: KEY_A / KEY_S'), 40, 420, 10, DARKGRAY)
 
-            call draw_text('(c) WWI plane model created by GiaHanLam' // c_null_char, &
+            call draw_text(f_c_str('(c) WWI plane model created by GiaHanLam'), &
                            SCREEN_WIDTH - 240, SCREEN_HEIGHT - 20, 10, DARKGRAY)
             call draw_fps(10, 10)
         call end_drawing()

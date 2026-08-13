@@ -1,13 +1,10 @@
-! castle.f90
-!
-! Example program that renders a 3-D model loaded from file. Based on the raylib
-! example `models_loading.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that renders a 3-D model loaded from file. Based on the
+    !! raylib example `models_loading.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -18,7 +15,7 @@ program main
     type(texture2d_type) :: texture
     type(vector3_type)   :: position
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
     call disable_cursor()
 
@@ -29,8 +26,8 @@ program main
     camera%fov_y      = 45.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model   = load_model('share/castle.obj' // c_null_char)
-    texture = load_texture('share/castle_diffuse.png' // c_null_char)
+    model   = load_model(f_c_str('share/castle.obj'))
+    texture = load_texture(f_c_str('share/castle_diffuse.png'))
 
     call set_model_diffuse(model, texture)
 
@@ -45,7 +42,7 @@ program main
                 call draw_grid(20, 10.0)
             call end_mode3d()
 
-            call draw_text('(c) Castle 3D model by Alberto Cano' // c_null_char, &
+            call draw_text(f_c_str('(c) Castle 3D model by Alberto Cano'), &
                            SCREEN_WIDTH - 200, SCREEN_HEIGHT - 20, 10, GRAY)
             call draw_fps(10, 10)
         call end_drawing()

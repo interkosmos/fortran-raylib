@@ -1,13 +1,10 @@
-! camera.f90
-!
-! Example program to test camera modes. Based on the raylib example
-! `core_3d_camera_mode.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program to test camera modes. Based on the raylib example
+    !! `core_3d_camera_mode.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -16,7 +13,7 @@ program main
     type(camera3d_type) :: camera
     type(vector3_type)  :: cube_pos
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     ! Define camera to look into our 3-D world.
@@ -38,7 +35,7 @@ program main
                 call draw_grid(10, 1.0)
             call end_mode3d()
 
-            call draw_text('Welcome to the third dimension!' // c_null_char, 10, 40, 20, DARKGRAY)
+            call draw_text(f_c_str('Welcome to the third dimension!'), 10, 40, 20, DARKGRAY)
             call draw_fps(10, 10)
         call end_drawing()
     end do

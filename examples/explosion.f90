@@ -1,13 +1,10 @@
-! explosion.f90
-!
-! Example program that renders a sprite explosion. Based on the raylib example
-! `textures_sprite_explosion.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program that renders a sprite explosion. Based on the raylib
+    !! example `textures_sprite_explosion.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -24,13 +21,13 @@ program main
     type(texture2d_type) :: explosion
     type(vector2_type)   :: position
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call init_audio_device()
 
     call set_target_fps(120)
 
-    boom = load_sound('share/boom.wav' // c_null_char)
-    explosion = load_texture('share/explosion.png' // c_null_char)
+    boom      = load_sound(f_c_str('share/boom.wav'))
+    explosion = load_texture(f_c_str('share/explosion.png'))
 
     width  = real(explosion%width / NCOLS)
     height = real(explosion%height / NROWS)

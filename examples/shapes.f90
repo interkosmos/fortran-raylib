@@ -1,13 +1,10 @@
-! shapes.f90
-!
-! Example program that renders basic shapes. Based on the raylib example
-! `shapes_basic_shapes.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program that renders basic shapes. Based on the raylib example
+    !! `shapes_basic_shapes.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -15,7 +12,7 @@ program main
 
     real :: rotation
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     rotation = 0.0
@@ -26,11 +23,11 @@ program main
         call begin_drawing()
             call clear_background(RAYWHITE)
 
-            call draw_text('some basic shapes available on raylib' // c_null_char, 20, 20, 20, DARKGRAY)
+            call draw_text(f_c_str('some basic shapes available on raylib'), 20, 20, 20, DARKGRAY)
 
             ! Circle shapes and lines.
             call draw_circle(SCREEN_WIDTH / 5, 120, 35.0, DARKBLUE)
-            call draw_circle_gradient(SCREEN_WIDTH / 5, 220, 60.0, GREEN, SKYBLUE)
+            call draw_circle_gradient(vector2_type(SCREEN_WIDTH / 5.0, 220.0), 60.0, GREEN, SKYBLUE)
             call draw_circle_lines(SCREEN_WIDTH / 5, 340, 80.0, DARKBLUE)
 
             ! Rectangle shapes and lines.
@@ -39,11 +36,11 @@ program main
             call draw_rectangle_lines(SCREEN_WIDTH / 4 * 2 - 40, 320, 80, 60, ORANGE)
 
             ! Triangle shapes and lines.
-            call draw_triangle(vector2_type(SCREEN_WIDTH / 4.0 * 3.0, 80.0), &
+            call draw_triangle(vector2_type(SCREEN_WIDTH / 4.0 * 3.0,         80.0), &
                                vector2_type(SCREEN_WIDTH / 4.0 * 3.0 - 60.0, 150.0), &
                                vector2_type(SCREEN_WIDTH / 4.0 * 3.0 + 60.0, 150.0), VIOLET)
 
-            call draw_triangle_lines(vector2_type(SCREEN_WIDTH / 4.0 * 3.0, 160.0), &
+            call draw_triangle_lines(vector2_type(SCREEN_WIDTH / 4.0 * 3.0,        160.0), &
                                      vector2_type(SCREEN_WIDTH / 4.0 * 3.0 - 20.0, 230.0), &
                                      vector2_type(SCREEN_WIDTH / 4.0 * 3.0 + 20.0, 230.0), DARKBLUE)
 

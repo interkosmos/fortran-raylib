@@ -1,20 +1,23 @@
 # fortran-raylib
 
+![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)
+![License](https://img.shields.io/github/license/interkosmos/fortran-raylib)
+
 A work-in-progress collection of interface bindings to
-[raylib](https://www.raylib.com/) 5.5, for 2-D and 3-D game programming in
-Fortran 2018. The library has been tested with GNU Fortran 14 and Flang 20.
+[raylib](https://www.raylib.com/) 6.0, for 2-D and 3-D game programming in
+Fortran 2018. The library has been tested with GNU Fortran 15 and Flang 21.
 
 ## Build Instructions
 
 Install the raylib package suitable for your operating system, or build from
-[source](https://github.com/raysan5/raylib/releases/tag/5.5):
+[source](https://github.com/raysan5/raylib/releases/tag/6.0), for example:
 
 ```
-$ cd raylib-5.5/
+$ cd raylib-6.0/
 $ mkdir build && cd build/
-$ cmake ..
-$ make PLATFORM=PLATFORM_DESKTOP
-$ make install
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Desktop -DWITH_PIC=ON -DBUILD_SHARED_LIBS=ON
+$ cmake --build .
+$ cmake --install . --prefix /opt
 ```
 Select platform `PLATFORM_DESKTOP_SDL` for the SDL 2.0 back-end:
 
@@ -36,7 +39,7 @@ $ make
 Or, to compile with Flang:
 
 ```
-$ make FC=flang20
+$ make FC=flang21
 ```
 
 Pass argument `RAYLIB` to override the raylib library to link. For example, if
@@ -87,20 +90,20 @@ The following example program opens a window and draws some text.
 ```fortran
 ! example.f90
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     do while (.not. window_should_close())
         call begin_drawing()
             call clear_background(RAYWHITE)
-            call draw_text('Hello, World!' // c_null_char, 190, 200, 20, LIGHTGRAY)
+            call draw_text(f_c_str('Hello, World!'), 190, 200, 20, LIGHTGRAY)
         call end_drawing()
     end do
 
@@ -159,11 +162,9 @@ $ make examples RAYLIB=libraylib.a
 
 Some issues have to be regarded when calling raylib from Fortran:
 
-* Loading models in Wavefront OBJ format is broken since raylib 5.0
-  ([issue](https://github.com/raysan5/raylib/issues/3576)).
 * All procedure names and dummy arguments have been converted to snake case.
 * Make sure to properly null-terminate all character strings passed to raylib
-  with `c_null_char` from module `iso_c_binding` or simply `achar(0)`.
+  with `c_null_char` or by using utility function `f_c_str()`.
 * Some variadic C functions of raylib are not bound by the interface library,
   like `TextFormat()`. In this particular case, just use the Fortran `write`
   statement instead.

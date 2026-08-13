@@ -1,24 +1,21 @@
-! collision.f90
-!
-! Example program to test collision detection. Based on the raylib example
-! `shapes_collision_area.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program to test collision detection. Based on the raylib example
+    !! `shapes_collision_area.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
 
-    character(len=32)    :: str
+    character(32)        :: str
     integer              :: limit, speed
     logical              :: collision, pause
     type(rectangle_type) :: box_a, box_b, box_c
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     box_a = rectangle_type(10.0, &
@@ -75,13 +72,12 @@ program main
 
             if (collision) then
                 call draw_rectangle_rec(box_c, LIME)
-                call draw_text('COLLISION!' // c_null_char, &
-                               SCREEN_WIDTH / 2 - measure_text('COLLISION!' // c_null_char, 20) / 2, &
+                call draw_text(f_c_str('COLLISION!'), &
+                               SCREEN_WIDTH / 2 - measure_text(f_c_str('COLLISION!'), 20) / 2, &
                                limit / 2 - 10, 20, BLACK)
 
                 write (str, '("Collision Area: ", i0)') int(box_c%width) * int(box_c%height)
-                call draw_text(trim(str) // c_null_char, SCREEN_WIDTH / 2 - 100, &
-                               limit + 10, 20, BLACK)
+                call draw_text(f_c_str(str), SCREEN_WIDTH / 2 - 100, limit + 10, 20, BLACK)
             end if
 
             call draw_fps(10, 10)

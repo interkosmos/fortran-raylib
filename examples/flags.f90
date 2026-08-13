@@ -1,19 +1,16 @@
-! flags.f90
-!
-! Example program to test window flags. Based on the raylib example
-! `core_window_flags.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program to test window flags. Based on the raylib example
+    !! `core_window_flags.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
 
-    character(len=32)    :: str
+    character(32)        :: str
     integer              :: nframes
     real                 :: ball_radius
     type(rectangle_type) :: rect
@@ -23,7 +20,7 @@ program main
     ! Set configuration flags for window creation.
     ! call set_config_flags(FLAG_VSYNC_HINT + FLAG_MSAA_4X_HINT + FLAG_WINDOW_HIGHDPI)
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
     call hide_cursor()
 
@@ -146,87 +143,87 @@ program main
         call draw_fps(10, 10)
 
         write (str, '("Screen Size: [", i0, ", ", i0, "]")') get_screen_width(), get_screen_height()
-        call draw_text(str // c_null_char, 10, 40, 10, GREEN)
-        call draw_text('Following flags can be set after window creation:' // c_null_char, 10, 60, 10, GRAY)
+        call draw_text(f_c_str(str), 10, 40, 10, GREEN)
+        call draw_text(f_c_str('Following flags can be set after window creation:'), 10, 60, 10, GRAY)
 
         if (is_window_state(FLAG_FULLSCREEN_MODE)) then
-            call draw_text('[F] FLAG_FULLSCREEN_MODE: on' // c_null_char, 10, 80, 10, LIME)
+            call draw_text(f_c_str('[F] FLAG_FULLSCREEN_MODE: on'), 10, 80, 10, LIME)
         else
-            call draw_text('[F] FLAG_FULLSCREEN_MODE: off' // c_null_char, 10, 80, 10, MAROON)
+            call draw_text(f_c_str('[F] FLAG_FULLSCREEN_MODE: off'), 10, 80, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_RESIZABLE)) then
-            call draw_text('[R] FLAG_WINDOW_RESIZABLE: on' // c_null_char, 10, 100, 10, LIME)
+            call draw_text(f_c_str('[R] FLAG_WINDOW_RESIZABLE: on'), 10, 100, 10, LIME)
         else
-            call draw_text('[R] FLAG_WINDOW_RESIZABLE: off' // c_null_char, 10, 100, 10, MAROON)
+            call draw_text(f_c_str('[R] FLAG_WINDOW_RESIZABLE: off'), 10, 100, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_UNDECORATED)) then
-            call draw_text('[D] FLAG_WINDOW_UNDECORATED: on' // c_null_char, 10, 120, 10, LIME)
+            call draw_text(f_c_str('[D] FLAG_WINDOW_UNDECORATED: on'), 10, 120, 10, LIME)
         else
-            call draw_text('[D] FLAG_WINDOW_UNDECORATED: off' // c_null_char, 10, 120, 10, MAROON)
+            call draw_text(f_c_str('[D] FLAG_WINDOW_UNDECORATED: off'), 10, 120, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_HIDDEN)) then
-            call draw_text('[H] FLAG_WINDOW_HIDDEN: on' // c_null_char, 10, 140, 10, LIME)
+            call draw_text(f_c_str('[H] FLAG_WINDOW_HIDDEN: on'), 10, 140, 10, LIME)
         else
-            call draw_text('[H] FLAG_WINDOW_HIDDEN: off' // c_null_char, 10, 140, 10, MAROON)
+            call draw_text(f_c_str('[H] FLAG_WINDOW_HIDDEN: off'), 10, 140, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_MINIMIZED)) then
-            call draw_text('[N] FLAG_WINDOW_MINIMIZED: on' // c_null_char, 10, 160, 10, LIME)
+            call draw_text(f_c_str('[N] FLAG_WINDOW_MINIMIZED: on'), 10, 160, 10, LIME)
         else
-            call draw_text('[N] FLAG_WINDOW_MINIMIZED: off' // c_null_char, 10, 160, 10, MAROON)
+            call draw_text(f_c_str('[N] FLAG_WINDOW_MINIMIZED: off'), 10, 160, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_MAXIMIZED)) then
-            call draw_text('[M] FLAG_WINDOW_MAXIMIZED: on' // c_null_char, 10, 180, 10, LIME)
+            call draw_text(f_c_str('[M] FLAG_WINDOW_MAXIMIZED: on'), 10, 180, 10, LIME)
         else
-            call draw_text('[M] FLAG_WINDOW_MAXIMIZED: off' // c_null_char, 10, 180, 10, MAROON)
+            call draw_text(f_c_str('[M] FLAG_WINDOW_MAXIMIZED: off'), 10, 180, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_UNFOCUSED)) then
-            call draw_text('[G] FLAG_WINDOW_UNFOCUSED: on' // c_null_char, 10, 200, 10, LIME)
+            call draw_text(f_c_str('[G] FLAG_WINDOW_UNFOCUSED: on'), 10, 200, 10, LIME)
         else
-            call draw_text('[U] FLAG_WINDOW_UNFOCUSED: off' // c_null_char, 10, 200, 10, MAROON)
+            call draw_text(f_c_str('[U] FLAG_WINDOW_UNFOCUSED: off'), 10, 200, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_TOPMOST)) then
-            call draw_text('[T] FLAG_WINDOW_TOPMOST: on' // c_null_char, 10, 220, 10, LIME)
+            call draw_text(f_c_str('[T] FLAG_WINDOW_TOPMOST: on'), 10, 220, 10, LIME)
         else
-            call draw_text('[T] FLAG_WINDOW_TOPMOST: off' // c_null_char, 10, 220, 10, MAROON)
+            call draw_text(f_c_str('[T] FLAG_WINDOW_TOPMOST: off'), 10, 220, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_ALWAYS_RUN)) then
-            call draw_text('[A] FLAG_WINDOW_ALWAYS_RUN: on' // c_null_char, 10, 240, 10, LIME)
+            call draw_text(f_c_str('[A] FLAG_WINDOW_ALWAYS_RUN: on'), 10, 240, 10, LIME)
         else
-            call draw_text('[A] FLAG_WINDOW_ALWAYS_RUN: off' // c_null_char, 10, 240, 10, MAROON)
+            call draw_text(f_c_str('[A] FLAG_WINDOW_ALWAYS_RUN: off'), 10, 240, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_VSYNC_HINT)) then
-            call draw_text('[V] FLAG_VSYNC_HINT: on' // c_null_char, 10, 260, 10, LIME)
+            call draw_text(f_c_str('[V] FLAG_VSYNC_HINT: on'), 10, 260, 10, LIME)
         else
-            call draw_text('[V] FLAG_VSYNC_HINT: off' // c_null_char, 10, 260, 10, MAROON)
+            call draw_text(f_c_str('[V] FLAG_VSYNC_HINT: off'), 10, 260, 10, MAROON)
         end if
 
-        call draw_text('Following flags can only be set before window creation:' // c_null_char, 10, 300, 10, GRAY)
+        call draw_text(f_c_str('Following flags can only be set before window creation:'), 10, 300, 10, GRAY)
 
         if (is_window_state(FLAG_WINDOW_HIGHDPI)) then
-            call draw_text('FLAG_WINDOW_HIGHDPI: on' // c_null_char, 10, 320, 10, LIME)
+            call draw_text(f_c_str('FLAG_WINDOW_HIGHDPI: on'), 10, 320, 10, LIME)
         else
-            call draw_text('FLAG_WINDOW_HIGHDPI: off' // c_null_char, 10, 320, 10, MAROON)
+            call draw_text(f_c_str('FLAG_WINDOW_HIGHDPI: off'), 10, 320, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_WINDOW_TRANSPARENT)) then
-            call draw_text('FLAG_WINDOW_TRANSPARENT: on' // c_null_char, 10, 340, 10, LIME)
+            call draw_text(f_c_str('FLAG_WINDOW_TRANSPARENT: on'), 10, 340, 10, LIME)
         else
-            call draw_text('FLAG_WINDOW_TRANSPARENT: off' // c_null_char, 10, 340, 10, MAROON)
+            call draw_text(f_c_str('FLAG_WINDOW_TRANSPARENT: off'), 10, 340, 10, MAROON)
         end if
 
         if (is_window_state(FLAG_MSAA_4X_HINT)) then
-            call draw_text('FLAG_MSAA_4X_HINT: on' // c_null_char, 10, 360, 10, LIME)
+            call draw_text(f_c_str('FLAG_MSAA_4X_HINT: on'), 10, 360, 10, LIME)
         else
-            call draw_text('FLAG_MSAA_4X_HINT: off' // c_null_char, 10, 360, 10, MAROON)
+            call draw_text(f_c_str('FLAG_MSAA_4X_HINT: off'), 10, 360, 10, MAROON)
         end if
 
         call end_drawing()

@@ -1,17 +1,14 @@
-! mesh.f90
-!
-! Example program based on `shaders_mesh_instancing.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program based on `shaders_mesh_instancing.c`.
     use :: raylib
     use :: raylib_math
+    use :: raylib_util
     implicit none (type, external)
 
-    character(len=*), parameter :: FS_FILE_NAME = 'share/lighting.fs'
-    character(len=*), parameter :: VS_FILE_NAME = 'share/lighting_instancing.vs'
+    character(*), parameter :: FS_FILE_NAME = 'share/lighting.fs'
+    character(*), parameter :: VS_FILE_NAME = 'share/lighting_instancing.vs'
 
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
@@ -24,18 +21,18 @@ program main
     integer, parameter :: LIGHT_POINT       = 1
 
     type :: light_type
-        integer(kind=c_int) :: type            = LIGHT_DIRECTIONAL
-        integer(kind=c_int) :: enabled         = 0
-        type(vector3_type)  :: position
-        type(vector3_type)  :: target
-        type(color_type)    :: color
-        real(kind=c_float)  :: attenuation     = 0.0
-        integer(kind=c_int) :: enabled_loc     = 0
-        integer(kind=c_int) :: type_loc        = 0
-        integer(kind=c_int) :: position_loc    = 0
-        integer(kind=c_int) :: target_loc      = 0
-        integer(kind=c_int) :: color_loc       = 0
-        integer(kind=c_int) :: attenuation_loc = 0
+        integer(c_int)     :: type            = LIGHT_DIRECTIONAL
+        integer(c_int)     :: enabled         = 0
+        type(vector3_type) :: position        = vector3_type()
+        type(vector3_type) :: target          = vector3_type()
+        type(color_type)   :: color           = color_type()
+        real(c_float)      :: attenuation     = 0.0
+        integer(c_int)     :: enabled_loc     = 0
+        integer(c_int)     :: type_loc        = 0
+        integer(c_int)     :: position_loc    = 0
+        integer(c_int)     :: target_loc      = 0
+        integer(c_int)     :: color_loc       = 0
+        integer(c_int)     :: attenuation_loc = 0
     end type light_type
 
     integer :: lights_count = 0
@@ -53,7 +50,7 @@ program main
 
     type(matrix_type), allocatable :: transforms(:)
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
 
     camera%position   = vector3_type(-125.0, 125.0, -125.0)
     camera%target     = vector3_type(0.0, 0.0, 0.0)
@@ -84,8 +81,8 @@ program main
     shader = load_shader(VS_FILE_NAME // c_null_char, FS_FILE_NAME // c_null_char)
 
     call c_f_pointer(shader%locs, locs, [ MAX_SHADER_LOCATIONS + 1 ])
-    locs(SHADER_LOC_MATRIX_MVP + 1)  = get_shader_location(shader, 'mvp' // c_null_char)
-    locs(SHADER_LOC_VECTOR_VIEW + 1) = get_shader_location(shader, 'viewPos' // c_null_char)
+    locs(SHADER_LOC_MATRIX_MVP + 1)  = get_shader_location(shader, f_c_str('mvp'))
+    locs(SHADER_LOC_VECTOR_VIEW + 1) = get_shader_location(shader, f_c_str('viewPos'))
 
     ! Set shader value: ambient light level.
     ambient = get_shader_location(shader, 'ambient')
@@ -160,8 +157,8 @@ contains
         type(color_type),   intent(in) :: color
         type(shader_type),  intent(in) :: shader
 
-        character(len=32) :: string
-        type(light_type)  :: light
+        character(32)    :: string
+        type(light_type) :: light
 
         if (lights_count < MAX_LIGHTS) then
             light%enabled  = 1

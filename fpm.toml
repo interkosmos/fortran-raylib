@@ -1,5 +1,5 @@
 name = "fortran-raylib"
-version = "0.2.0"
+version = "0.3.0"
 license = "ISC"
 author = "Philipp Engel"
 maintainer = "@interkosmos"
@@ -15,6 +15,14 @@ source-dir = "src"
 
 [install]
 library = true
+
+[features]
+debug.flags = "-g -O0 -L/opt/lib -L/usr/local/lib"
+release.flags = "-O3 -L/opt/lib -L/usr/local/lib"
+
+[profiles]
+debug = ["debug"]
+release = ["release"]
 
 [[executable]]
 source-dir = "examples"

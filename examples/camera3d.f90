@@ -1,28 +1,25 @@
-! camera3d.f90
-!
-! Example program that shows a 3-D scene from first-person. Based on the raylib
-! example `core_3d_camera_first_person.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_bool, c_null_char
+    !! Example program that shows a 3-D scene from first-person. Based on the
+    !! raylib example `core_3d_camera_first_person.c`.
     use :: raylib
     use :: raylib_camera
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: MAX_COLUMNS   = 20
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
 
-    character(len=32)   :: text
+    character(32)       :: text
     integer             :: camera_mode, i
     real                :: heights(MAX_COLUMNS)
     type(camera3d_type) :: camera
     type(color_type)    :: colors(MAX_COLUMNS)
     type(vector3_type)  :: positions(MAX_COLUMNS)
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
     call disable_cursor()
 
@@ -126,17 +123,17 @@ program main
             call draw_rectangle(5, 5, 330, 100, fade(SKYBLUE, 0.5))
             call draw_rectangle_lines(5, 5, 330, 100, BLUE)
 
-            call draw_text('Camera controls:' // c_null_char, 15, 15, 10, BLACK)
-            call draw_text('- Move keys: W, A, S, D, Space, Left-Ctrl' // c_null_char, 15, 30, 10, BLACK)
-            call draw_text('- Look around: arrow keys or mouse' // c_null_char, 15, 45, 10, BLACK)
-            call draw_text('- Camera mode keys: 1, 2, 3, 4' // c_null_char, 15, 60, 10, BLACK)
-            call draw_text('- Zoom keys: num-plus, num-minus or mouse scroll' // c_null_char, 15, 75, 10, BLACK)
-            call draw_text('- Camera projection key: P' // c_null_char, 15, 90, 10, BLACK)
+            call draw_text(f_c_str('Camera controls:'), 15, 15, 10, BLACK)
+            call draw_text(f_c_str('- Move keys: W, A, S, D, Space, Left-Ctrl'), 15, 30, 10, BLACK)
+            call draw_text(f_c_str('- Look around: arrow keys or mouse'), 15, 45, 10, BLACK)
+            call draw_text(f_c_str('- Camera mode keys: 1, 2, 3, 4'), 15, 60, 10, BLACK)
+            call draw_text(f_c_str('- Zoom keys: num-plus, num-minus or mouse scroll'), 15, 75, 10, BLACK)
+            call draw_text(f_c_str('- Camera projection key: P'), 15, 90, 10, BLACK)
 
             call draw_rectangle(600, 5, 195, 100, fade(SKYBLUE, 0.5))
             call draw_rectangle_lines(600, 5, 195, 100, BLUE)
 
-            call draw_text('Camera status:' // c_null_char, 610, 15, 10, BLACK)
+            call draw_text(f_c_str('Camera status:'), 610, 15, 10, BLACK)
 
             select case (camera_mode)
                 case (CAMERA_FREE)
@@ -149,7 +146,7 @@ program main
                     text = '- Mode: ORBITAL'
             end select
 
-            call draw_text(trim(text) // c_null_char, 610, 30, 10, BLACK)
+            call draw_text(f_c_str(text), 610, 30, 10, BLACK)
 
             select case (camera%projection)
                 case (CAMERA_PERSPECTIVE)
@@ -160,16 +157,16 @@ program main
                     text = '- Projection: CUSTOM'
             end select
 
-            call draw_text(trim(text) // c_null_char, 610, 45, 10, BLACK)
+            call draw_text(f_c_str(text), 610, 45, 10, BLACK)
 
             write (text, '("Position: ", f6.3, 2(", ", f6.3))') camera%position%x, camera%position%y, camera%position%z
-            call draw_text(trim(text) // c_null_char, 610, 60, 10, BLACK)
+            call draw_text(f_c_str(text), 610, 60, 10, BLACK)
 
             write (text, '("Target: ", f6.3, 2(", ", f6.3))') camera%target%x, camera%target%y, camera%target%z
-            call draw_text(trim(text) // c_null_char, 610, 75, 10, BLACK)
+            call draw_text(f_c_str(text), 610, 75, 10, BLACK)
 
             write (text, '("Up: ", f6.3, 2(", ", f6.3))') camera%up%x, camera%up%y, camera%up%z
-            call draw_text(trim(text) // c_null_char, 610, 90, 10, BLACK)
+            call draw_text(f_c_str(text), 610, 90, 10, BLACK)
         call end_drawing()
     end do
 

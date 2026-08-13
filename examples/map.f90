@@ -1,13 +1,10 @@
-! map.f90
-!
-! Example program that generates a height map from image. Based on the raylib
-! example `models_heightmap.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that generates a height map from image. Based on the
+    !! raylib example `models_heightmap.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -20,7 +17,7 @@ program main
     type(texture2d_type) :: texture
     type(vector3_type)   :: position
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     ! Define camera to look into our 3-D world.
@@ -30,7 +27,7 @@ program main
     camera%fov_y      = 45.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    image   = load_image('share/map.png' // c_null_char)
+    image   = load_image(f_c_str('share/map.png'))
     texture = load_texture_from_image(image)
     mesh    = gen_mesh_heightmap(image, vector3_type(16.0, 8.0, 16.0))
     model   = load_model_from_mesh(mesh)

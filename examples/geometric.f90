@@ -1,13 +1,10 @@
-! geometric.f90
-!
-! Example program that renders geometric shapes. Based on the raylib example
-! `models_geometric_shapes.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program that renders geometric shapes. Based on the raylib
+    !! example `models_geometric_shapes.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -16,7 +13,7 @@ program main
     type(camera3d_type) :: camera
 
     call set_config_flags(FLAG_MSAA_4X_HINT)
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     ! Define camera to look into our 3-D world.

@@ -1,15 +1,12 @@
-! ship.f90
-!
-! Example program that rotates a 3-D model loaded from file. Enables VSync and
-! MSAA4.
-!
-! Model (CC0) source: https://opengameart.org/content/lowpoly-ship-pack
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that rotates a 3-D model loaded from file. Enables VSync
+    !! and MSAA4.
+    !!
+    !! Model (CC0) source: https://opengameart.org/content/lowpoly-ship-pack
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -23,7 +20,7 @@ program main
     type(vector3_type)  :: scale
 
     call set_config_flags(ior(FLAG_VSYNC_HINT, FLAG_MSAA_4X_HINT))
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call disable_cursor()
 
     ! Define camera to look into our 3-D world.
@@ -33,7 +30,7 @@ program main
     camera%fov_y      = 45.0
     camera%projection = CAMERA_PERSPECTIVE
 
-    model = load_model('share/ship.glb' // c_null_char)
+    model = load_model(f_c_str('share/ship.glb'))
 
     angle    = 0.0
     rotation = vector3_type(0.0, 1.0, 0.0)

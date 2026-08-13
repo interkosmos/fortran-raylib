@@ -1,13 +1,10 @@
-! font.f90
-!
-! Example program that demonstrates bitmap font rendering. Based on the raylib
-! example `text_raylib_fonts.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding
+    !! Example program that demonstrates bitmap font rendering. Based on the
+    !! raylib example `text_raylib_fonts.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: MAX_FONTS     = 8
@@ -16,27 +13,27 @@ program main
 
     integer            :: i
     integer            :: spacings(MAX_FONTS)
-    character(len=72)  :: messages(MAX_FONTS)
+    character(72)      :: messages(MAX_FONTS)
     type(color_type)   :: colors(MAX_FONTS)
     type(font_type)    :: fonts(MAX_FONTS)
     type(vector2_type) :: positions(MAX_FONTS)
     type(vector2_type) :: v2
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
     fonts = [ &
-        load_font('share/fonts/alagard.png' // c_null_char), &
-        load_font('share/fonts/pixelplay.png' // c_null_char), &
-        load_font('share/fonts/mecha.png' // c_null_char), &
-        load_font('share/fonts/setback.png' // c_null_char), &
-        load_font('share/fonts/romulus.png' // c_null_char), &
-        load_font('share/fonts/pixantiqua.png' // c_null_char), &
-        load_font('share/fonts/alpha_beta.png' // c_null_char), &
-        load_font('share/fonts/jupiter_crash.png' // c_null_char) &
+        load_font(f_c_str('share/fonts/alagard.png')), &
+        load_font(f_c_str('share/fonts/pixelplay.png')), &
+        load_font(f_c_str('share/fonts/mecha.png')), &
+        load_font(f_c_str('share/fonts/setback.png')), &
+        load_font(f_c_str('share/fonts/romulus.png')), &
+        load_font(f_c_str('share/fonts/pixantiqua.png')), &
+        load_font(f_c_str('share/fonts/alpha_beta.png')), &
+        load_font(f_c_str('share/fonts/jupiter_crash.png')) &
     ]
 
-    messages = [ character(len=72) :: &
+    messages = [ character(72) :: &
         'ALAGARD FONT designed by Hewett Tsoi', &
         'PIXELPLAY FONT designed by Aleksander Shevchuk', &
         'MECHA FONT designed by Captain Falcon', &
@@ -50,7 +47,7 @@ program main
     spacings = [ 2, 4, 8, 4, 3, 4, 4, 1 ]
 
     do i = 1, MAX_FONTS
-        v2 = measure_text_ex(fonts(i), trim(messages(i)) // c_null_char, fonts(i)%base_size * 2.0, real(spacings(i)))
+        v2 = measure_text_ex(fonts(i), f_c_str(messages(i)), fonts(i)%base_size * 2.0, real(spacings(i)))
 
         positions(i)%x = SCREEN_WIDTH / 2.0 - v2%x / 2.0
         positions(i)%y = 60.0 + fonts(i)%base_size + 45.0 * (i - 1)
@@ -67,12 +64,12 @@ program main
         call begin_drawing()
             call clear_background(RAYWHITE)
 
-            call draw_text('free fonts included with raylib' // c_null_char, 250, 20, 20, DARKGRAY)
+            call draw_text(f_c_str('free fonts included with raylib'), 250, 20, 20, DARKGRAY)
             call draw_line(220, 50, 590, 50, DARKGRAY)
 
             do i = 1, MAX_FONTS
                 call draw_text_ex(fonts(i), &
-                                  trim(messages(i)) // c_null_char, &
+                                  f_c_str(messages(i)), &
                                   positions(i), &
                                   fonts(i)%base_size * 2.0, &
                                   real(spacings(i)), &

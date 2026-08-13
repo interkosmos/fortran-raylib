@@ -1,13 +1,10 @@
-! bunny.f90
-!
-! Example program that renders thousands of textures (bunny benchmark). Based
-! on the raylib example `textures_bunnymark.c`.
-!
 ! Author:  Philipp Engel
 ! Licence: ISC
 program main
-    use, intrinsic :: iso_c_binding, only: c_null_char
+    !! Example program that renders thousands of textures (bunny benchmark).
+    !! Based on the raylib example `textures_bunnymark.c`.
     use :: raylib
+    use :: raylib_util
     implicit none (type, external)
 
     integer, parameter :: SCREEN_WIDTH  = 800
@@ -20,17 +17,17 @@ program main
         type(color_type)   :: color
     end type bunny_type
 
-    character(len=32)    :: str
+    character(32)        :: str
     integer              :: i, x, y
     integer              :: nbunnies
     type(texture2d_type) :: texture
 
     type(bunny_type), allocatable :: bunnies(:)
 
-    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, 'Fortran + raylib' // c_null_char)
+    call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
-    texture = load_texture('share/wabbit.png' // c_null_char)
+    texture = load_texture(f_c_str('share/wabbit.png'))
 
     allocate (bunnies(MAX_BUNNIES))
     nbunnies = 0
@@ -76,7 +73,7 @@ program main
 
             write (str, '("bunnies: ", i0)') nbunnies
             call draw_rectangle(0, 0, SCREEN_WIDTH, 40, BLACK)
-            call draw_text(trim(str) // c_null_char, 120, 10, 20, GREEN)
+            call draw_text(f_c_str(str), 120, 10, 20, GREEN)
             call draw_fps(10, 10)
         call end_drawing()
     end do
