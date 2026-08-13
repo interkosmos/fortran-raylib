@@ -5,6 +5,7 @@ PREFIX  = /usr/local
 FC      = gfortran
 AR      = ar
 RM      = /bin/rm
+FORD    = ford
 FFLAGS  = -O2 -std=f2018
 ARFLAGS = rcs
 LDFLAGS = -L/usr/local/lib
@@ -23,7 +24,7 @@ OBJ = raylib.o \
       raylib_math.o \
       raylib_util.o
 
-.PHONY: all clean examples install
+.PHONY: all clean doc examples install
 
 all: $(TARGET)
 
@@ -104,6 +105,9 @@ ship: $(TARGET) examples/ship.f90
 
 window: $(TARGET) examples/window.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o window examples/window.f90 $(TARGET) $(LDLIBS)
+
+doc: ford.md
+	$(FORD) ford.md
 
 clean:
 	$(RM) -f *.mod

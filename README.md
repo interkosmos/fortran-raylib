@@ -161,6 +161,16 @@ To link against a static raylib library, run:
 $ make examples RAYLIB=/path/to/libraylib.a
 ```
 
+## Documentation
+
+Create the source code documentation with
+[FORD](https://github.com/cmacmackin/ford):
+
+```
+$ pip install -U ford
+$ make doc
+```
+
 ## Compatibility
 
 Some issues have to be regarded when calling raylib from Fortran:
