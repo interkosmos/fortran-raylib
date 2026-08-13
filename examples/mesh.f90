@@ -78,7 +78,7 @@ program main
         transforms(i) = matrix_multiply(rotation, translation)
     end do
 
-    shader = load_shader(VS_FILE_NAME // c_null_char, FS_FILE_NAME // c_null_char)
+    shader = load_shader(f_c_str(VS_FILE_NAME), f_c_str(FS_FILE_NAME))
 
     call c_f_pointer(shader%locs, locs, [ MAX_SHADER_LOCATIONS + 1 ])
     locs(SHADER_LOC_MATRIX_MVP + 1)  = get_shader_location(shader, f_c_str('mvp'))
@@ -157,7 +157,7 @@ contains
         type(color_type),   intent(in) :: color
         type(shader_type),  intent(in) :: shader
 
-        character(32)    :: string
+        character(32)    :: str
         type(light_type) :: light
 
         if (lights_count < MAX_LIGHTS) then
@@ -168,20 +168,20 @@ contains
             light%color    = color
 
             ! NOTE: Lighting shader naming must be the provided ones.
-            write (string, '("lights[", i0, "].enabled")') lights_count
-            light%enabled_loc = get_shader_location(shader, trim(string) // c_null_char)
+            write (str, '("lights[", i0, "].enabled")') lights_count
+            light%enabled_loc = get_shader_location(shader, f_c_str(str))
 
-            write (string, '("lights[", i0, "].type")') lights_count
-            light%type_loc = get_shader_location(shader, trim(string) // c_null_char)
+            write (str, '("lights[", i0, "].type")') lights_count
+            light%type_loc = get_shader_location(shader, f_c_str(str))
 
-            write (string, '("lights[", i0, "].position")') lights_count
-            light%position_loc = get_shader_location(shader, trim(string) // c_null_char)
+            write (str, '("lights[", i0, "].position")') lights_count
+            light%position_loc = get_shader_location(shader, f_c_str(str))
 
-            write (string, '("lights[", i0, "].target")') lights_count
-            light%target_loc = get_shader_location(shader, trim(string) // c_null_char)
+            write (str, '("lights[", i0, "].target")') lights_count
+            light%target_loc = get_shader_location(shader, f_c_str(str))
 
-            write (string, '("lights[", i0, "].color")') lights_count
-            light%color_loc = get_shader_location(shader, trim(string) // c_null_char)
+            write (str, '("lights[", i0, "].color")') lights_count
+            light%color_loc = get_shader_location(shader, f_c_str(str))
 
             call update_light_values(shader, light)
 
@@ -193,7 +193,7 @@ contains
         type(shader_type),        intent(in) :: shader
         type(light_type), target, intent(in) :: light
 
-        real, target :: color(4), position(3), target(3)
+        real(c_float), target :: color(4), position(3), target(3)
 
         ! Send to shader light enabled state and type.
         call set_shader_value(shader, light%enabled_loc, c_loc(light%enabled), SHADER_UNIFORM_INT)
