@@ -744,6 +744,7 @@ module raylib
     integer(c_int), parameter, public :: NPATCH_THREE_PATCH_VERTICAL   = 1
     integer(c_int), parameter, public :: NPATCH_THREE_PATCH_HORIZONTAL = 2
 
+    public :: audio_callback
     public :: load_file_data_callback
     public :: save_file_data_callback
     public :: load_file_text_callback
@@ -751,7 +752,15 @@ module raylib
     public :: trace_log_callback
 
     abstract interface
-        ! unsigned char *(*LoadFileDataCallback)(const char *fileName, unsigned int *bytesRead)
+        ! void AudioCallback(void *bufferData, unsigned int frames)
+        subroutine audio_callback(buffer_data, frames) bind(c)
+            import :: c_ptr, c_unsigned
+            implicit none
+            type(c_ptr),         intent(in), value :: buffer_data
+            integer(c_unsigned), intent(in), value :: frames
+        end subroutine audio_callback
+
+        ! unsigned char *LoadFileDataCallback(const char *fileName, unsigned int *bytesRead)
         function load_file_data_callback(file_name, bytes_read) bind(c)
             import :: c_ptr, c_unsigned
             implicit none
@@ -760,7 +769,7 @@ module raylib
             type(c_ptr)                            :: load_file_data_callback
         end function load_file_data_callback
 
-        ! bool (*SaveFileDataCallback)(const char *fileName, void *data, unsigned int bytesToWrite)
+        ! bool SaveFileDataCallback(const char *fileName, void *data, unsigned int bytesToWrite)
         function save_file_data_callback(file_name, data, bytes_to_write) bind(c)
             import :: c_bool, c_ptr, c_unsigned
             implicit none
@@ -770,7 +779,7 @@ module raylib
             logical(c_bool)                        :: save_file_data_callback
         end function save_file_data_callback
 
-        ! char *(*LoadFileTextCallback)(const char *fileName)
+        ! char *LoadFileTextCallback(const char *fileName)
         function load_file_text_callback(file_name) bind(c)
             import :: c_ptr
             implicit none
@@ -778,7 +787,7 @@ module raylib
             type(c_ptr)                    :: load_file_text_callback
         end function load_file_text_callback
 
-        ! bool (*SaveFileTextCallback)(const char *fileName, char *text)
+        ! bool SaveFileTextCallback(const char *fileName, char *text)
         function save_file_text_callback(file_name, text) bind(c)
             import :: c_bool, c_ptr
             implicit none
@@ -787,13 +796,13 @@ module raylib
             logical(c_bool)                :: save_file_text_callback
         end function save_file_text_callback
 
-        ! void (*TraceLogCallback)(int logLevel, const char *text, va_list args)
+        ! void TraceLogCallback(int logLevel, const char *text, va_list args)
         subroutine trace_log_callback(log_level, text, args) bind(c)
             import :: c_int, c_ptr
             implicit none
             integer(c_int), intent(in), value :: log_level
             type(c_ptr),    intent(in), value :: text
-            type(c_ptr),    intent(in)        :: args(*)
+            type(c_ptr),    intent(in), value :: args
         end subroutine trace_log_callback
     end interface
 
@@ -1381,17 +1390,17 @@ module raylib
     interface
         ! void AttachAudioMixedProcessor(AudioCallback processor)
         subroutine attach_audio_mixed_processor(processor) bind(c, name='AttachAudioMixedProcessor')
-            import :: c_funptr
+            import :: audio_callback
             implicit none
-            type(c_funptr), intent(in), value :: processor
+            procedure(audio_callback), bind(c) :: processor
         end subroutine attach_audio_mixed_processor
 
         ! void AttachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
         subroutine attach_audio_stream_processor(stream, processor) bind(c, name='AttachAudioStreamProcessor')
-            import :: audio_stream_type, c_funptr
+            import :: audio_callback, audio_stream_type, c_funptr
             implicit none
             type(audio_stream_type), intent(in), value :: stream
-            type(c_funptr),          intent(in), value :: processor
+            procedure(audio_callback), bind(c)         :: processor
         end subroutine attach_audio_stream_processor
 
         ! void BeginBlendMode(int mode)
@@ -1717,7 +1726,7 @@ module raylib
 
         ! unsigned char *CompressData(const unsigned char *data, int dataSize, int *compDataSize)
         function compress_data(data, data_size, comp_data_size) bind(c, name='CompressData')
-            !! Compress data (DEFLATE algorithm), memory must be MemFree().
+            !! Compress data (DEFLATE algorithm), memory must be `mem_free()`.
             import :: c_int, c_ptr, c_unsigned_char
             implicit none
             integer(c_unsigned_char), intent(in)        :: data
@@ -1764,7 +1773,7 @@ module raylib
 
         ! unsigned char *DecodeDataBase64(const unsigned char *data, int *outputSize)
         function decode_data_base64(data, output_size) bind(c, name='DecodeDataBase64')
-            !! Decode Base64 string (expected NULL terminated), memory must be MemFree().
+            !! Decode Base64 string (expected NULL terminated), memory must be `mem_free()`.
             import :: c_int, c_unsigned_char, c_ptr
             implicit none
             integer(c_unsigned_char), intent(in)  :: data
@@ -1774,7 +1783,7 @@ module raylib
 
         ! unsigned char *DecompressData(const unsigned char *compData, int compDataSize, int *dataSize)
         function decompress_data(comp_data, comp_data_size, data_size) bind(c, name='DecompressData')
-            !! Decompress data (DEFLATE algorithm), memory must be MemFree().
+            !! Decompress data (DEFLATE algorithm), memory must be `mem_free()`.
             import :: c_int, c_ptr, c_unsigned_char
             implicit none
             integer(c_unsigned_char), intent(in)        :: comp_data
@@ -1785,17 +1794,17 @@ module raylib
 
         ! void DetachAudioMixedProcessor(AudioCallback processor)
         subroutine detach_audio_mixed_processor(processor) bind(c, name='DetachAudioMixedProcessor')
-            import :: c_funptr
+            import :: audio_callback
             implicit none
-            type(c_funptr), intent(in), value :: processor
+            procedure(audio_callback), bind(c) :: processor
         end subroutine detach_audio_mixed_processor
 
         ! void DetachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
         subroutine detach_audio_stream_processor(stream, processor) bind(c, name='DetachAudioStreamProcessor')
-            import :: audio_stream_type, c_funptr
+            import :: audio_callback, audio_stream_type, c_funptr
             implicit none
             type(audio_stream_type), intent(in), value :: stream
-            type(c_funptr),          intent(in), value :: processor
+            procedure(audio_callback), bind(c)         :: processor
         end subroutine detach_audio_stream_processor
 
         ! bool DirectoryExists(const char *dirPath)
@@ -2807,7 +2816,7 @@ module raylib
 
         ! char *EncodeDataBase64(const unsigned char *data, int dataSize, int *outputSize)
         function encode_data_base64(data, data_size, output_size) bind(c, name='EncodeDataBase64')
-            !! Encode data to Base64 string (includes NULL terminator), memory must be MemFree().
+            !! Encode data to Base64 string (includes NULL terminator), memory must be `mem_free()`.
             import :: c_int, c_unsigned_char, c_ptr
             implicit none
             integer(c_unsigned_char), intent(in)        :: data
@@ -5541,16 +5550,16 @@ module raylib
 
         ! void SetLoadFileDataCallback(LoadFileDataCallback callback)
         subroutine set_load_file_data_callback(callback) bind(c, name='SetLoadFileDataCallback')
-            import :: c_funptr
+            import :: load_file_data_callback
             implicit none
-            type(c_funptr), intent(in), value :: callback
+            procedure(load_file_data_callback), bind(c) :: callback
         end subroutine set_load_file_data_callback
 
         ! void SetLoadFileTextCallback(LoadFileTextCallback callback)
         subroutine set_load_file_text_callback(callback) bind(c, name='SetLoadFileTextCallback')
-            import :: c_funptr
+            import :: load_file_text_callback
             implicit none
-            type(c_funptr), intent(in), value :: callback
+            procedure(load_file_text_callback), bind(c) :: callback
         end subroutine set_load_file_text_callback
 
         ! void SetMasterVolume(float volume)
@@ -5651,16 +5660,16 @@ module raylib
 
         ! void SetSaveFileDataCallback(SaveFileDataCallback callback)
         subroutine set_save_file_data_callback(callback) bind(c, name='SetSaveFileDataCallback')
-            import :: c_funptr
+            import :: save_file_data_callback
             implicit none
-            type(c_funptr), intent(in), value :: callback
+            procedure(save_file_data_callback), bind(c) :: callback
         end subroutine set_save_file_data_callback
 
         ! void SetSaveFileTextCallback(SaveFileTextCallback callback)
         subroutine set_save_file_text_callback(callback) bind(c, name='SetSaveFileTextCallback')
-            import :: c_funptr
+            import :: save_file_text_callback
             implicit none
-            type(c_funptr), intent(in), value :: callback
+            procedure(save_file_text_callback), bind(c) :: callback
         end subroutine set_save_file_text_callback
 
         ! void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType)
@@ -5766,9 +5775,9 @@ module raylib
 
         ! void SetTraceLogCallback(TraceLogCallback callback)
         subroutine set_trace_log_callback(callback) bind(c, name='SetTraceLogCallback')
-            import :: c_funptr
+            import :: trace_log_callback
             implicit none
-            type(c_funptr), intent(in), value :: callback
+            procedure(trace_log_callback), bind(c) :: callback
         end subroutine set_trace_log_callback
 
         ! void SetTraceLogLevel(int logLevel)

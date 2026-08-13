@@ -10,7 +10,7 @@ program main
     integer, parameter :: SCREEN_WIDTH  = 800
     integer, parameter :: SCREEN_HEIGHT = 450
 
-    call set_trace_log_callback(c_funloc(custom_log))
+    call set_trace_log_callback(custom_log)
     call init_window(SCREEN_WIDTH, SCREEN_HEIGHT, f_c_str('Fortran + raylib'))
     call set_target_fps(60)
 
