@@ -53,7 +53,6 @@ $ make RAYLIB=libraylib.a
 You may have to set the libraries to link manually (argument `LDLIBS`),
 depending on your operating system.
 
-
 ### Fortran Package Manager
 
 Building the library and all examples with *fpm*:
@@ -67,7 +66,7 @@ your project:
 
 ```toml
 [dependencies]
-fortran-raylib = { git = "https://github.com/interkosmos/fortran-raylib.git" }
+fortran-raylib = { git = "https://github.com/interkosmos/fortran-raylib" }
 ```
 
 ### Linking

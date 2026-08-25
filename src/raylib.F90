@@ -1147,41 +1147,41 @@ module raylib
     public :: is_audio_device_ready
     public :: is_audio_stream_playing
     public :: is_audio_stream_processed
-    public :: is_audio_stream_ready
+    public :: is_audio_stream_valid
     public :: is_cursor_hidden
     public :: is_cursor_on_screen
     public :: is_file_dropped
     public :: is_file_extension
     public :: is_file_name_valid
-    public :: is_font_ready
+    public :: is_font_valid
     public :: is_gamepad_available
     public :: is_gamepad_button_down
     public :: is_gamepad_button_pressed
     public :: is_gamepad_button_released
     public :: is_gamepad_button_up
     public :: is_gesture_detected
-    public :: is_image_ready
+    public :: is_image_valid
     public :: is_key_down
     public :: is_key_pressed
     public :: is_key_pressed_repeat
     public :: is_key_released
     public :: is_key_up
-    public :: is_material_ready
+    public :: is_material_valid
     public :: is_model_animation_valid
-    public :: is_model_ready
+    public :: is_model_valid
     public :: is_mouse_button_down
     public :: is_mouse_button_pressed
     public :: is_mouse_button_released
     public :: is_mouse_button_up
-    public :: is_music_ready
     public :: is_music_stream_playing
+    public :: is_music_valid
     public :: is_path_file
-    public :: is_render_texture_ready
-    public :: is_shader_ready
+    public :: is_render_texture_valid
+    public :: is_shader_valid
     public :: is_sound_playing
-    public :: is_sound_ready
-    public :: is_texture_ready
-    public :: is_wave_ready
+    public :: is_sound_valid
+    public :: is_texture_valid
+    public :: is_wave_valid
     public :: is_window_focused
     public :: is_window_fullscreen
     public :: is_window_hidden
@@ -4513,13 +4513,13 @@ module raylib
             logical(c_bool)                            :: is_audio_stream_processed
         end function is_audio_stream_processed
 
-        ! bool IsAudioStreamReady(AudioStream stream)
-        function is_audio_stream_ready(stream) bind(c, name='IsAudioStreamReady')
+        ! bool IsAudioStreamValid(AudioStream stream)
+        function is_audio_stream_valid(stream) bind(c, name='IsAudioStreamValid')
             import :: audio_stream_type, c_bool
             implicit none
             type(audio_stream_type), intent(in), value :: stream
-            logical(c_bool)                            :: is_audio_stream_ready
-        end function is_audio_stream_ready
+            logical(c_bool)                            :: is_audio_stream_valid
+        end function is_audio_stream_valid
 
         ! bool IsCursorHidden(void)
         function is_cursor_hidden() bind(c, name='IsCursorHidden')
@@ -4559,13 +4559,13 @@ module raylib
             logical(c_bool)               :: is_file_name_valid
         end function is_file_name_valid
 
-        ! bool IsFontReady(Font font)
-        function is_font_ready(font) bind(c, name='IsFontReady')
+        ! bool IsFontValid(Font font)
+        function is_font_valid(font) bind(c, name='IsFontValid')
             import :: c_bool, font_type
             implicit none
             type(font_type), intent(in), value :: font
-            logical(c_bool)                    :: is_font_ready
-        end function is_font_ready
+            logical(c_bool)                    :: is_font_valid
+        end function is_font_valid
 
         ! bool IsGamepadAvailable(int gamepad)
         function is_gamepad_available(gamepad) bind(c, name='IsGamepadAvailable')
@@ -4619,13 +4619,13 @@ module raylib
             logical(c_bool)                        :: is_gesture_detected
         end function is_gesture_detected
 
-        ! bool IsImageReady(Image image)
-        function is_image_ready(image) bind(c, name='IsImageReady')
+        ! bool IsImageValid(Image image)
+        function is_image_valid(image) bind(c, name='IsImageValid')
             import :: c_bool, image_type
             implicit none
             type(image_type), intent(in), value :: image
-            logical(c_bool)                     :: is_image_ready
-        end function is_image_ready
+            logical(c_bool)                     :: is_image_valid
+        end function is_image_valid
 
         ! bool IsKeyDown(int key)
         function is_key_down(key) bind(c, name='IsKeyDown')
@@ -4667,13 +4667,13 @@ module raylib
             logical(c_bool)                   :: is_key_up
         end function is_key_up
 
-        ! bool IsMaterialReady(Material material)
-        function is_material_ready(material) bind(c, name='IsMaterialReady')
+        ! bool IsMaterialValid(Material material)
+        function is_material_valid(material) bind(c, name='IsMaterialValid')
             import :: c_bool, material_type
             implicit none
             type(material_type), intent(in), value :: material
-            logical(c_bool)                        :: is_material_ready
-        end function is_material_ready
+            logical(c_bool)                        :: is_material_valid
+        end function is_material_valid
 
         ! bool IsModelAnimationValid(Model model, ModelAnimation anim)
         function is_model_animation_valid(model, anim) bind(c, name='IsModelAnimationValid')
@@ -4684,13 +4684,13 @@ module raylib
             logical(c_bool)                               :: is_model_animation_valid
         end function is_model_animation_valid
 
-        ! bool IsModelReady(Model model)
-        function is_model_ready(model) bind(c, name='IsModelReady')
+        ! bool IsModelValid(Model model)
+        function is_model_valid(model) bind(c, name='IsModelValid')
             import :: c_bool, model_type
             implicit none
             type(model_type), intent(in), value :: model
-            logical(c_bool)                     :: is_model_ready
-        end function is_model_ready
+            logical(c_bool)                     :: is_model_valid
+        end function is_model_valid
 
         ! bool IsMouseButtonDown(int button)
         function is_mouse_button_down(button) bind(c, name='IsMouseButtonDown')
@@ -4724,14 +4724,6 @@ module raylib
             logical(c_bool)                   :: is_mouse_button_up
         end function is_mouse_button_up
 
-        ! bool IsMusicReady(Music music)
-        function is_music_ready(music) bind(c, name='IsMusicReady')
-            import :: c_bool, music_type
-            implicit none
-            type(music_type), intent(in), value :: music
-            logical(c_bool)                     :: is_music_ready
-        end function is_music_ready
-
         ! bool IsMusicStreamPlaying(Music music)
         function is_music_stream_playing(music) bind(c, name='IsMusicStreamPlaying')
             import :: c_bool, music_type
@@ -4739,6 +4731,14 @@ module raylib
             type(music_type), intent(in), value :: music
             logical(c_bool)                     :: is_music_stream_playing
         end function is_music_stream_playing
+
+        ! bool IsMusicValid(Music music)
+        function is_music_valid(music) bind(c, name='IsMusicValid')
+            import :: c_bool, music_type
+            implicit none
+            type(music_type), intent(in), value :: music
+            logical(c_bool)                     :: is_music_valid
+        end function is_music_valid
 
         ! bool IsPathFile(const char *path)
         function is_path_file(path) bind(c, name='IsPathFile')
@@ -4748,21 +4748,21 @@ module raylib
             logical(c_bool)               :: is_path_file
         end function is_path_file
 
-        ! bool IsRenderTextureReady(RenderTexture2D target)
-        function is_render_texture_ready(target) bind(c, name='IsRenderTextureReady')
+        ! bool IsRenderTextureValid(RenderTexture2D target)
+        function is_render_texture_valid(target) bind(c, name='IsRenderTextureValid')
             import :: c_bool, render_texture2d_type
             implicit none
             type(render_texture2d_type), intent(in), value :: target
-            logical(c_bool)                                :: is_render_texture_ready
-        end function is_render_texture_ready
+            logical(c_bool)                                :: is_render_texture_valid
+        end function is_render_texture_valid
 
-        ! bool IsShaderReady(Shader shader)
-        function is_shader_ready(shader) bind(c, name='IsShaderReady')
+        ! bool IsShaderValid(Shader shader)
+        function is_shader_valid(shader) bind(c, name='IsShaderValid')
             import :: c_bool, shader_type
             implicit none
             type(shader_type), intent(in), value :: shader
-            logical(c_bool)                      :: is_shader_ready
-        end function is_shader_ready
+            logical(c_bool)                      :: is_shader_valid
+        end function is_shader_valid
 
         ! bool IsSoundPlaying(Sound sound)
         function is_sound_playing(sound) bind(c, name='IsSoundPlaying')
@@ -4772,29 +4772,29 @@ module raylib
             logical(c_bool)                     :: is_sound_playing
         end function is_sound_playing
 
-        ! bool IsSoundReady(Sound sound)
-        function is_sound_ready(sound) bind(c, name='IsSoundReady')
+        ! bool IsSoundValid(Sound sound)
+        function is_sound_valid(sound) bind(c, name='IsSoundValid')
             import :: c_bool, sound_type
             implicit none
             type(sound_type), intent(in), value :: sound
-            logical(c_bool)                     :: is_sound_ready
-        end function is_sound_ready
+            logical(c_bool)                     :: is_sound_valid
+        end function is_sound_valid
 
-        ! bool IsTextureReady(Texture2D texture)
-        function is_texture_ready(texture) bind(c, name='IsTextureReady')
+        ! bool IsTextureValid(Texture2D texture)
+        function is_texture_valid(texture) bind(c, name='IsTextureValid')
             import :: c_bool, texture2d_type
             implicit none
             type(texture2d_type), intent(in), value :: texture
-            logical(c_bool)                         :: is_texture_ready
-        end function is_texture_ready
+            logical(c_bool)                         :: is_texture_valid
+        end function is_texture_valid
 
-        ! bool IsWaveReady(Wave wave)
-        function is_wave_ready(wave) bind(c, name='IsWaveReady')
+        ! bool IsWaveValid(Wave wave)
+        function is_wave_valid(wave) bind(c, name='IsWaveValid')
             import :: c_bool, wave_type
             implicit none
             type(wave_type), intent(in), value :: wave
-            logical(c_bool)                    :: is_wave_ready
-        end function is_wave_ready
+            logical(c_bool)                    :: is_wave_valid
+        end function is_wave_valid
 
         ! bool IsWindowFocused(void)
         function is_window_focused() bind(c, name='IsWindowFocused')
