@@ -4,10 +4,10 @@ module raylib
     !! A collection of auto-generated Fortran 2018 interface bindings to raylib 6.0.
     use, intrinsic :: iso_c_binding, only: c_associated, c_f_pointer, c_funloc, c_loc, c_sizeof, &
                                            c_bool, c_char, c_double, c_float, c_funptr, c_int, &
-                                           c_long, c_ptr, c_signed_char, c_size_t, &
+                                           c_long, c_ptr, c_short, c_signed_char, c_size_t, &
                                            c_null_char, c_null_funptr, c_null_ptr
 #if HAS_UNSIGNED
-    use, intrinsic :: iso_c_binding, only: c_unsigned, c_unsigned_char
+    use, intrinsic :: iso_c_binding, only: c_unsigned, c_unsigned_char, c_unsigned_short
 #endif
     use :: raylib_util
     implicit none (type, external)
@@ -27,6 +27,7 @@ module raylib
     public :: c_int
     public :: c_long
     public :: c_ptr
+    public :: c_short
     public :: c_signed_char
     public :: c_size_t
 
@@ -37,9 +38,11 @@ module raylib
 #if HAS_UNSIGNED
     public :: c_unsigned
     public :: c_unsigned_char
+    public :: c_unsigned_short
 #else
-    integer, parameter, public :: c_unsigned      = c_int
-    integer, parameter, public :: c_unsigned_char = c_signed_char
+    integer, parameter, public :: c_unsigned       = c_int
+    integer, parameter, public :: c_unsigned_char  = c_signed_char
+    integer, parameter, public :: c_unsigned_short = c_short
 #endif
 
     integer, parameter, public :: MAX_MATERIAL_MAPS    = 12
@@ -4939,11 +4942,11 @@ module raylib
 
         ! Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointsCount)
         function load_font_ex(file_name, font_size, codepoints, codepoints_count) bind(c, name='LoadFontEx')
-            import :: c_char, c_int, font_type
+            import :: c_char, c_int, c_ptr, font_type
             implicit none
             character(c_char), intent(in)        :: file_name
             integer(c_int),    intent(in), value :: font_size
-            integer(c_int),    intent(inout)     :: codepoints(*)
+            type(c_ptr),       intent(in), value :: codepoints
             integer(c_int),    intent(in), value :: codepoints_count
             type(font_type)                      :: load_font_ex
         end function load_font_ex

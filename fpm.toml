@@ -1,5 +1,5 @@
 name = "fortran-raylib"
-version = "0.3.0"
+version = "0.3.1"
 license = "ISC"
 author = "Philipp Engel"
 maintainer = "@interkosmos"
