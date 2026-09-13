@@ -17,10 +17,12 @@ TARGET  = libfortran-raylib.a
 
 SRC = src/raylib.F90 \
       src/raylib_camera.f90 \
+      src/raylib_gl.f90 \
       src/raylib_math.f90 \
       src/raylib_util.f90
 OBJ = raylib.o \
       raylib_camera.o \
+      raylib_gl.o \
       raylib_math.o \
       raylib_util.o
 
@@ -33,6 +35,7 @@ $(TARGET): $(SRC)
 	$(FC) $(FFLAGS) -c src/raylib.F90
 	$(FC) $(FFLAGS) -c src/raylib_camera.f90
 	$(FC) $(FFLAGS) -c src/raylib_math.f90
+	$(FC) $(FFLAGS) -c src/raylib_gl.f90
 	$(AR) $(ARFLAGS) $(TARGET) $(OBJ)
 
 install: $(TARGET)
@@ -44,7 +47,7 @@ install: $(TARGET)
 	install -m 644 *.mod $(INCDIR)/
 
 examples: bunny camera camera3d castle collision cubes explosion flags font \
-          geometric julia keys log map maze mesh plane shapes ship window
+          geometric julia keys log map maze mesh plane shapes ship skybox window
 
 bunny: $(TARGET) examples/bunny.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o bunny examples/bunny.f90 $(TARGET) $(LDLIBS)
@@ -103,6 +106,9 @@ shapes: $(TARGET) examples/shapes.f90
 ship: $(TARGET) examples/ship.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o ship examples/ship.f90 $(TARGET) $(LDLIBS)
 
+skybox: $(TARGET) examples/skybox.f90
+	$(FC) $(FFLAGS) $(LDFLAGS) -o skybox examples/skybox.f90 $(TARGET) $(LDLIBS)
+
 window: $(TARGET) examples/window.f90
 	$(FC) $(FFLAGS) $(LDFLAGS) -o window examples/window.f90 $(TARGET) $(LDLIBS)
 
@@ -132,4 +138,5 @@ clean:
 	$(RM) -f plane
 	$(RM) -f shapes
 	$(RM) -f ship
+	$(RM) -f skybox
 	$(RM) -f window

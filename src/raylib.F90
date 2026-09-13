@@ -122,13 +122,13 @@ module raylib
     end type texture2d_type
 
     ! TextureCubemap
-    type, bind(c), public :: texture_cubemap_type
-        integer(c_unsigned) :: id      = 0_c_unsigned
-        integer(c_int)      :: width   = 0
-        integer(c_int)      :: height  = 0
-        integer(c_int)      :: mipmaps = 0
-        integer(c_int)      :: format  = 0
-    end type texture_cubemap_type
+    ! type, bind(c), public :: texture_cubemap_type
+    !     integer(c_unsigned) :: id      = 0_c_unsigned
+    !     integer(c_int)      :: width   = 0
+    !     integer(c_int)      :: height  = 0
+    !     integer(c_int)      :: mipmaps = 0
+    !     integer(c_int)      :: format  = 0
+    ! end type texture_cubemap_type
 
     ! RenderTexture
     type, bind(c), public :: render_texture_type
@@ -5207,11 +5207,11 @@ module raylib
 
         ! TextureCubemap LoadTextureCubemap(Image image, int layout)
         function load_texture_cubemap(image, layout) bind(c, name='LoadTextureCubemap')
-            import :: c_int, image_type, texture_cubemap_type
+            import :: c_int, image_type, texture2d_type
             implicit none
             type(image_type), intent(in), value :: image
             integer(c_int),   intent(in), value :: layout
-            type(texture_cubemap_type)          :: load_texture_cubemap
+            type(texture2d_type)                :: load_texture_cubemap
         end function load_texture_cubemap
 
         ! Texture2D LoadTextureFromImage(Image image)

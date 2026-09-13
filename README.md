@@ -146,6 +146,7 @@ More examples can be found in `examples/`:
 * **plane** shows pitch/yaw/roll of a 3-D model.
 * **shapes** renders basic shapes.
 * **ship** rotates a 3-D model loaded from file.
+* **skybox** renders a skybox.
 * **window** opens a window with raylib.
 
 Build all examples with:

@@ -121,5 +121,10 @@ main = "ship.f90"
 
 [[executable]]
 source-dir = "examples"
+name = "skybox"
+main = "skybox.f90"
+
+[[executable]]
+source-dir = "examples"
 name = "window"
 main = "window.f90"
